@@ -7,7 +7,7 @@ out_fn = "out.ttl"
 prefix_fn="prefixes.txt"
 
 if (len(sys.argv) < 2) :
-    print "Usage: python SDD2OWL.py <SDD_file> [<data_file>] [<codebook_file>] [<output_file>]"
+    print "Usage: python sdd2owl.py <SDD_file> [<data_file>] [<codebook_file>] [<output_file>]"
     sys.exit(1)
 
 if (len(sys.argv) > 1) :
