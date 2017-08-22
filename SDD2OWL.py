@@ -370,6 +370,19 @@ def convertFromCB(dataVal,column_name) :
 #    for item in cb_tuple[tuples] :
 #        print item
 
+def writeVirtualEntry(output_file, v_column, index) : 
+    for v_tuple in virtual_tuples :
+        if (v_tuple["Column"] == v_column) :
+            output_file.write(kb + v_tuple["Column"][2:] + "-" + row[id_index] + " a " + v_tuple["Entity"])
+            if "Subject" in v_tuple :
+                output_file.write(";\n\tsio:hasUniqueIdentifier " + row[id_index])
+            if "inRelationTo" in v_tuple :
+                if ("Role" in v_tuple) and ("Relation" not in v_tuple) :
+                    output_file.write(" ;\n\tsio:hasRole [ a " + v_tuple["Role"] + " ;\n\t\tsio:inRelationTo " + kb +  v_tuple["inRelationTo"][2:] + "-" + row[id_index] + " ]")
+                elif ("Role" not in v_tuple) and ("Relation" in v_tuple) :
+                    output_file.write(" ;\n\t" + v_tuple["Relation"] + " " + kb +  v_tuple["inRelationTo"][2:] + "-" + row[id_index])
+            output_file.write(" .\n\n")
+
 if data_fn is not None :
     try :
         data_file = open(data_fn, 'r')
@@ -453,6 +466,18 @@ if data_fn is not None :
                                     print "Error writing data value"
                                     print row[data_key.index(a_tuple["Column"])]
                                 output_file.write(" .\n\n")
+#                                try :
+#                                    writeVirtualEntry(output_file, a_tuple["isAttributeOf"], row[id_index])
+#                                    if ("Time" in a_tuple) and (a_tuple["Time"][:2] == "??") :
+#                                        writeVirtualEntry(output_file, a_tuple["Time"], row[id_index])
+#                                    if ("wasDerivedFrom" in a_tuple) and (a_tuple["wasDerivedFrom"][:2] == "??") :
+#                                        writeVirtualEntry(output_file, a_tuple["wasDerivedFrom"], row[id_index])
+#                                    if ("wasGeneratedBy" in a_tuple) and (a_tuple["wasGeneratedBy"][:2] == "??") :
+#                                        writeVirtualEntry(output_file, a_tuple["wasGeneratedBy"], row[id_index])
+#                                    if ("inRelationTo" in a_tuple) and (a_tuple["inRelationTo"][:2] == "??") :
+#                                        writeVirtualEntry(output_file, a_tuple["inRelationTo"], row[id_index])
+#                                except :
+#                                    print "Warning: Unable to write virtual entry"
                             except :
                                 print "Unable to process tuple" + a_tuple.__str__()
                 except:
