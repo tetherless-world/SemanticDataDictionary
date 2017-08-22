@@ -264,7 +264,7 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
         output_file.write(kb + item[column_ind] + " a owl:Class ")
         output_file.write(" ;\n\trdfs:label \"" + item[column_ind] + "\"")
         if (item[attr_ind] != "") :
-            output_file.write(" ;\n\tsio:hasAttribute " + codeMapper(item[attr_ind]))
+            output_file.write(" ;\n\tsio:hasAttribute " + convertVirtualToKGEntry(codeMapper(item[attr_ind])))
             actual_tuple["Column"]=item[column_ind]
             actual_tuple["Attribute"]=codeMapper(item[attr_ind])
         else :
@@ -459,8 +459,7 @@ if data_fn is not None :
                             try :
                                 output_file.write(kb + a_tuple["Column"] + "-" + row[id_index] + " a " + a_tuple["Attribute"])
                                 output_file.write(" ;\n\ta " + kb + a_tuple["Column"])
-                                output_file.write(" ;\n\tsio:isAttributeOf " + kb + a_tuple["isAttributeOf"][2:] + "-" + row[id_index])
-                                
+                                output_file.write(" ;\n\tsio:isAttributeOf " + convertVirtualToKGEntry(a_tuple["isAttributeOf"],row[id_index]))
                                 if "Unit" in a_tuple :
                                     output_file.write(" ;\n\tsio:hasUnit " + a_tuple["Unit"])
                                 if "Time" in a_tuple :
