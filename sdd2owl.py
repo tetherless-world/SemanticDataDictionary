@@ -223,11 +223,11 @@ def writeVirtualRDF(virtual_list, virtual_tuples, output_file) :
         output_file.write(" ;\n\trdfs:label \"" + item[column_ind][2:] + "\"")
         # Set the rdf:type of the virtual row to either the Attribute or Entity value (or else owl:Individual)
         if (item[entity_ind] != "") and (item[attr_ind] == "") :
-            output_file.write(" ;\n\ta " + codeMapper(item[entity_ind]))
+            output_file.write(" ;\n\trdfs:subClassOf " + codeMapper(item[entity_ind]))
             virtual_tuple["Column"]=item[column_ind]
             virtual_tuple["Entity"]=codeMapper(item[entity_ind])
         elif (item[entity_ind] == "") and (item[attr_ind] != "") :
-            output_file.write(" ;\n\tsio:hasAttribute " + codeMapper(item[attr_ind]))
+            output_file.write(" ;\n\trdfs:subClassOf " + codeMapper(item[attr_ind]))
             virtual_tuple["Column"]=item[column_ind]
             virtual_tuple["Attribute"]=codeMapper(item[attr_ind])
         else :
@@ -264,7 +264,7 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
         output_file.write(kb + item[column_ind] + " a owl:Class ")
         output_file.write(" ;\n\trdfs:label \"" + item[column_ind] + "\"")
         if (item[attr_ind] != "") :
-            output_file.write(" ;\n\tsio:hasAttribute " + convertVirtualToKGEntry(codeMapper(item[attr_ind])))
+            output_file.write(" ;\n\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper(item[attr_ind])))
             actual_tuple["Column"]=item[column_ind]
             actual_tuple["Attribute"]=codeMapper(item[attr_ind])
         else :
@@ -380,9 +380,9 @@ def writeVirtualEntry(output_file, v_column, index) :
                 if "Entity" in v_tuple :
                     output_file.write(";\n\ta " + v_tuple["Entity"])
                 if "Attribute" in v_tuple :
-                    output_file.write(";\n\tsio:hasAttribute " + v_tuple["Attribute"])
+                    output_file.write(";\n\ta " + v_tuple["Attribute"])
                 if "Subject" in v_tuple :
-                    output_file.write(";\n\tsio:hasUniqueIdentifier " + row[id_index])
+                    output_file.write(";\n\tsio:hasIdentifier " + kb + v_tuple["Subject"] + "-" + row[id_index])
                 if "inRelationTo" in v_tuple :
                     if ("Role" in v_tuple) and ("Relation" not in v_tuple) :
                         output_file.write(" ;\n\tsio:hasRole [ a " + v_tuple["Role"] + " ;\n\t\tsio:inRelationTo " + kb +  v_tuple["inRelationTo"][2:] + "-" + row[id_index] + " ]")
@@ -424,7 +424,7 @@ if data_fn is not None :
                                     id_index = row.index(item)
                                     for v_tuple in virtual_tuples :
                                         if (a_tuple["isAttributeOf"] == v_tuple["Column"]) :
-                                            v_tuple["Subject"]="true"
+                                            v_tuple["Subject"]=a_tuple["Column"]
                                             #print v_tuple
                     if (id_index is None) :
                         print "Error: To process Data it is necessary to have a \"hasco:originalID\" or \"sio:Identifier\" Attribute in the SDD."
@@ -432,30 +432,6 @@ if data_fn is not None :
                 except:
                     print "Warning: Something went wrong on the first Data row."
             else:
-                # note that when using a single SDD for multiple data files, this approach creates unused virtual tuples, i.e. needs refinement
-#                try:
-#                    for v_tuple in virtual_tuples :
-#                        output_file.write(kb + v_tuple["Column"][2:] + "-" + row[id_index] + " a " + v_tuple["Entity"])
-#                        output_file.write(";\n\ta " + kb + v_tuple["Column"][2:])
-#                        if "Subject" in v_tuple :
-#                            output_file.write(";\n\tsio:hasUniqueIdentifier " + row[id_index])
-#                        if "inRelationTo" in v_tuple :
-#                            if ("Role" in v_tuple) and ("Relation" not in v_tuple) :
-#                                output_file.write(" ;\n\tsio:hasRole [ a " + v_tuple["Role"] + " ;\n\t\tsio:inRelationTo " + kb +  v_tuple["inRelationTo"][2:] + "-" + row[id_index] + " ]")
-#                            elif ("Role" not in v_tuple) and ("Relation" in v_tuple) :
-#                                output_file.write(" ;\n\t" + v_tuple["Relation"] + " " + kb +  v_tuple["inRelationTo"][2:] + "-" + row[id_index])
-#                            elif ("Role" in v_tuple) and ("Relation" in v_tuple) :
-#                                output_file.write(" ;\n\t" + v_tuple["Relation"] + " " + kb +  v_tuple["inRelationTo"][2:] + "-" + row[id_index])
-#                                output_file.write(" ;\n\tsio:hasRole [ a " + v_tuple["Role"] + " ]")
-                        #output_file.write(";\n\tprov:wasDerivedFrom " + kb + v_tuple["Column"][2:])
-#                        if "wasGeneratedBy" in v_tuple : 
-#                            output_file.write(" ;\n\tprov:wasGeneratedBy " + convertVirtualToKGEntry(v_tuple["wasGeneratedBy"],row[id_index]))
-#                        if "wasDerivedFrom" in v_tuple : 
-#                            output_file.write(" ;\n\tprov:wasDerivedFrom " + convertVirtualToKGEntry(v_tuple["wasDerivedFrom"],row[id_index]))
-#                        output_file.write(" .\n\n")
-#                except :
-#                    print "Error: Something went wrong when processing virtual tuples."
-#                    sys.exit(1)
                 try :
                     vref_list = []
                     for a_tuple in actual_tuples :
@@ -506,18 +482,6 @@ if data_fn is not None :
                                     print "Error writing data value"
                                     print row[data_key.index(a_tuple["Column"])]
                                 output_file.write(" .\n\n")
-#                                try :
-#                                    writeVirtualEntry(output_file, a_tuple["isAttributeOf"], row[id_index])
-#                                    if ("Time" in a_tuple) and (a_tuple["Time"][:2] == "??") :
-#                                        writeVirtualEntry(output_file, a_tuple["Time"], row[id_index])
-#                                    if ("wasDerivedFrom" in a_tuple) and (a_tuple["wasDerivedFrom"][:2] == "??") :
-#                                        writeVirtualEntry(output_file, a_tuple["wasDerivedFrom"], row[id_index])
-#                                    if ("wasGeneratedBy" in a_tuple) and (a_tuple["wasGeneratedBy"][:2] == "??") :
-#                                        writeVirtualEntry(output_file, a_tuple["wasGeneratedBy"], row[id_index])
-#                                    if ("inRelationTo" in a_tuple) and (a_tuple["inRelationTo"][:2] == "??") :
-#                                        writeVirtualEntry(output_file, a_tuple["inRelationTo"], row[id_index])
-#                                except :
-#                                    print "Warning: Unable to write virtual entry"
                             except :
                                 print "Unable to process tuple" + a_tuple.__str__()
                     #print vref_list
