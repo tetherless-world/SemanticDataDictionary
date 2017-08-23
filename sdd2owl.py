@@ -389,11 +389,15 @@ def writeVirtualEntry(output_file, v_column, index) :
                     elif ("Role" not in v_tuple) and ("Relation" in v_tuple) :
                         output_file.write(" ;\n\t" + v_tuple["Relation"] + " " + kb +  v_tuple["inRelationTo"][2:] + "-" + row[id_index])
                 if "wasGeneratedBy" in v_tuple : 
-                    output_file.write(" ;\n\tprov:wasGeneratedBy " + convertVirtualToKGEntry(item[generated_by_ind],row[id_index]))
-                #if "wasDerivedFrom" in v_tuple : 
-                #    output_file.write(" ;\n\tprov:wasDerivedFrom " + convertVirtualToKGEntry(item[derived_from_ind],row[id_index]))
+                    output_file.write(" ;\n\tprov:wasGeneratedBy " + convertVirtualToKGEntry(v_tuple["wasGeneratedBy"],index))
+                if "wasDerivedFrom" in v_tuple : 
+                    output_file.write(" ;\n\tprov:wasDerivedFrom " + convertVirtualToKGEntry(v_tuple["wasDerivedFrom"],index))
                 #output_file.write(";\n\tprov:wasDerivedFrom " + kb + v_tuple["Column"][2:])
                 output_file.write(" .\n\n")
+                if ("wasGeneratedBy" in v_tuple ) and (checkVirtual(v_tuple["wasGeneratedBy"])) :
+                    writeVirtualEntry(output_file, v_tuple["wasGeneratedBy"], index)
+                if ("wasDerivedFrom" in v_tuple) and (checkVirtual(v_tuple["wasDerivedFrom"])) :
+                    writeVirtualEntry(output_file, v_tuple["wasDerivedFrom"], index)
     except :
         print "Warning: Unable to create virtual entry."
 
