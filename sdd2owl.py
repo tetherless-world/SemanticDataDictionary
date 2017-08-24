@@ -2,12 +2,15 @@ import urllib2
 import csv
 import sys
 
-kb="heals-kb:"
+kb=":"
 out_fn = "out.ttl"
 prefix_fn="prefixes.txt"
 
+studyRef = None
+
+# Need to implement input flags rather than ordering
 if (len(sys.argv) < 2) :
-    print "Usage: python sdd2owl.py <SDD_file> [<data_file>] [<codebook_file>] [<output_file>]"
+    print "Usage: python sdd2owl.py <SDD_file> [<data_file>] [<codebook_file>] [<output_file>] [kb_prefix]\nOptional arguments can be skipped by entering '!'"
     sys.exit(1)
 
 if (len(sys.argv) > 1) :
@@ -20,6 +23,12 @@ if (len(sys.argv) > 1) :
             cb_fn = sys.argv[3]
             if (len(sys.argv) > 4) :
                 out_fn = sys.argv[4]
+                if (len(sys.argv) > 5) :
+                    if not (sys.argv[5] == "!" ):
+                        if ":" not in sys.argv[5] :
+                            kb = sys.argv[5] + ":"
+                        else :                       
+                            kb = sys.argv[5]
         else :
             cb_fn = raw_input("If you wish to use a Codebook file, please type the path and press 'Enter'.\n Otherwise, type '!' and press Enter: ")       
     else : 
@@ -31,6 +40,9 @@ if cb_fn == "!" :
 
 if data_fn == "!" :
     data_fn = None
+
+if out_fn == "!" :
+    out_fn = "out.ttl"
 
 output_file = open(out_fn,"w")
 prefix_file = open(prefix_fn,"r")
@@ -125,16 +137,19 @@ def codeMapper(input_word) :
     return unitVal    
 
 def convertVirtualToKGEntry(*args) :
-    cellVal = args[0]
     if (args[0][:2] == "??") :
+        if (studyRef is not None ) :
+            if (args[0]==studyRef) :
+                return kb + args[0][2:]
         if (len(args) == 2) :
-            cellVal = kb + args[0][2:] + "-" + args[1]
+            return kb + args[0][2:] + "-" + args[1]
         else : 
-            cellVal = kb + args[0][2:]
+            return kb + args[0][2:]
     elif (':' not in args[0]) :
-        cellVal = '"' + args[0] + "\"^^xsd:string"
-    # Check if input work has namespace
-    return cellVal
+        # Need to implement check for entry in column list
+        return '"' + args[0] + "\"^^xsd:string"
+    else :
+        return args[0]
 
 def checkVirtual(input_word) :
     if (input_word[:2] == "??") :
@@ -226,6 +241,10 @@ def writeVirtualRDF(virtual_list, virtual_tuples, output_file) :
             output_file.write(" ;\n\trdfs:subClassOf " + codeMapper(item[entity_ind]))
             virtual_tuple["Column"]=item[column_ind]
             virtual_tuple["Entity"]=codeMapper(item[entity_ind])
+            if (virtual_tuple["Entity"] == "hasco:Study") :
+                global studyRef
+                studyRef = item[column_ind]
+                virtual_tuple["Study"] = item[column_ind]
         elif (item[entity_ind] == "") and (item[attr_ind] != "") :
             output_file.write(" ;\n\trdfs:subClassOf " + codeMapper(item[attr_ind]))
             virtual_tuple["Column"]=item[column_ind]
@@ -239,11 +258,11 @@ def writeVirtualRDF(virtual_list, virtual_tuples, output_file) :
             virtual_tuple["inRelationTo"]=item[relation_to_ind]
             # If there is a value in the Relation column but not the Role column ...
             if (item[relation_ind] != "") and (item[role_ind] == "") :
-                output_file.write(" ;\n\t" + item[relation_ind] + " " + kb +  item[relation_to_ind][2:] )
+                output_file.write(" ;\n\t" + item[relation_ind] + " " + convertVirtualToKGEntry(item[relation_to_ind]) )
                 virtual_tuple["Relation"]=item[relation_ind]
             # If there is a value in the Role column but not the Relation column ...
             elif (item[relation_ind] == "") and (item[role_ind] != "") :
-                output_file.write(" ;\n\tsio:hasRole [ a " + item[role_ind] + " ;\n\t\tsio:inRelationTo " + kb +  item[relation_to_ind][2:] + " ]")
+                output_file.write(" ;\n\tsio:hasRole [ a " + item[role_ind] + " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item[relation_to_ind]) + " ]")
                 virtual_tuple["Role"]=item[role_ind]
             # If there is a value in the Role and Relation columns ...
             elif (item[relation_ind] != "") and (item[role_ind] != "") :
@@ -376,18 +395,21 @@ def writeVirtualEntry(output_file, v_column, index) :
     try :
         for v_tuple in virtual_tuples :
             if (v_tuple["Column"] == v_column) :
-                output_file.write(kb + v_tuple["Column"][2:] + "-" + row[id_index] + " a " + kb + v_tuple["Column"][2:])
+                if "Study" in v_tuple :
+                    continue
+                else :
+                    output_file.write(kb + v_tuple["Column"][2:] + "-" + index + " a " + kb + v_tuple["Column"][2:])
                 if "Entity" in v_tuple :
                     output_file.write(";\n\ta " + v_tuple["Entity"])
                 if "Attribute" in v_tuple :
                     output_file.write(";\n\ta " + v_tuple["Attribute"])
                 if "Subject" in v_tuple :
-                    output_file.write(";\n\tsio:hasIdentifier " + kb + v_tuple["Subject"] + "-" + row[id_index])
+                    output_file.write(";\n\tsio:hasIdentifier " + kb + v_tuple["Subject"] + "-" + index)
                 if "inRelationTo" in v_tuple :
                     if ("Role" in v_tuple) and ("Relation" not in v_tuple) :
-                        output_file.write(" ;\n\tsio:hasRole [ a " + v_tuple["Role"] + " ;\n\t\tsio:inRelationTo " + kb +  v_tuple["inRelationTo"][2:] + "-" + row[id_index] + " ]")
+                        output_file.write(" ;\n\tsio:hasRole [ a " + v_tuple["Role"] + " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(v_tuple["inRelationTo"], index) + " ]")
                     elif ("Role" not in v_tuple) and ("Relation" in v_tuple) :
-                        output_file.write(" ;\n\t" + v_tuple["Relation"] + " " + kb +  v_tuple["inRelationTo"][2:] + "-" + row[id_index])
+                        output_file.write(" ;\n\t" + v_tuple["Relation"] + " " + convertVirtualToKGEntry(v_tuple["inRelationTo"],index))
                 if "wasGeneratedBy" in v_tuple : 
                     output_file.write(" ;\n\tprov:wasGeneratedBy " + convertVirtualToKGEntry(v_tuple["wasGeneratedBy"],index))
                 if "wasDerivedFrom" in v_tuple : 
