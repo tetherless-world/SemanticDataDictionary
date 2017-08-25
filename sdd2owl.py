@@ -291,7 +291,7 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
             sys.exit(1)
             #output_file.write(kb + item[column_ind] + " a owl:Individual")
         if (item[attr_of_ind] != "") :
-            output_file.write(" ;\n\tsio:isAttributeOf " + kb +  item[attr_of_ind][2:] )
+            output_file.write(" ;\n\tsio:isAttributeOf " + convertVirtualToKGEntry(item[attr_of_ind]))
             actual_tuple["isAttributeOf"]=item[attr_of_ind]
         else :
             print "Error: Actual column not assigned an isAttributeOf value."
@@ -462,6 +462,9 @@ if data_fn is not None :
                                 output_file.write(kb + a_tuple["Column"] + "-" + row[id_index] + " a " + a_tuple["Attribute"])
                                 output_file.write(" ;\n\ta " + kb + a_tuple["Column"])
                                 output_file.write(" ;\n\tsio:isAttributeOf " + convertVirtualToKGEntry(a_tuple["isAttributeOf"],row[id_index]))
+                                if checkVirtual(a_tuple["isAttributeOf"]) :
+                                    if a_tuple["isAttributeOf"] not in vref_list :
+                                        vref_list.append(a_tuple["isAttributeOf"])
                                 if "Unit" in a_tuple :
                                     output_file.write(" ;\n\tsio:hasUnit " + a_tuple["Unit"])
                                 if "Time" in a_tuple :
