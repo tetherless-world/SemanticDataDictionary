@@ -1,6 +1,7 @@
 import urllib2
 import csv
 import sys
+import re
 
 kb=":"
 out_fn = "out.ttl"
@@ -93,10 +94,14 @@ except:
     sys.exit(1)
 
 try: 
+    dialect = csv.Sniffer().sniff(sdd_file.read(),delimiters=',\t')
+    sdd_file.seek(0)
+    sdd_reader=csv.reader(sdd_file,dialect)    
+    #sdd_reader=csv.reader(sdd_file)
     row_num=0
-    sdd_reader=csv.reader(sdd_file)
     # Set virtual and actual columns
     for row in sdd_reader :
+        #print row
         if row_num==0:
             sdd_key = row
         else :
@@ -346,9 +351,13 @@ if cb_fn is not None :
         print "Error: The specified Codebook file does not exist."
         sys.exit(1)
     try :
-        row_num=0
-        cb_reader=csv.reader(cb_file)
+        dialect = csv.Sniffer().sniff(cb_file.read(),delimiters=',\t')
+        cb_file.seek(0)
+        cb_reader=csv.reader(cb_file,dialect)
+        #cb_reader=csv.reader(cb_file)
+
         inner_tuple_list = []
+        row_num=0
         for row in cb_reader :
             if row_num == 0:
                 cb_key = row
@@ -448,18 +457,23 @@ if data_fn is not None :
         print "Error: The specified Data file does not exist."
         sys.exit(1)
     try :
-        row_num=0
+        dialect = csv.Sniffer().sniff(data_file.read(),delimiters=',\t')
+        data_file.seek(0)
+        data_reader=csv.reader(data_file,dialect)
+        #data_reader=csv.reader(data_file)
         id_index=None
-        data_reader=csv.reader(data_file)
+        row_num=0
         for row in data_reader :
             if row_num==0:
                 try :
-                    data_key = row
                     #print row
+                    #if '\t' in row[0] :
+                    #    row = re.split(r'\t+',row[0])
+                    data_key = row
                     for item in row :
                         for a_tuple in actual_tuples :
                             if item == a_tuple["Column"] :
-                                if (a_tuple["Attribute"] == "hasco:originalID") or (a_tuple["Attribute"] == "sio:Identifier") :
+                                if ((a_tuple["Attribute"] == "hasco:originalID") or (a_tuple["Attribute"] == "sio:Identifier")) :
                                     #print "Found ID"
                                     id_index = row.index(item)
                                     for v_tuple in virtual_tuples :
@@ -472,9 +486,12 @@ if data_fn is not None :
                 except:
                     print "Warning: Something went wrong on the first Data row."
             else:
+                #if '\t' in row[0] :
+                #    row = re.split(r'\t+',row[0])
                 try :
                     vref_list = []
                     for a_tuple in actual_tuples :
+                        #print a_tuple
                         if (a_tuple["Column"] in data_key ) :
                             try :
                                 output_file.write(kb + a_tuple["Column"].replace(" ","_") + "-" + row[id_index] + " a " + a_tuple["Attribute"])
@@ -523,7 +540,7 @@ if data_fn is not None :
                                             output_file.write(" ;\n\tsio:hasValue \"" + row[data_key.index(a_tuple["Column"])] + "\"")
                                 except :
                                     print "Error writing data value"
-                                    print row[data_key.index(a_tuple["Column"])]
+                                    #print row[data_key.index(a_tuple["Column"])]
                                 output_file.write(" .\n\n")
                             except :
                                 print "Unable to process tuple" + a_tuple.__str__()
