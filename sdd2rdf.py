@@ -11,7 +11,7 @@ studyRef = None
 
 # Need to implement input flags rather than ordering
 if (len(sys.argv) < 2) :
-    print "Usage: python sdd2owl.py <SDD_file> [<data_file>] [<codebook_file>] [<output_file>] [kb_prefix]\nOptional arguments can be skipped by entering '!'"
+    print "Usage: python sdd2rdf.py <SDD_file> [<data_file>] [<codebook_file>] [<output_file>] [kb_prefix]\nOptional arguments can be skipped by entering '!'"
     sys.exit(1)
 
 if (len(sys.argv) > 1) :
