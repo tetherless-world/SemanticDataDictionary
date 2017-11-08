@@ -616,14 +616,15 @@ if data_fn is not None :
                 except:
                     print "Error: Something went wrong when processing actual tuples."
                     sys.exit(1)
-            output_file.write(kb + "assertion-" + row[id_index] + " {")
-            output_file.write(assertionString + "\n}\n\n")
-            output_file.write(kb + "provenance-" + row[id_index] + " {")
-            provenanceString = "\n\t" + kb + "assertion-" + row[id_index] + " prov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString
-            output_file.write(provenanceString + "\n}\n\n")
-            output_file.write(kb + "pubInfo-" + row[id_index] + " {")
-            publicationInfoString = "\n\t" + kb + "nanoPub-" + row[id_index] + " prov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + publicationInfoString
-            output_file.write(publicationInfoString + "\n}\n\n")
+            if row_num != 0 :
+                output_file.write(kb + "assertion-" + row[id_index] + " {")
+                output_file.write(assertionString + "\n}\n\n")
+                output_file.write(kb + "provenance-" + row[id_index] + " {")
+                provenanceString = "\n\t" + kb + "assertion-" + row[id_index] + " prov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString
+                output_file.write(provenanceString + "\n}\n\n")
+                output_file.write(kb + "pubInfo-" + row[id_index] + " {")
+                publicationInfoString = "\n\t" + kb + "nanoPub-" + row[id_index] + " prov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + publicationInfoString
+                output_file.write(publicationInfoString + "\n}\n\n")
             row_num += 1
     except :
         print "Warning: Unable to process Data file"
