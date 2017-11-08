@@ -374,7 +374,7 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
             actual_tuple["wasGeneratedBy"]=item[generated_by_ind]
         provenanceString += " .\n"
         if (position_ind is not None) and (item[position_ind] != "") :
-            publicationInfoString += "\n\t" + kb + item[column_ind].replace(" ","_") + "\thasco:hasPosition\t\"" + item[position_ind] + "\"^^xsd:Integer ."
+            publicationInfoString += "\n\t" + kb + item[column_ind].replace(" ","_") + "\thasco:hasPosition\t\"" + item[position_ind] + "\"^^xsd:integer ."
             actual_tuple["hasPosition"]=item[position_ind]
         #output_file.write(" .\n}\n\n")
         actual_tuples.append(actual_tuple)
