@@ -2,7 +2,6 @@ import urllib2
 import csv
 import sys
 import re
-import numbers
 from datetime import datetime
 import time
 
@@ -608,7 +607,8 @@ if data_fn is not None :
                                 publicationInfoString += "\n\t" + kb + a_tuple["Column"].replace(" ","_") + "-" + row[id_index]
                                 publicationInfoString += "\n\t\tprov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
                                 if "hasPosition" in a_tuple :
-                                    publicationInfoString += ";\n\t\thasco:hasPosition\t\"" + a_tuple["hasPosition"] + "\"^^xsd:integer .\n"
+                                    publicationInfoString += ";\n\t\thasco:hasPosition\t\"" + a_tuple["hasPosition"] + "\"^^xsd:integer"
+                                publicationInfoString += " .\n"
                             except :
                                 print "Unable to process tuple" + a_tuple.__str__()
                     for vref in vref_list :
