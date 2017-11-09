@@ -158,6 +158,13 @@ def checkVirtual(input_word) :
         sys.exit(1)
 
 
+def isfloat(value):
+  try:
+    float(value)
+    return True
+  except ValueError:
+    return False
+
 #virtual_list is a list of tuples
 def writeVirtualRDF(virtual_list, virtual_tuples, output_file) :
     #output_file.write(kb + "head-" + item[column_ind][2:] + " { "
@@ -289,7 +296,7 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
             actual_tuple["wasGeneratedBy"]=item.wasGeneratedBy
         provenanceString += " .\n"
         if (pd.notnull(item.hasPosition)) :
-            publicationInfoString += "\n\t" + kb + item.Column.replace(" ","_") + "\thasco:hasPosition\t\"" + item.hasPosition + "\"^^xsd:Integer ."
+            publicationInfoString += "\n\t" + kb + item.Column.replace(" ","_") + "\thasco:hasPosition\t\"" + item.hasPosition + "\"^^xsd:integer ."
             actual_tuple["hasPosition"]=item.hasPosition
         #output_file.write(" .\n}\n\n")
         actual_tuples.append(actual_tuple)
@@ -300,6 +307,42 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
     output_file.write(provenanceString + "\n}\n\n")
     output_file.write(kb + "pubInfo-actual_entry {\n\t" + kb + "nanoPub-actual_entry\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .")
     output_file.write(publicationInfoString + "\n}\n\n")
+
+def writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_column, index) : 
+    try :
+        for v_tuple in virtual_tuples :
+            if (v_tuple["Column"] == v_column) :
+                if "Study" in v_tuple :
+                    #print "Got to Study\n"
+                    continue
+                else :
+                    assertionString += "\n\t" + kb + v_tuple["Column"][2:] + "-" + index + "\trdf:type\t" + kb + v_tuple["Column"][2:]
+                    if "Entity" in v_tuple :
+                        assertionString += ";\n\t\trdf:type\t" + v_tuple["Entity"]
+                    if "Attribute" in v_tuple :
+                        assertionString += ";\n\t\trdf:type\t" + v_tuple["Attribute"]
+                    if "Subject" in v_tuple :
+                        assertionString += ";\n\t\tsio:hasIdentifier " + kb + v_tuple["Subject"] + "-" + index
+                    if "inRelationTo" in v_tuple :
+                        if ("Role" in v_tuple) and ("Relation" not in v_tuple) :
+                            assertionString += " ;\n\t\tsio:hasRole [ rdf:type\t" + v_tuple["Role"] + " ;\n\t\t\tsio:inRelationTo " + convertVirtualToKGEntry(v_tuple["inRelationTo"], index) + " ]"
+                        elif ("Role" not in v_tuple) and ("Relation" in v_tuple) :
+                            assertionString += " ;\n\t\t" + v_tuple["Relation"] + " " + convertVirtualToKGEntry(v_tuple["inRelationTo"],index)
+                        elif ("Role" not in v_tuple) and ("Relation" not in v_tuple) :
+                            assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(v_tuple["inRelationTo"],index)
+                    assertionString += " .\n"
+                    if "wasGeneratedBy" in v_tuple : 
+                        provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(v_tuple["wasGeneratedBy"],index)
+                    if "wasDerivedFrom" in v_tuple : 
+                        provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(v_tuple["wasDerivedFrom"],index)
+                    if not provenanceString is "" :
+                        provenanceString += " .\n"
+                    if ("wasGeneratedBy" in v_tuple ) and (checkVirtual(v_tuple["wasGeneratedBy"])) :
+                        writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_tuple["wasGeneratedBy"], index)
+                    if ("wasDerivedFrom" in v_tuple) and (checkVirtual(v_tuple["wasDerivedFrom"])) :
+                        writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_tuple["wasDerivedFrom"], index)
+    except :
+        print "Warning: Unable to create virtual entry."
 
 writeVirtualRDF(virtual_list, virtual_tuples, output_file)
 writeActualRDF(actual_list, actual_tuples, output_file)
@@ -327,7 +370,6 @@ if cb_fn is not None :
             row_num += 1
     except :
         print "Warning: Unable to process Codebook file"
-
 
 def convertFromCB(dataVal,column_name) :
     if column_name in cb_tuple :
