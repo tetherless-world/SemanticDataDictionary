@@ -4,6 +4,7 @@ import sys
 import re
 from datetime import datetime
 import time
+import pandas as pd
 
 kb=":"
 out_fn = "out.ttl"
@@ -55,9 +56,11 @@ for prefix in prefixes :
     output_file.write(prefix)
 output_file.write("\n")
 
+# K: parameterize this, too?
 code_mappings_url = 'https://raw.githubusercontent.com/tetherless-world/chear-ontology/master/code_mappings.csv'
-code_mappings_response = urllib2.urlopen(code_mappings_url)
-code_mappings_reader = csv.reader(code_mappings_response)
+#code_mappings_response = urllib2.urlopen(code_mappings_url)
+#code_mappings_reader = csv.reader(code_mappings_response)
+code_mappings_reader = pd.read_csv(code_mappings_url)
 
 column_ind = None
 attr_ind = None
@@ -90,46 +93,34 @@ virtual_tuples = []
 cb_tuple = {}
 
 try :
-    sdd_file = open(sdd_fn, 'r')
+    #sdd_file = open(sdd_fn, 'r')
+    sdd_file = pd.read_csv(sdd_fn)
 except:
     print "Error: The specified SDD file does not exist."
     sys.exit(1)
 
 try: 
-    dialect = csv.Sniffer().sniff(sdd_file.read(),delimiters=',\t')
-    sdd_file.seek(0)
-    sdd_reader=csv.reader(sdd_file,dialect)    
-    #sdd_reader=csv.reader(sdd_file)
-    row_num=0
     # Set virtual and actual columns
-    for row in sdd_reader :
-        #print row
-        if row_num==0:
-            sdd_key = row
+    for row in sdd_file.itertuples() :
+        if (pd.isnull(row.Column)) :
+            print "Error: The SDD must have a column named 'Column'"
+            sys.exit(1)
+        if row.Column.startswith("??") :
+            virtual_list.append(row)
         else :
-            try :
-                column_ind = sdd_key.index("Column")
-                if row[column_ind].startswith("??") :
-                    virtual_list.append(row)
-                else :
-                    actual_list.append(row)
-            except:
-                print "Error: The SDD must have a column named 'Column'"
-                sys.exit(1)
-        row_num += 1
+            actual_list.append(row)
 except : 
     print "Something went wrong when trying to read the SDD"
     sys.exit(1)
 
-for code_row in code_mappings_reader :
-    unit_code_list.append(code_row[0])
-    unit_uri_list.append(code_row[1])
-    unit_label_list.append(code_row[2])
-
-# Remove list labels
-del unit_code_list[0]
-del unit_uri_list[0] 
-del unit_label_list[0]
+#Using itertuples on a data frame makes the column heads case-sensitive
+for code_row in code_mappings_reader.itertuples() :
+    if pd.notnull(code_row.code):
+        unit_code_list.append(code_row.code)
+    if pd.notnull(code_row.uri):
+        unit_uri_list.append(code_row.uri)
+    if pd.notnull(code_row.label):
+        unit_label_list.append(code_row.label)
 
 def codeMapper(input_word) :
     unitVal = input_word
@@ -168,88 +159,15 @@ def checkVirtual(input_word) :
         print "Something went wrong in checkVirtual()"
         sys.exit(1)
 
-# Set indices
-try :
-    attr_ind = sdd_key.index("Attribute")
-except :
-    print "Error: The SDD must have a column named 'Attribute'"
-    sys.exit(1)
-
-try :
-    attr_of_ind = sdd_key.index("attributeOf")
-except :
-    print "Error: The SDD must have a column named 'attributeOf'"
-    sys.exit(1)
-
-try :
-    entity_ind = sdd_key.index("Entity")
-except :
-    print "Error: The SDD must have a column named 'Entity'"
-    sys.exit(1)
-
-try :
-    unit_ind = sdd_key.index("Unit")
-except :
-    print "Error: The SDD must have a column named 'Unit'"
-    sys.exit(1)
-
-try :
-    time_ind = sdd_key.index("Time")
-except :
-    print "Warning: Optional SDD column 'Time' is missing"
-
-try :
-    role_ind = sdd_key.index("Role")
-except :
-    print "Error: The SDD must have a column named 'Role'"
-    sys.exit(1)
-
-try:
-    relation_ind = sdd_key.index("Relation")
-except :
-    print "Error: The SDD must have a column named 'Relation'"
-    sys.exit(1)
-
-try :
-    relation_to_ind = sdd_key.index("inRelationTo")
-except :
-    print "Error: The SDD must have a column named 'inRelationTo'"
-    sys.exit(1)
-
-try:
-    derived_from_ind = sdd_key.index("wasDerivedFrom")
-except :
-    print "Warning: Optional SDD column 'wasDerivedFrom' is missing"
-
-try:
-    generated_by_ind = sdd_key.index("wasGeneratedBy")
-except :
-    print "Warning: Optional SDD column 'wasGeneratedBy' is missing"
-
-try:
-    position_ind = sdd_key.index("hasPosition")    
-except :
-    print "Warning: Optional SDD column 'hasPosition' is missing"
-
-try:
-    label_ind = sdd_key.index("Label")    
-except :
-    print "Warning: Optional SDD column 'Label' is missing"
-
-try:
-    comment_ind = sdd_key.index("Comment")    
-except :
-    print "Warning: Optional SDD column 'Comment' is missing"
-
 def isfloat(value):
-  try:
-    float(value)
-    return True
-  except ValueError:
-    return False
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
 
 def writeVirtualRDF(virtual_list, virtual_tuples, output_file) :
-    #output_file.write(kb + "head-" + item[column_ind][2:] + " { "
+    #output_file.write(kb + "head-" + item.Column[2:] + " { "
     assertionString = ''
     provenanceString = ''
     output_file.write(kb + "head-virtual_entry { ")
@@ -260,53 +178,53 @@ def writeVirtualRDF(virtual_list, virtual_tuples, output_file) :
     output_file.write(" .\n}\n\n")
     for item in virtual_list :
         virtual_tuple = {}
-        assertionString += "\n\t" + kb + item[column_ind][2:] + "\trdf:type\towl:Class"
-        assertionString += " ;\n\t\trdfs:label \"" + item[column_ind][2:] + "\""
+        assertionString += "\n\t" + kb + item.Column[2:] + "\trdf:type\towl:Class"
+        assertionString += " ;\n\t\trdfs:label \"" + item.Column[2:] + "\""
         # Set the rdf:type of the virtual row to either the Attribute or Entity value (or else owl:Individual)
-        if (item[entity_ind] != "") and (item[attr_ind] == "") :
-            assertionString += " ;\n\t\trdfs:subClassOf " + codeMapper(item[entity_ind])
-            virtual_tuple["Column"]=item[column_ind]
-            virtual_tuple["Entity"]=codeMapper(item[entity_ind])
+        if (pd.notnull(item.Entity)) and (pd.isnull(item.Attribute)) :
+            assertionString += " ;\n\t\trdfs:subClassOf " + codeMapper(item.Entity)
+            virtual_tuple["Column"]=item.Column
+            virtual_tuple["Entity"]=codeMapper(item.Entity)
             if (virtual_tuple["Entity"] == "hasco:Study") :
                 global studyRef
-                studyRef = item[column_ind]
-                virtual_tuple["Study"] = item[column_ind]
-        elif (item[entity_ind] == "") and (item[attr_ind] != "") :
-            assertionString += " ;\n\t\trdfs:subClassOf " + codeMapper(item[attr_ind])
-            virtual_tuple["Column"]=item[column_ind]
-            virtual_tuple["Attribute"]=codeMapper(item[attr_ind])
+                studyRef = item.Column
+                virtual_tuple["Study"] = item.Column
+        elif (pd.notnull(item.Entity)) and (pd.notnull(item.Attribute)) :
+            assertionString += " ;\n\t\trdfs:subClassOf " + codeMapper(item.Attribute)
+            virtual_tuple["Column"]=item.Column
+            virtual_tuple["Attribute"]=codeMapper(item.Attribute)
         else :
             print "Warning: Virtual column not assigned an Entity or Attribute value, or was assigned both."
-            virtual_tuple["Column"]=item[column_ind]
+            virtual_tuple["Column"]=item.Column
         
         # If there is a value in the inRelationTo column ...
-        if (item[relation_to_ind] != "") :
-            virtual_tuple["inRelationTo"]=item[relation_to_ind]
+        if (pd.notnull(item.inRelationTo)) :
+            virtual_tuple["inRelationTo"]=item.inRelationTo
             # If there is a value in the Relation column but not the Role column ...
-            if (item[relation_ind] != "") and (item[role_ind] == "") :
-                assertionString += " ;\n\t\t" + item[relation_ind] + " " + convertVirtualToKGEntry(item[relation_to_ind]) 
-                virtual_tuple["Relation"]=item[relation_ind]
+            if (pd.notnull(item.Relation)) and (pd.isnull(item.Role)) :
+                assertionString += " ;\n\t\t" + item.Relation + " " + convertVirtualToKGEntry(item.inRelationTo) 
+                virtual_tuple["Relation"]=item.Relation
             # If there is a value in the Role column but not the Relation column ...
-            elif (item[relation_ind] == "") and (item[role_ind] != "") :
-                assertionString += " ;\n\t\tsio:hasRole [ rdf:type\t" + item[role_ind] + " ;\n\t\t\tsio:inRelationTo " + convertVirtualToKGEntry(item[relation_to_ind]) + " ]"
-                virtual_tuple["Role"]=item[role_ind]
+            elif (pd.isnull(item.Relation)) and (pd.notnull(item.Role)) :
+                assertionString += " ;\n\t\tsio:hasRole [ rdf:type\t" + item.Role + " ;\n\t\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo) + " ]"
+                virtual_tuple["Role"]=item.Role
             # If there is a value in the Role and Relation columns ...
-            elif (item[relation_ind] != "") and (item[role_ind] != "") :
-                virtual_tuple["Relation"]=item[relation_ind]
-                virtual_tuple["Role"]=item[role_ind]
-                assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item[relation_to_ind]) 
+            elif (pd.notnull(item.Relation)) and (pd.notnull(item.Role)) :
+                virtual_tuple["Relation"]=item.Relation
+                virtual_tuple["Role"]=item.Role
+                assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo) 
         assertionString += " .\n"
         #output_file.write(" .\n}\n\n")
         # Nanopublication provenance
-        #output_file.write(kb + "provenance-" + item[column_ind][2:] + " { ")
-        provenanceString += "\n\t" + kb + item[column_ind][2:] 
+        #output_file.write(kb + "provenance-" + item.Column[2:] + " { ")
+        provenanceString += "\n\t" + kb + item.Column[2:] 
         provenanceString +="\n\t\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
-        if (derived_from_ind is not None) and (item[derived_from_ind] != "") :
-            provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(item[derived_from_ind])
-            virtual_tuple["wasDerivedFrom"]=item[derived_from_ind]
-        if (generated_by_ind is not None) and (item[generated_by_ind] != "") :
-            provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(item[generated_by_ind])
-            virtual_tuple["wasGeneratedBy"]=item[generated_by_ind]
+        if (derived_from_ind is not None) and (item.wasDerivedFrom != "") :
+            provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(item.wasDerivedFrom)
+            virtual_tuple["wasDerivedFrom"]=item.wasDerivedFrom
+        if (generated_by_ind is not None) and (item.wasGeneratedBy != "") :
+            provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(item.wasGeneratedBy)
+            virtual_tuple["wasGeneratedBy"]=item.wasGeneratedBy
         provenanceString += " .\n"
         virtual_tuples.append(virtual_tuple)
     output_file.write(kb + "assertion-virtual_entry {")
@@ -328,53 +246,57 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
     output_file.write(" .\n}\n\n")
     for item in actual_list :
         actual_tuple = {}
-        assertionString += "\n\t" + kb + item[column_ind].replace(" ","_") + "\trdf:type\towl:Class"
-        #output_file.write(" ;\n\trdfs:label \"" + item[column_ind] + "\"")
-        if (item[attr_ind] != "") :
-            assertionString += " ;\n\t\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper(item[attr_ind]))
-            actual_tuple["Column"]=item[column_ind]
-            actual_tuple["Attribute"]=codeMapper(item[attr_ind])
+        assertionString += "\n\t" + kb + item.Column.replace(" ","_") + "\trdf:type\towl:Class"
+        #output_file.write(" ;\n\trdfs:label \"" + item.Column + "\"")
+        if (pd.notnull(item.Attribute)) :
+            assertionString += " ;\n\t\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper(item.Attribute))
+            actual_tuple["Column"]=item.Column
+            actual_tuple["Attribute"]=codeMapper(item.Attribute)
         else :
-            print "Error: Actual column not assigned an Attribute value."
-            sys.exit(1)
-            #output_file.write(kb + item[column_ind] + " a owl:Individual")
-        if (item[attr_of_ind] != "") :
-            assertionString += " ;\n\t\tsio:isAttributeOf " + convertVirtualToKGEntry(item[attr_of_ind])
-            actual_tuple["isAttributeOf"]=item[attr_of_ind]
+            assertionString += " ;\n\t\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper("sio:Attribute"))
+            actual_tuple["Column"]=item.Column
+            actual_tuple["Attribute"]=codeMapper("sio:Attribute")
+            print "Warning: Actual column not assigned an Attribute value."
+            #print "Error: Actual column not assigned an Attribute value."
+            #sys.exit(1)
+            #output_file.write(kb + item.Column + " a owl:Individual")
+        if (pd.notnull(item.attributeOf)) :
+            assertionString += " ;\n\t\tsio:isAttributeOf " + convertVirtualToKGEntry(item.attributeOf)
+            actual_tuple["isAttributeOf"]=item.attributeOf
         else :
             print "Error: Actual column not assigned an isAttributeOf value."
             sys.exit(1)
-        if (item[unit_ind] != "") :
-            assertionString += " ;\n\t\tsio:hasUnit " + codeMapper(item[unit_ind])
-            actual_tuple["Unit"] = codeMapper(item[unit_ind])
-        if (time_ind is not None) and (item[time_ind] != "") :
-            assertionString += " ;\n\t\tsio:existsAt " + convertVirtualToKGEntry(item[time_ind])
-            actual_tuple["Time"]=item[time_ind]
-        if (relation_to_ind is not None) and (item[relation_to_ind] != "") :
-            assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item[relation_to_ind])
-            actual_tuple["inRelationTo"]=item[relation_to_ind]
-        if (relation_ind is not None) and (item[relation_ind] != "") :
-            assertionString += " ;\n\t\t" + item[relation_ind] + " " + convertVirtualToKGEntry(item[relation_to_ind])
-            actual_tuple["Relation"]=item[relation_ind]
-        if (label_ind is not None) and (item[label_ind] != "") :
-            assertionString += " ;\n\t\trdfs:label \"" + item[label_ind] + "\"^^xsd:String" 
-            actual_tuple["Label"]=item[label_ind]
-        if (comment_ind is not None) and (item[comment_ind] != "") :
-            assertionString += " ;\n\t\trdfs:comment \"" + item[comment_ind] + "\"^^xsd:String"
-            actual_tuple["Comment"]=item[comment_ind]
+        if (pd.notnull(item.Unit)) :
+            assertionString += " ;\n\t\tsio:hasUnit " + codeMapper(item.Unit)
+            actual_tuple["Unit"] = codeMapper(item.Unit)
+        if (pd.notnull(item.Time)) :
+            assertionString += " ;\n\t\tsio:existsAt " + convertVirtualToKGEntry(item.Time)
+            actual_tuple["Time"]=item.Time
+        if (pd.notnull(item.Relation) and pd.notnull(item.inRelationTo)) :
+            assertionString += " ;\n\t\t" + item.Relation + " " + convertVirtualToKGEntry(item.inRelationTo)
+            actual_tuple["Relation"]=item.Relation
+        elif (pd.notnull(item.inRelationTo)) :
+            assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo)
+            actual_tuple["inRelationTo"]=item.inRelationTo
+        if (pd.notnull(item.Label)) :
+            assertionString += " ;\n\t\trdfs:label \"" + item.Label + "\"^^xsd:String" 
+            actual_tuple["Label"]=item.Label
+        if (pd.notnull(item.Comment)) :
+            assertionString += " ;\n\t\trdfs:comment \"" + item.Comment + "\"^^xsd:String"
+            actual_tuple["Comment"]=item.Comment
         assertionString += " .\n" 
-        provenanceString += "\n\t" + kb + item[column_ind].replace(" ","_")
+        provenanceString += "\n\t" + kb + item.Column.replace(" ","_")
         provenanceString += "\n\t\tprov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
-        if (derived_from_ind is not None) and (item[derived_from_ind] != "") :
-            provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(item[derived_from_ind])
-            actual_tuple["wasDerivedFrom"]=item[derived_from_ind]
-        if (generated_by_ind is not None) and (item[generated_by_ind] != "") :
-            provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(item[generated_by_ind])
-            actual_tuple["wasGeneratedBy"]=item[generated_by_ind]
+        if (pd.notnull(item.wasDerivedFrom)) :
+            provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(item.wasDerivedFrom)
+            actual_tuple["wasDerivedFrom"]=item.wasDerivedFrom
+        if (pd.notnull(item.wasGeneratedBy)) :
+            provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(item.wasGeneratedBy)
+            actual_tuple["wasGeneratedBy"]=item.wasGeneratedBy
         provenanceString += " .\n"
-        if (position_ind is not None) and (item[position_ind] != "") :
-            publicationInfoString += "\n\t" + kb + item[column_ind].replace(" ","_") + "\thasco:hasPosition\t\"" + item[position_ind] + "\"^^xsd:integer ."
-            actual_tuple["hasPosition"]=item[position_ind]
+        if (pd.notnull(item.hasPosition)) :
+            publicationInfoString += "\n\t" + kb + item.Column.replace(" ","_") + "\thasco:hasPosition\t\"" + str(item.hasPosition) + "\"^^xsd:integer ."
+            actual_tuple["hasPosition"]=item.hasPosition
         #output_file.write(" .\n}\n\n")
         actual_tuples.append(actual_tuple)
     output_file.write(kb + "assertion-actual_entry {")
@@ -425,173 +347,128 @@ writeVirtualRDF(virtual_list, virtual_tuples, output_file)
 writeActualRDF(actual_list, actual_tuples, output_file)
 
 if cb_fn is not None :
-    cb_column_ind = None
-    cb_code_ind = None
-    cb_label_ind = None
-    cb_class_ind = None
-    cb_comment_ind = None
-    cb_note_ind = None
     try :
-        cb_file = open(cb_fn, 'r')
+        cb_file = pd.read_csv(cb_fn)
     except :
         print "Error: The specified Codebook file does not exist."
         sys.exit(1)
     try :
-        dialect = csv.Sniffer().sniff(cb_file.read(),delimiters=',\t')
-        cb_file.seek(0)
-        cb_reader=csv.reader(cb_file,dialect)
-
         inner_tuple_list = []
         row_num=0
-        for row in cb_reader :
-            if row_num == 0:
-                cb_key = row
-                try :
-                    cb_column_ind = cb_key.index("Column")
-                except :
-                    print "Error: The Codebook must have a column named 'Column'"
-                    sys.exit(1)
-                try :
-                    cb_code_ind = cb_key.index("Code")
-                except :
-                    print "Error: The Codebook must have a column named 'Code'"
-                    sys.exit(1)
-                try :
-                    cb_label_ind = cb_key.index("Label")
-                except :
-                    print "Error: The Codebook must have a column named 'Label'"
-                    sys.exit(1)
-                try :
-                    cb_class_ind = cb_key.index("Class")
-                except :
-                    print "Warning: The Codebook is missing an optional column named 'Class'"
-                try :
-                    cb_comment_ind = cb_key.index("Comment")
-                except :
-                    print "Warning: The Codebook is missing an optional column named 'Comment'"
-                try :
-                    cb_note_ind = cb_key.index("Note")
-                except :
-                    print "Warning: The Codebook is missing an optional column named 'Note'"
-            else :
-                if (row[cb_column_ind] not in cb_tuple) :
-                    inner_tuple_list=[]
-                inner_tuple = {}
-                inner_tuple["Code"]=row[cb_code_ind]
-                inner_tuple["Label"]=row[cb_label_ind]
-                if(cb_class_ind is not None) :
-                    inner_tuple["Class"]=row[cb_class_ind]
-                inner_tuple_list.append(inner_tuple)
-                cb_tuple[row[cb_column_ind]]=inner_tuple_list
+        for row in cb_file.itertuples():
+            if (pd.notnull(row.Column) and row.Column not in cb_tuple) :
+                inner_tuple_list=[]
+            inner_tuple = {}
+            inner_tuple["Code"]=row.Code
+        if(pd.notnull(row.Label)):
+            inner_tuple["Label"]=row.Label
+            if(pd.notnull(row.Class)) :
+                inner_tuple["Class"]=row.Class
+            inner_tuple_list.append(inner_tuple)
+            cb_tuple[row.Column]=inner_tuple_list
             row_num += 1
     except :
         print "Warning: Unable to process Codebook file"
 
 if data_fn is not None :
     try :
-        data_file = open(data_fn, 'r')
+        data_file = pd.read_csv(data_fn)
     except :
         print "Error: The specified Data file does not exist."
         sys.exit(1)
     try :
-        dialect = csv.Sniffer().sniff(data_file.read(),delimiters=',\t')
-        data_file.seek(0)
-        data_reader=csv.reader(data_file,dialect)
-        #data_reader=csv.reader(data_file)
+        # ensure that there is a column annotated as the sio:Identifier or hasco:originalID in the data file:
+        # TODO make sure this is getting the first available ID property for the _subject_ (and not anything else)
         id_index=None
         row_num=0
-        for row in data_reader :
+        col_headers=list(data_file.columns.values)
+        try :
+            for a_tuple in actual_tuples :
+                #print a_tuple["Column"]
+                if ((a_tuple["Attribute"] == "hasco:originalID") or (a_tuple["Attribute"] == "sio:Identifier")) :
+                    if(a_tuple["Column"] in col_headers) :
+                        #print a_tuple["Column"]
+                        id_index = col_headers.index(a_tuple["Column"]) + 1
+                        #print id_index
+                        for v_tuple in virtual_tuples :
+                            if (a_tuple["isAttributeOf"] == v_tuple["Column"]) :
+                                v_tuple["Subject"]=a_tuple["Column"].replace(" ","_")
+                if (id_index is None) :
+                    print "Error: To process Data it is necessary to have a \"hasco:originalID\" or \"sio:Identifier\" Attribute in the SDD."
+                    sys.exit(1)
+        except: 
+            print "Error processing column headers"
+        for row in data_file.itertuples() :
+            #print row
             assertionString = ''
             provenanceString = ''
             publicationInfoString = ''
-            if row_num==0:
-                try :
-                    #print row
-                    #if '\t' in row[0] :
-                    #    row = re.split(r'\t+',row[0])
-                    data_key = row
-                    for item in row :
-                        for a_tuple in actual_tuples :
-                            if item == a_tuple["Column"] :
-                                if ((a_tuple["Attribute"] == "hasco:originalID") or (a_tuple["Attribute"] == "sio:Identifier")) :
-                                    #print "Found ID"
-                                    id_index = row.index(item)
-                                    for v_tuple in virtual_tuples :
-                                        if (a_tuple["isAttributeOf"] == v_tuple["Column"]) :
-                                            v_tuple["Subject"]=a_tuple["Column"].replace(" ","_")
-                                            #print v_tuple
-                    if (id_index is None) :
-                        print "Error: To process Data it is necessary to have a \"hasco:originalID\" or \"sio:Identifier\" Attribute in the SDD."
-                        sys.exit(1)
-                except:
-                    print "Warning: Something went wrong on the first Data row."
-            else:
-                #print row
+            try:
                 if row_num==1:
-                    output_file.write(kb + "head-" + row[id_index] + " {")
-                    output_file.write("\n\t" + kb + "nanoPub-" + row[id_index])
+                    output_file.write(kb + "head-" + str(row[id_index]) + " {")
+                    output_file.write("\n\t" + kb + "nanoPub-" + str(row[id_index]))
                     output_file.write("\n\t\trdf:type np:Nanopublication")
-                    output_file.write(" ;\n\t\tnp:hasAssertion " + kb + "assertion-" + row[id_index])
-                    output_file.write(" ;\n\t\tnp:hasProvenance " + kb + "provenance-" + row[id_index])
-                    output_file.write(" ;\n\t\tnp:hasPublicationInfo " + kb + "pubInfo-" + row[id_index])
+                    output_file.write(" ;\n\t\tnp:hasAssertion " + kb + "assertion-" + str(row[id_index]))
+                    output_file.write(" ;\n\t\tnp:hasProvenance " + kb + "provenance-" + str(row[id_index]))
+                    output_file.write(" ;\n\t\tnp:hasPublicationInfo " + kb + "pubInfo-" + str(row[id_index]))
                     output_file.write(" .\n}\n\n")# Nanopublication head
-                #if '\t' in row[0] :
-                #    row = re.split(r'\t+',row[0])
-                try :
-                    vref_list = []
-                    for a_tuple in actual_tuples :
-                        #print a_tuple
-                        if (a_tuple["Column"] in data_key ) :
+            except : 
+                print "Warning: Something went wrong when creating Nanopublicatipon head."
+            try :
+                vref_list = []
+                for a_tuple in actual_tuples :
+                    #print a_tuple
+                    if (a_tuple["Column"] in col_headers ) :
+                        try :
                             try :
-                                assertionString += "\n\t" + kb + a_tuple["Column"].replace(" ","_") + "-" + row[id_index] + "\trdf:type\t" + a_tuple["Attribute"]
+                                assertionString += "\n\t" + kb + a_tuple["Column"].replace(" ","_") + "-" + str(row[id_index]) + "\trdf:type\t" + a_tuple["Attribute"]
                                 assertionString += " ;\n\t\trdf:type\t" + kb + a_tuple["Column"].replace(" ","_")
-                                assertionString += " ;\n\t\tsio:isAttributeOf " + convertVirtualToKGEntry(a_tuple["isAttributeOf"],row[id_index])
+                                assertionString += " ;\n\t\tsio:isAttributeOf " + convertVirtualToKGEntry(a_tuple["isAttributeOf"],str(row[id_index]))
                                 if checkVirtual(a_tuple["isAttributeOf"]) :
                                     if a_tuple["isAttributeOf"] not in vref_list :
                                         vref_list.append(a_tuple["isAttributeOf"])
                                 if "Unit" in a_tuple :
                                     assertionString += " ;\n\t\tsio:hasUnit " + a_tuple["Unit"]
                                 if "Time" in a_tuple :
-                                    assertionString += " ;\n\t\tsio:existsAt " + convertVirtualToKGEntry(a_tuple["Time"], row[id_index])
+                                    assertionString += " ;\n\t\tsio:existsAt " + convertVirtualToKGEntry(a_tuple["Time"], str(row[id_index]))
                                     if checkVirtual(a_tuple["Time"]) :
                                         if a_tuple["Time"] not in vref_list :
                                             vref_list.append(a_tuple["Time"])
                                 if "Label" in a_tuple :
                                     assertionString += " ;\n\t\trdfs:label \"" + a_tuple["Label"] + "\"^^xsd:String"
                                 if "Comment" in a_tuple :
-                                        assertionString += " ;\n\t\trdfs:comment \"" + a_tuple["Comment"] + "\"^^xsd:String"
-                                try :
-                                    if row[data_key.index(a_tuple["Column"])] != "" :
-                                        #print row[data_key.index(a_tuple["Column"])]
-                                        if cb_fn is not None :
-                                            if a_tuple["Column"] in cb_tuple :
-                                                for tuple_row in cb_tuple[a_tuple["Column"]] :
-                                                    if ("Code" in tuple_row) and tuple_row['Code'] == row[data_key.index(a_tuple["Column"])] :
-                                                        if ("Class" in tuple_row) and (tuple_row['Class'] is not "") :
-                                                            assertionString += " ;\n\t\trdf:type\t" + tuple_row['Class']
-                                                        if ("Label" in tuple_row) and (tuple_row['Label'] is not "") :
-                                                            assertionString += " ;\n\t\trdfs:label\t\"" + tuple_row['Label'] + "\"^^xsd:string"
-                                                        #else :
-                                                        #    return "\"" + tuple_row['Label'] + "\"^^xsd:String"
-                                                #return "\"" + row[data_key.index(a_tuple["Column"])] + "\""
-                                            #assertionString += " ;\n\t\tsio:hasValue\t" + convertFromCB(row[data_key.index(a_tuple["Column"])],a_tuple["Column"])
-                                        if row[data_key.index(a_tuple["Column"])].isdigit() :
-                                            assertionString += " ;\n\t\tsio:hasValue\t\"" + row[data_key.index(a_tuple["Column"])] + "\"^^xsd:integer"
-                                        elif isfloat(row[data_key.index(a_tuple["Column"])]) :
-                                            assertionString += " ;\n\t\tsio:hasValue\t\"" + row[data_key.index(a_tuple["Column"])] + "\"^^xsd:float"
-                                        else :
-                                            assertionString += " ;\n\t\tsio:hasValue\t\"" + row[data_key.index(a_tuple["Column"])] + "\"^^xsd:string"
-                                except :
-                                    print "Error writing data value"
+                                    assertionString += " ;\n\t\trdfs:comment \"" + a_tuple["Comment"] + "\"^^xsd:String"
+                            except :
+                                print "Error writing initial assertion elements"
+                            try :
+                                if row[col_headers.index(a_tuple["Column"])] != "" :
+                                    #print row[col_headers.index(a_tuple["Column"])]
+                                    if cb_fn is not None :
+                                        if a_tuple["Column"] in cb_tuple :
+                                            for tuple_row in cb_tuple[a_tuple["Column"]] :
+                                                if ("Code" in tuple_row) and tuple_row['Code'] == row[col_headers.index(a_tuple["Column"])] :
+                                                    if ("Class" in tuple_row) and (tuple_row['Class'] is not "") :
+                                                        assertionString += " ;\n\t\trdf:type\t" + tuple_row['Class']
+                                                    if ("Label" in tuple_row) and (tuple_row['Label'] is not "") :
+                                                        assertionString += " ;\n\t\trdfs:label\t\"" + tuple_row['Label'] + "\"^^xsd:string"
+                                    if str(row[col_headers.index(a_tuple["Column"])]).isdigit() :
+                                        assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])]) + "\"^^xsd:integer"
+                                    elif isfloat(str(row[col_headers.index(a_tuple["Column"])])) :
+                                        assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])]) + "\"^^xsd:float"
+                                    else :
+                                        assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])]) + "\"^^xsd:string"
                                 assertionString += " .\n"
-                                provenanceString += "\n\t" + kb + a_tuple["Column"].replace(" ","_") + "-" + row[id_index] + "\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
+                            except :
+                                print "Error writing data value to assertion string"
+                            try :
+                                provenanceString += "\n\t" + kb + a_tuple["Column"].replace(" ","_") + "-" + str(row[id_index]) + "\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
                                 if "wasDerivedFrom" in a_tuple :
-                                    provenanceString += " ;\n\t\tprov:wasDerivedFrom\t" + convertVirtualToKGEntry(a_tuple["wasDerivedFrom"], row[id_index])
+                                    provenanceString += " ;\n\t\tprov:wasDerivedFrom\t" + convertVirtualToKGEntry(a_tuple["wasDerivedFrom"], str(row[id_index]))
                                     if checkVirtual(a_tuple["wasDerivedFrom"]) :
                                         if a_tuple["wasDerivedFrom"] not in vref_list :
                                             vref_list.append(a_tuple["wasDerivedFrom"])
                                 if "wasGeneratedBy" in a_tuple :
-                                    provenanceString += " ;\n\t\tprov:wasGeneratedBy\t" + convertVirtualToKGEntry(a_tuple["wasGeneratedBy"], row[id_index])
+                                    provenanceString += " ;\n\t\tprov:wasGeneratedBy\t" + convertVirtualToKGEntry(a_tuple["wasGeneratedBy"], str(row[id_index]))
                                     if checkVirtual(a_tuple["wasGeneratedBy"]) :
                                         if a_tuple["wasGeneratedBy"] not in vref_list :
                                             vref_list.append(a_tuple["wasGeneratedBy"])
@@ -600,40 +477,45 @@ if data_fn is not None :
                                         if a_tuple["inRelationTo"] not in vref_list :
                                             vref_list.append(a_tuple["inRelationTo"])
                                     if "Relation" in a_tuple :
-                                        provenanceString += " ;\n\t\t" + a_tuple["Relation"] + "\t" + convertVirtualToKGEntry(a_tuple["inRelationTo"], row[id_index])
+                                        provenanceString += " ;\n\t\t" + a_tuple["Relation"] + "\t" + convertVirtualToKGEntry(a_tuple["inRelationTo"], str(row[id_index]))
                                     else :
-                                        provenanceString += " ;\n\t\tsio:inRelationTo\t" + convertVirtualToKGEntry(a_tuple["inRelationTo"], row[id_index])
+                                        provenanceString += " ;\n\t\tsio:inRelationTo\t" + convertVirtualToKGEntry(a_tuple["inRelationTo"], str(row[id_index]))
                                 provenanceString += " .\n"
-                                publicationInfoString += "\n\t" + kb + a_tuple["Column"].replace(" ","_") + "-" + row[id_index]
+                                publicationInfoString += "\n\t" + kb + a_tuple["Column"].replace(" ","_") + "-" + str(row[id_index])
                                 publicationInfoString += "\n\t\tprov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
                                 if "hasPosition" in a_tuple :
-                                    publicationInfoString += ";\n\t\thasco:hasPosition\t\"" + a_tuple["hasPosition"] + "\"^^xsd:integer"
+                                    publicationInfoString += ";\n\t\thasco:hasPosition\t\"" + str(a_tuple["hasPosition"]) + "\"^^xsd:integer"
                                 publicationInfoString += " .\n"
                             except :
-                                print "Unable to process tuple" + a_tuple.__str__()
+                                print "Error writing provenance or publication info"
+                        except :
+                            print "Unable to process tuple" + a_tuple.__str__()
+                try: 
                     for vref in vref_list :
-                        writeVirtualEntry(assertionString,provenanceString,publicationInfoString, vref, row[id_index])
-                except:
-                    print "Error: Something went wrong when processing actual tuples."
-                    sys.exit(1)
+                        writeVirtualEntry(assertionString,provenanceString,publicationInfoString, vref, str(row[id_index]))
+                except :
+                    print "Warning: Something went writing vref entries."
+            except:
+                print "Error: Something went wrong when processing actual tuples."
+                sys.exit(1)
             if row_num != 0 :
-                output_file.write(kb + "assertion-" + row[id_index] + " {")
+                output_file.write(kb + "assertion-" + str(row[id_index]) + " {")
                 output_file.write(assertionString + "\n}\n\n")
-                output_file.write(kb + "provenance-" + row[id_index] + " {")
-                provenanceString = "\n\t" + kb + "assertion-" + row[id_index] + " prov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString
+                output_file.write(kb + "provenance-" + str(row[id_index]) + " {")
+                provenanceString = "\n\t" + kb + "assertion-" + str(row[id_index]) + " prov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString
                 output_file.write(provenanceString + "\n}\n\n")
-                output_file.write(kb + "pubInfo-" + row[id_index] + " {")
-                publicationInfoString = "\n\t" + kb + "nanoPub-" + row[id_index] + " prov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + publicationInfoString
+                output_file.write(kb + "pubInfo-" + str(row[id_index]) + " {")
+                publicationInfoString = "\n\t" + kb + "nanoPub-" + str(row[id_index]) + " prov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + publicationInfoString
                 output_file.write(publicationInfoString + "\n}\n\n")
             row_num += 1
     except :
         print "Warning: Unable to process Data file"
 
-sdd_file.close()
+#sdd_file.close()
 output_file.close()
 
-if cb_fn is not None :
-    cb_file.close()
+#if cb_fn is not None :
+#    cb_file.close()
 
-if data_fn is not None : 
-    data_file.close()
+#if data_fn is not None : 
+#    data_file.close()
