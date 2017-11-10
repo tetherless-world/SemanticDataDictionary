@@ -5,6 +5,7 @@ import re
 from datetime import datetime
 import time
 import pandas as pd
+import configparser
 
 kb=":"
 out_fn = "out.ttl"
@@ -14,38 +15,54 @@ studyRef = None
 
 # Need to implement input flags rather than ordering
 if (len(sys.argv) < 2) :
-    print "Usage: python sdd2rdf.py <SDD_file> [<data_file>] [<codebook_file>] [<output_file>] [kb_prefix]\nOptional arguments can be skipped by entering '!'"
+    #print "Usage: python sdd2rdf.py <SDD_file> [<data_file>] [<codebook_file>] [<output_file>] [kb_prefix]\nOptional arguments can be skipped by entering '!'"
+    print "Usage: python sdd2rdf.py <configuration_file>"
     sys.exit(1)
 
-if (len(sys.argv) > 1) :
-    sdd_fn = sys.argv[1]
+#if (len(sys.argv) > 1) :
+#    sdd_fn = sys.argv[1]
+#
+#    if (len(sys.argv) > 2) :
+#        data_fn = sys.argv[2]
+#
+#        if (len(sys.argv) > 3) :
+#            cb_fn = sys.argv[3]
+#            if (len(sys.argv) > 4) :
+#                out_fn = sys.argv[4]
+#                if (len(sys.argv) > 5) :
+#                    if not (sys.argv[5] == "!" ):
+#                        if ":" not in sys.argv[5] :
+#                            kb = sys.argv[5] + ":"
+#                        else :                       
+#                            kb = sys.argv[5]
+#        else :
+#            cb_fn = raw_input("If you wish to use a Codebook file, please type the path and press 'Enter'.\n Otherwise, type '!' and press Enter: ")       
+#    else : 
+#        data_fn = raw_input("If you wish to use a Data file, please type the path and press 'Enter'.\n Otherwise, type '!' and press Enter: ")
+#        cb_fn = raw_input("If you wish to use a Codebook file, please type the path and press 'Enter'.\n Otherwise, type '!' and press Enter: ")
 
-    if (len(sys.argv) > 2) :
-        data_fn = sys.argv[2]
 
-        if (len(sys.argv) > 3) :
-            cb_fn = sys.argv[3]
-            if (len(sys.argv) > 4) :
-                out_fn = sys.argv[4]
-                if (len(sys.argv) > 5) :
-                    if not (sys.argv[5] == "!" ):
-                        if ":" not in sys.argv[5] :
-                            kb = sys.argv[5] + ":"
-                        else :                       
-                            kb = sys.argv[5]
-        else :
-            cb_fn = raw_input("If you wish to use a Codebook file, please type the path and press 'Enter'.\n Otherwise, type '!' and press Enter: ")       
-    else : 
-        data_fn = raw_input("If you wish to use a Data file, please type the path and press 'Enter'.\n Otherwise, type '!' and press Enter: ")
-        cb_fn = raw_input("If you wish to use a Codebook file, please type the path and press 'Enter'.\n Otherwise, type '!' and press Enter: ")
 
-if cb_fn == "!" :
-    cb_fn = None
+#file setup and configuration
+config = configparser.ConfigParser()
+try:
+    config.read(sys.argv[1])
+except:
+    print "[ERROR] Unable to open configuration file."
+    sys.exit(1)
 
-if data_fn == "!" :
-    data_fn = None
+#unspecified parameters in the config file should set the corresponding read string to ""
+prefix_fn = config['Prefixes']['prefixes']
+kb = config['Prefixes']['base_uri'] + ":"
 
-if out_fn == "!" :
+sdd_fn = config['Source Files']['dictionary']
+cb_fn = config['Source Files']['codebook']
+cmap_fn = config['Source Files']['code_mappings']
+data_fn = config['Source Files']['data_file']
+
+out_fn = config['Output Files']['out_file']
+
+if out_fn == "" :
     out_fn = "out.ttl"
 
 output_file = open(out_fn,"w")
@@ -57,10 +74,10 @@ for prefix in prefixes :
 output_file.write("\n")
 
 # K: parameterize this, too?
-code_mappings_url = 'https://raw.githubusercontent.com/tetherless-world/chear-ontology/master/code_mappings.csv'
+#code_mappings_url = 'https://raw.githubusercontent.com/tetherless-world/chear-ontology/master/code_mappings.csv'
 #code_mappings_response = urllib2.urlopen(code_mappings_url)
 #code_mappings_reader = csv.reader(code_mappings_response)
-code_mappings_reader = pd.read_csv(code_mappings_url)
+code_mappings_reader = pd.read_csv(cmap_fn)
 
 column_ind = None
 attr_ind = None
@@ -264,8 +281,12 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
             assertionString += " ;\n\t\tsio:isAttributeOf " + convertVirtualToKGEntry(item.attributeOf)
             actual_tuple["isAttributeOf"]=item.attributeOf
         else :
-            print "Error: Actual column not assigned an isAttributeOf value."
-            sys.exit(1)
+            print "WARN: Actual column not assigned an isAttributeOf value. Skipping...."
+            #assertionString += " ;\n\n"
+            #print "Error: Actual column not assigned an isAttributeOf value."
+            #sys.exit(1)
+            #print "Error: Actual column not assigned an isAttributeOf value."
+            #sys.exit(1)
         if (pd.notnull(item.Unit)) :
             assertionString += " ;\n\t\tsio:hasUnit " + codeMapper(item.Unit)
             actual_tuple["Unit"] = codeMapper(item.Unit)
@@ -370,7 +391,7 @@ if cb_fn is not None :
     except :
         print "Warning: Unable to process Codebook file"
 
-if data_fn is not None :
+if data_fn != "" :
     try :
         data_file = pd.read_csv(data_fn)
     except :
