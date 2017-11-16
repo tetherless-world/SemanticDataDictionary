@@ -79,20 +79,20 @@ output_file.write("\n")
 #code_mappings_reader = csv.reader(code_mappings_response)
 code_mappings_reader = pd.read_csv(cmap_fn)
 
-column_ind = None
-attr_ind = None
-attr_of_ind = None
-entity_ind = None
-unit_ind = None
-time_ind = None
-role_ind = None
-relation_ind = None
-relation_to_ind = None
-derived_from_ind = None
-generated_by_ind = None
-position_ind = None
-label_ind = None
-comment_ind = None
+#column_ind = None
+#attr_ind = None
+#attr_of_ind = None
+#entity_ind = None
+#unit_ind = None
+#time_ind = None
+#role_ind = None
+#relation_ind = None
+#relation_to_ind = None
+#derived_from_ind = None
+#generated_by_ind = None
+#position_ind = None
+#label_ind = None
+#comment_ind = None
 
 sdd_key = None
 cb_key = None
@@ -236,10 +236,10 @@ def writeVirtualRDF(virtual_list, virtual_tuples, output_file) :
         #output_file.write(kb + "provenance-" + item.Column[2:] + " { ")
         provenanceString += "\n\t" + kb + item.Column[2:] 
         provenanceString +="\n\t\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
-        if (derived_from_ind is not None) and (item.wasDerivedFrom != "") :
+        if pd.notnull(item.wasDerivedFrom) :
             provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(item.wasDerivedFrom)
             virtual_tuple["wasDerivedFrom"]=item.wasDerivedFrom
-        if (generated_by_ind is not None) and (item.wasGeneratedBy != "") :
+        if pd.notnull(item.wasGeneratedBy) :
             provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(item.wasGeneratedBy)
             virtual_tuple["wasGeneratedBy"]=item.wasGeneratedBy
         provenanceString += " .\n"
