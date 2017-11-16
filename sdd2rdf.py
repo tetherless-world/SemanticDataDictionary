@@ -20,30 +20,6 @@ if (len(sys.argv) < 2) :
     print "Usage: python sdd2rdf.py <configuration_file>"
     sys.exit(1)
 
-#if (len(sys.argv) > 1) :
-#    sdd_fn = sys.argv[1]
-#
-#    if (len(sys.argv) > 2) :
-#        data_fn = sys.argv[2]
-#
-#        if (len(sys.argv) > 3) :
-#            cb_fn = sys.argv[3]
-#            if (len(sys.argv) > 4) :
-#                out_fn = sys.argv[4]
-#                if (len(sys.argv) > 5) :
-#                    if not (sys.argv[5] == "!" ):
-#                        if ":" not in sys.argv[5] :
-#                            kb = sys.argv[5] + ":"
-#                        else :                       
-#                            kb = sys.argv[5]
-#        else :
-#            cb_fn = raw_input("If you wish to use a Codebook file, please type the path and press 'Enter'.\n Otherwise, type '!' and press Enter: ")       
-#    else : 
-#        data_fn = raw_input("If you wish to use a Data file, please type the path and press 'Enter'.\n Otherwise, type '!' and press Enter: ")
-#        cb_fn = raw_input("If you wish to use a Codebook file, please type the path and press 'Enter'.\n Otherwise, type '!' and press Enter: ")
-
-
-
 #file setup and configuration
 config = configparser.ConfigParser()
 try:
@@ -80,25 +56,6 @@ output_file.write("\n")
 #code_mappings_reader = csv.reader(code_mappings_response)
 code_mappings_reader = pd.read_csv(cmap_fn)
 
-#column_ind = None
-#attr_ind = None
-#attr_of_ind = None
-#entity_ind = None
-#unit_ind = None
-#time_ind = None
-#role_ind = None
-#relation_ind = None
-#relation_to_ind = None
-#derived_from_ind = None
-#generated_by_ind = None
-#position_ind = None
-#label_ind = None
-#comment_ind = None
-
-sdd_key = None
-cb_key = None
-data_key = None
-
 unit_code_list = []
 unit_uri_list = []
 unit_label_list = []
@@ -111,7 +68,6 @@ virtual_tuples = []
 cb_tuple = {}
 
 try :
-    #sdd_file = open(sdd_fn, 'r')
     sdd_file = pd.read_csv(sdd_fn)
 except:
     print "Error: The specified SDD file does not exist."
@@ -185,7 +141,6 @@ def isfloat(value):
         return False
 
 def writeVirtualRDF(virtual_list, virtual_tuples, output_file) :
-    #output_file.write(kb + "head-" + item.Column[2:] + " { "
     assertionString = ''
     provenanceString = ''
     output_file.write(kb + "head-virtual_entry { ")
@@ -232,9 +187,6 @@ def writeVirtualRDF(virtual_list, virtual_tuples, output_file) :
                 virtual_tuple["Role"]=item.Role
                 assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo) 
         assertionString += " .\n"
-        #output_file.write(" .\n}\n\n")
-        # Nanopublication provenance
-        #output_file.write(kb + "provenance-" + item.Column[2:] + " { ")
         provenanceString += "\n\t" + kb + item.Column[2:] 
         provenanceString +="\n\t\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
         if pd.notnull(item.wasDerivedFrom) :
@@ -265,7 +217,6 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
     for item in actual_list :
         actual_tuple = {}
         assertionString += "\n\t" + kb + item.Column.replace(" ","_") + "\trdf:type\towl:Class"
-        #output_file.write(" ;\n\trdfs:label \"" + item.Column + "\"")
         if (pd.notnull(item.Attribute)) :
             assertionString += " ;\n\t\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper(item.Attribute))
             actual_tuple["Column"]=item.Column
@@ -275,19 +226,11 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
             actual_tuple["Column"]=item.Column
             actual_tuple["Attribute"]=codeMapper("sio:Attribute")
             print "Warning: Actual column not assigned an Attribute value."
-            #print "Error: Actual column not assigned an Attribute value."
-            #sys.exit(1)
-            #output_file.write(kb + item.Column + " a owl:Individual")
         if (pd.notnull(item.attributeOf)) :
             assertionString += " ;\n\t\tsio:isAttributeOf " + convertVirtualToKGEntry(item.attributeOf)
             actual_tuple["isAttributeOf"]=item.attributeOf
         else :
             print "WARN: Actual column not assigned an isAttributeOf value. Skipping...."
-            #assertionString += " ;\n\n"
-            #print "Error: Actual column not assigned an isAttributeOf value."
-            #sys.exit(1)
-            #print "Error: Actual column not assigned an isAttributeOf value."
-            #sys.exit(1)
         if (pd.notnull(item.Unit)) :
             assertionString += " ;\n\t\tsio:hasUnit " + codeMapper(item.Unit)
             actual_tuple["Unit"] = codeMapper(item.Unit)
@@ -319,7 +262,6 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
         if (pd.notnull(item.hasPosition)) :
             publicationInfoString += "\n\t" + kb + item.Column.replace(" ","_") + "\thasco:hasPosition\t\"" + str(item.hasPosition) + "\"^^xsd:integer ."
             actual_tuple["hasPosition"]=item.hasPosition
-        #output_file.write(" .\n}\n\n")
         actual_tuples.append(actual_tuple)
     output_file.write(kb + "assertion-actual_entry {")
     output_file.write(assertionString + "\n}\n\n")
@@ -334,7 +276,6 @@ def writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_
         for v_tuple in virtual_tuples :
             if (v_tuple["Column"] == v_column) :
                 if "Study" in v_tuple :
-                    #print "Got to Study\n"
                     continue
                 else :
                     assertionString += "\n\t" + kb + v_tuple["Column"][2:] + "-" + index + "\trdf:type\t" + kb + v_tuple["Column"][2:]
@@ -382,8 +323,8 @@ if cb_fn is not None :
                 inner_tuple_list=[]
             inner_tuple = {}
             inner_tuple["Code"]=row.Code
-        if(pd.notnull(row.Label)):
-            inner_tuple["Label"]=row.Label
+            if(pd.notnull(row.Label)):
+                inner_tuple["Label"]=row.Label
             if(pd.notnull(row.Class)) :
                 inner_tuple["Class"]=row.Class
             inner_tuple_list.append(inner_tuple)
@@ -406,7 +347,6 @@ if data_fn != "" :
         col_headers=list(data_file.columns.values)
         try :
             for a_tuple in actual_tuples :
-                #print a_tuple["Column"]
                 if ((a_tuple["Attribute"] == "hasco:originalID") or (a_tuple["Attribute"] == "sio:Identifier")) :
                     if(a_tuple["Column"] in col_headers) :
                         #print a_tuple["Column"]
@@ -472,17 +412,17 @@ if data_fn != "" :
                                     if cb_fn is not None :
                                         if a_tuple["Column"] in cb_tuple :
                                             for tuple_row in cb_tuple[a_tuple["Column"]] :
-                                                if ("Code" in tuple_row) and tuple_row['Code'] == row[col_headers.index(a_tuple["Column"])] :
+                                                if ("Code" in tuple_row) and tuple_row['Code'] == row[col_headers.index(a_tuple["Column"])+1] :
                                                     if ("Class" in tuple_row) and (tuple_row['Class'] is not "") :
                                                         assertionString += " ;\n\t\trdf:type\t" + tuple_row['Class']
                                                     if ("Label" in tuple_row) and (tuple_row['Label'] is not "") :
                                                         assertionString += " ;\n\t\trdfs:label\t\"" + tuple_row['Label'] + "\"^^xsd:string"
                                     if str(row[col_headers.index(a_tuple["Column"])]).isdigit() :
-                                        assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])]) + "\"^^xsd:integer"
+                                        assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:integer"
                                     elif isfloat(str(row[col_headers.index(a_tuple["Column"])])) :
-                                        assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])]) + "\"^^xsd:float"
+                                        assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:float"
                                     else :
-                                        assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])]) + "\"^^xsd:string"
+                                        assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:string"
                                 assertionString += " .\n"
                             except :
                                 print "Error writing data value to assertion string"
@@ -537,11 +477,4 @@ if data_fn != "" :
     except :
         print "Warning: Unable to process Data file"
 
-#sdd_file.close()
 output_file.close()
-
-#if cb_fn is not None :
-#    cb_file.close()
-
-#if data_fn is not None : 
-#    data_file.close()
