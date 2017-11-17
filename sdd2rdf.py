@@ -96,6 +96,12 @@ for code_row in code_mappings_reader.itertuples() :
     if pd.notnull(code_row.label):
         unit_label_list.append(code_row.label)
 
+def parseString(input_string, delim) :
+    my_list = input_string.split(delim)
+    for i in range(0,len(my_list)) :
+        my_list[i] = my_list[i].strip()
+    return my_list
+
 def codeMapper(input_word) :
     unitVal = input_word
     for unit_label in unit_label_list :
@@ -155,14 +161,25 @@ def writeVirtualRDF(virtual_list, virtual_tuples, output_file) :
         assertionString += " ;\n\t\trdfs:label \"" + item.Column[2:] + "\""
         # Set the rdf:type of the virtual row to either the Attribute or Entity value (or else owl:Individual)
         if (pd.notnull(item.Entity)) and (pd.isnull(item.Attribute)) :
-            assertionString += " ;\n\t\trdfs:subClassOf " + codeMapper(item.Entity)
+            if ',' in item.Entity :
+                entities = parseString(item.Entity,',')
+                for entity in entities :
+                    assertionString += " ;\n\t\trdfs:subClassOf " + codeMapper(entity)
+            else :
+                assertionString += " ;\n\t\trdfs:subClassOf " + codeMapper(item.Entity)
             virtual_tuple["Column"]=item.Column
             virtual_tuple["Entity"]=codeMapper(item.Entity)
             if (virtual_tuple["Entity"] == "hasco:Study") :
                 global studyRef
                 studyRef = item.Column
                 virtual_tuple["Study"] = item.Column
-        elif (pd.notnull(item.Entity)) and (pd.notnull(item.Attribute)) :
+        elif (pd.isnull(item.Entity)) and (pd.notnull(item.Attribute)) :
+            if ',' in item.Attribute :
+                attributes = parseString(item.Attribute,',')
+                for attribute in attributes :
+                    assertionString += " ;\n\t\trdfs:subClassOf " + codeMapper(attribute)
+            else :
+                assertionString += " ;\n\t\trdfs:subClassOf " + codeMapper(item.Attribute)
             assertionString += " ;\n\t\trdfs:subClassOf " + codeMapper(item.Attribute)
             virtual_tuple["Column"]=item.Column
             virtual_tuple["Attribute"]=codeMapper(item.Attribute)
@@ -218,11 +235,16 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
         actual_tuple = {}
         assertionString += "\n\t" + kb + item.Column.replace(" ","_") + "\trdf:type\towl:Class"
         if (pd.notnull(item.Attribute)) :
-            assertionString += " ;\n\t\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper(item.Attribute))
+            if ',' in item.Attribute :
+                attributes = parseString(item.Attribute,',')
+                for attribute in attributes :
+                    assertionString += " ;\n\t\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper(attribute))
+            else :
+                assertionString += " ;\n\t\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper(item.Attribute))
             actual_tuple["Column"]=item.Column
             actual_tuple["Attribute"]=codeMapper(item.Attribute)
         else :
-            assertionString += " ;\n\t\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper("sio:Attribute"))
+            assertionString += " ;\n\t\trdfs:subClassOf\tsio:Attribute"
             actual_tuple["Column"]=item.Column
             actual_tuple["Attribute"]=codeMapper("sio:Attribute")
             print "Warning: Actual column not assigned an Attribute value."
@@ -280,9 +302,19 @@ def writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_
                 else :
                     assertionString += "\n\t" + kb + v_tuple["Column"][2:] + "-" + index + "\trdf:type\t" + kb + v_tuple["Column"][2:]
                     if "Entity" in v_tuple :
-                        assertionString += ";\n\t\trdf:type\t" + v_tuple["Entity"]
+                        if ',' in v_tuple["Entity"] :
+                            entities = parseString(v_tuple["Entity"],',')
+                            for entity in entities :
+                                assertionString += ";\n\t\trdf:type\t" + entity
+                        else :
+                            assertionString += ";\n\t\trdf:type\t" + v_tuple["Entity"]
                     if "Attribute" in v_tuple :
-                        assertionString += ";\n\t\trdf:type\t" + v_tuple["Attribute"]
+                        if ',' in v_tuple["Attribute"] :
+                            attributes = parseString(v_tuple["Attribute"],',')
+                            for attribute in attributes :
+                                assertionString += ";\n\t\trdf:type\t" + attribute
+                        else :
+                            assertionString += ";\n\t\trdf:type\t" + v_tuple["Attribute"]
                     if "Subject" in v_tuple :
                         assertionString += ";\n\t\tsio:hasIdentifier " + kb + v_tuple["Subject"] + "-" + index
                     if "inRelationTo" in v_tuple :
@@ -387,7 +419,12 @@ if data_fn != "" :
                     if (a_tuple["Column"] in col_headers ) :
                         try :
                             try :
-                                assertionString += "\n\t" + kb + a_tuple["Column"].replace(" ","_") + "-" + identifierString + "\trdf:type\t" + a_tuple["Attribute"]
+                                if ',' in a_tuple["Attribute"] :
+                                    attributes = parseString(a_tuple["Attribute"],',')
+                                    for attribute in attributes :
+                                        assertionString += "\n\t" + kb + a_tuple["Column"].replace(" ","_") + "-" + identifierString + "\trdf:type\t" + attribute
+                                else :
+                                    assertionString += "\n\t" + kb + a_tuple["Column"].replace(" ","_") + "-" + identifierString + "\trdf:type\t" + a_tuple["Attribute"]
                                 assertionString += " ;\n\t\trdf:type\t" + kb + a_tuple["Column"].replace(" ","_")
                                 assertionString += " ;\n\t\tsio:isAttributeOf " + convertVirtualToKGEntry(a_tuple["isAttributeOf"],identifierString)
                                 if checkVirtual(a_tuple["isAttributeOf"]) :
