@@ -239,7 +239,7 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
     output_file.write(" .\n}\n\n")
     for item in actual_list :
         actual_tuple = {}
-        assertionString += "\n\t" + kb + item.Column.replace(" ","_") + "\trdf:type\towl:Class"
+        assertionString += "\n\t" + kb + item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","") + "\trdf:type\towl:Class"
         if (pd.notnull(item.Attribute)) :
             if ',' in item.Attribute :
                 attributes = parseString(item.Attribute,',')
@@ -278,35 +278,27 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
             assertionString += " ;\n\t\trdfs:comment \"" + item.Comment + "\"^^xsd:String"
             actual_tuple["Comment"]=item.Comment
         assertionString += " .\n" 
-        provenanceString += "\n\t" + kb + item.Column.replace(" ","_")
+        provenanceString += "\n\t" + kb + item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","")
         provenanceString += "\n\t\tprov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
         if (pd.notnull(item.wasDerivedFrom)) :
             if ',' in item.wasDerivedFrom :
                 derivedFromTerms = parseString(item.wasDerivedFrom,',')
                 for derivedFromTerm in derivedFromTerms :
                     provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(derivedFromTerm)
-                    #if checkVirtual(derivedFromTerm) :
-                    #    writeVirtualEntry(assertionString,provenanceString,publicationInfoString, derivedFromTerm)
             else :
                 provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(item.wasDerivedFrom)
-                #if checkVirtual(item.wasDerivedFrom) :
-                    #writeVirtualEntry(assertionString,provenanceString,publicationInfoString, item.wasDerivedFrom)
             actual_tuple["wasDerivedFrom"]=item.wasDerivedFrom
         if (pd.notnull(item.wasGeneratedBy)) :
             if ',' in item.wasGeneratedBy :
                 generatedByTerms = parseString(item.wasGeneratedBy,',')
                 for generatedByTerm in generatedByTerms :
                     provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(generatedByTerm)
-                    #if checkVirtual(generatedByTerm) :
-                        #writeVirtualEntry(assertionString,provenanceString,publicationInfoString, generatedByTerm)
             else :
                 provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(item.wasGeneratedBy)
-                #if checkVirtual(item.wasGeneratedBy) :
-                    #writeVirtualEntry(assertionString,provenanceString,publicationInfoString, item.wasGeneratedBy)
             actual_tuple["wasGeneratedBy"]=item.wasGeneratedBy
         provenanceString += " .\n"
         if (pd.notnull(item.hasPosition)) :
-            publicationInfoString += "\n\t" + kb + item.Column.replace(" ","_") + "\thasco:hasPosition\t\"" + str(item.hasPosition) + "\"^^xsd:integer ."
+            publicationInfoString += "\n\t" + kb + item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","") + "\thasco:hasPosition\t\"" + str(item.hasPosition) + "\"^^xsd:integer ."
             actual_tuple["hasPosition"]=item.hasPosition
         actual_tuples.append(actual_tuple)
     output_file.write(kb + "assertion-actual_entry {")
@@ -317,7 +309,8 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
     output_file.write(kb + "pubInfo-actual_entry {\n\t" + kb + "nanoPub-actual_entry\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .")
     output_file.write(publicationInfoString + "\n}\n\n")
 
-def writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_column, index) : 
+def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, v_column, index) : 
+    #print v_column
     try :
         for v_tuple in virtual_tuples :
             if (v_tuple["Column"] == v_column) :
@@ -349,12 +342,15 @@ def writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_
                         elif ("Role" not in v_tuple) and ("Relation" not in v_tuple) :
                             assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(v_tuple["inRelationTo"],index)
                     assertionString += " .\n"
+                    if  "wasGeneratedBy" in v_tuple or "wasDerivedFrom" in v_tuple  :
+                        provenanceString += "\n\t" + kb + v_tuple["Column"][2:] + "-" + index + "\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
                     if "wasGeneratedBy" in v_tuple : 
                         if ',' in v_tuple["wasGeneratedBy"] :
                             generatedByTerms = parseString(v_tuple["wasGeneratedBy"],',')
                             for generatedByTerm in generatedByTerms :
                                 provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(generatedByTerm,index)
                                 if checkVirtual(generatedByTerm) :
+                                    # Needs some debugging
                                     writeVirtualEntry(assertionString,provenanceString,publicationInfoString, generatedByTerm, index)
                         else :
                             provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(v_tuple["wasGeneratedBy"],index)
@@ -371,12 +367,9 @@ def writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_
                             provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(v_tuple["wasDerivedFrom"],index)
                             if checkVirtual(v_tuple["wasDerivedFrom"]) :
                                 writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_tuple["wasDerivedFrom"], index)
-                    if not provenanceString is "" :
+                    if  "wasGeneratedBy" in v_tuple or "wasDerivedFrom" in v_tuple  :
                         provenanceString += " .\n"
-                    #if ("wasGeneratedBy" in v_tuple ) and (checkVirtual(v_tuple["wasGeneratedBy"])) :
-                    #    writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_tuple["wasGeneratedBy"], index)
-                    #if ("wasDerivedFrom" in v_tuple) and (checkVirtual(v_tuple["wasDerivedFrom"])) :
-                    #    writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_tuple["wasDerivedFrom"], index)
+        return [assertionString,provenanceString,publicationInfoString]
     except :
         print "Warning: Unable to create virtual entry."
 
@@ -428,7 +421,7 @@ if data_fn != "" :
                         #print id_index
                         for v_tuple in virtual_tuples :
                             if (a_tuple["isAttributeOf"] == v_tuple["Column"]) :
-                                v_tuple["Subject"]=a_tuple["Column"].replace(" ","_")
+                                v_tuple["Subject"]=a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","")
                 #if (id_index is None) :
                     #print "Warning: To process Data without a \"hasco:originalID\" or \"sio:Identifier\" Attribute in the SDD, for each row an md5 sum of the cell values will be used."
                     #print "Error: To process Data it is necessary to have a \"hasco:originalID\" or \"sio:Identifier\" Attribute in the SDD."
@@ -461,13 +454,13 @@ if data_fn != "" :
                     if (a_tuple["Column"] in col_headers ) :
                         try :
                             try :
+                                assertionString += "\n\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","") + "-" + identifierString + "\trdf:type\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","")
                                 if ',' in a_tuple["Attribute"] :
                                     attributes = parseString(a_tuple["Attribute"],',')
                                     for attribute in attributes :
-                                        assertionString += "\n\t" + kb + a_tuple["Column"].replace(" ","_") + "-" + identifierString + "\trdf:type\t" + attribute
+                                         assertionString + " ;\n\trdf:type\t" + attribute
                                 else :
-                                    assertionString += "\n\t" + kb + a_tuple["Column"].replace(" ","_") + "-" + identifierString + "\trdf:type\t" + a_tuple["Attribute"]
-                                assertionString += " ;\n\t\trdf:type\t" + kb + a_tuple["Column"].replace(" ","_")
+                                    " ;\n\trdf:type\t" + a_tuple["Attribute"]
                                 assertionString += " ;\n\t\tsio:isAttributeOf " + convertVirtualToKGEntry(a_tuple["isAttributeOf"],identifierString)
                                 if checkVirtual(a_tuple["isAttributeOf"]) :
                                     if a_tuple["isAttributeOf"] not in vref_list :
@@ -506,7 +499,7 @@ if data_fn != "" :
                             except :
                                 print "Error writing data value to assertion string"
                             try :
-                                provenanceString += "\n\t" + kb + a_tuple["Column"].replace(" ","_") + "-" + identifierString + "\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
+                                provenanceString += "\n\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","") + "-" + identifierString + "\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
                                 if "wasDerivedFrom" in a_tuple :
                                     if ',' in a_tuple["wasDerivedFrom"] :
                                         derivedFromTerms = parseString(a_tuple["wasDerivedFrom"],',')
@@ -546,7 +539,7 @@ if data_fn != "" :
                                     else :
                                         provenanceString += " ;\n\t\tsio:inRelationTo\t" + convertVirtualToKGEntry(a_tuple["inRelationTo"], identifierString)
                                 provenanceString += " .\n"
-                                publicationInfoString += "\n\t" + kb + a_tuple["Column"].replace(" ","_") + "-" + identifierString
+                                publicationInfoString += "\n\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","") + "-" + identifierString
                                 publicationInfoString += "\n\t\tprov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
                                 if "hasPosition" in a_tuple :
                                     publicationInfoString += ";\n\t\thasco:hasPosition\t\"" + str(a_tuple["hasPosition"]) + "\"^^xsd:integer"
@@ -556,8 +549,8 @@ if data_fn != "" :
                         except :
                             print "Unable to process tuple" + a_tuple.__str__()
                 try: 
-                    for vref in vref_list :
-                        writeVirtualEntry(assertionString,provenanceString,publicationInfoString, vref, identifierString)
+                    for vref in vref_list : 
+                        [assertionString,provenanceString,publicationInfoString] = writeVirtualEntry(assertionString,provenanceString,publicationInfoString, vref, identifierString)
                 except :
                     print "Warning: Something went writing vref entries."
             except:

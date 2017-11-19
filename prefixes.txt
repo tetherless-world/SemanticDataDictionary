@@ -1,5 +1,6 @@
 @prefix nhanes-kb: <http://idea.rpi.edu/heals/kb/nhanes#> .
 @prefix gdc-kb: <http://idea.rpi.edu/heals/kb/gdc#> .
+@prefix seer-kb: <http://idea.rpi.edu/heals/kb/seer#> .
 @prefix heals-kb: <http://idea.rpi.edu/heals/kb/heals#> .
 @prefix heals: <http://idea.rpi.edu/heals/ont/heals#> .
 @prefix chear: <http://hadatac.org/ont/chear#> .
@@ -23,3 +24,4 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uberon: <http://purl.obolibrary.org/obo/UBERON_> .
 @prefix np: <http://www.nanopub.org/nschema#>.
+@prefix pr: <http://purl.obolibrary.org/obo/PR_>.
