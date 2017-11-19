@@ -124,7 +124,13 @@ def convertVirtualToKGEntry(*args) :
         else : 
             return kb + args[0][2:]
     elif (':' not in args[0]) :
-        # Need to implement check for entry in column list
+        # Check for entry in column list
+        for item in actual_list :
+            if args[0] == item.Column :
+                if (len(args) == 2) :
+                    return kb + args[0] + "-" + args[1]
+                else :
+                    return kb + args[0]
         return '"' + args[0] + "\"^^xsd:string"
     else :
         return args[0]
@@ -275,10 +281,28 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
         provenanceString += "\n\t" + kb + item.Column.replace(" ","_")
         provenanceString += "\n\t\tprov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
         if (pd.notnull(item.wasDerivedFrom)) :
-            provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(item.wasDerivedFrom)
+            if ',' in item.wasDerivedFrom :
+                derivedFromTerms = parseString(item.wasDerivedFrom,',')
+                for derivedFromTerm in derivedFromTerms :
+                    provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(derivedFromTerm)
+                    #if checkVirtual(derivedFromTerm) :
+                    #    writeVirtualEntry(assertionString,provenanceString,publicationInfoString, derivedFromTerm)
+            else :
+                provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(item.wasDerivedFrom)
+                #if checkVirtual(item.wasDerivedFrom) :
+                    #writeVirtualEntry(assertionString,provenanceString,publicationInfoString, item.wasDerivedFrom)
             actual_tuple["wasDerivedFrom"]=item.wasDerivedFrom
         if (pd.notnull(item.wasGeneratedBy)) :
-            provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(item.wasGeneratedBy)
+            if ',' in item.wasGeneratedBy :
+                generatedByTerms = parseString(item.wasGeneratedBy,',')
+                for generatedByTerm in generatedByTerms :
+                    provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(generatedByTerm)
+                    #if checkVirtual(generatedByTerm) :
+                        #writeVirtualEntry(assertionString,provenanceString,publicationInfoString, generatedByTerm)
+            else :
+                provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(item.wasGeneratedBy)
+                #if checkVirtual(item.wasGeneratedBy) :
+                    #writeVirtualEntry(assertionString,provenanceString,publicationInfoString, item.wasGeneratedBy)
             actual_tuple["wasGeneratedBy"]=item.wasGeneratedBy
         provenanceString += " .\n"
         if (pd.notnull(item.hasPosition)) :
@@ -326,15 +350,33 @@ def writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_
                             assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(v_tuple["inRelationTo"],index)
                     assertionString += " .\n"
                     if "wasGeneratedBy" in v_tuple : 
-                        provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(v_tuple["wasGeneratedBy"],index)
+                        if ',' in v_tuple["wasGeneratedBy"] :
+                            generatedByTerms = parseString(v_tuple["wasGeneratedBy"],',')
+                            for generatedByTerm in generatedByTerms :
+                                provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(generatedByTerm,index)
+                                if checkVirtual(generatedByTerm) :
+                                    writeVirtualEntry(assertionString,provenanceString,publicationInfoString, generatedByTerm, index)
+                        else :
+                            provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(v_tuple["wasGeneratedBy"],index)
+                            if checkVirtual(v_tuple["wasGeneratedBy"]) :
+                                writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_tuple["wasGeneratedBy"], index)
                     if "wasDerivedFrom" in v_tuple : 
-                        provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(v_tuple["wasDerivedFrom"],index)
+                        if ',' in v_tuple["wasDerivedFrom"] :
+                            derivedFromTerms = parseString(v_tuple["wasDerivedFrom"],',')
+                            for derivedFromTerm in derivedFromTerms :
+                                provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(derivedFromTerm,index)
+                                if checkVirtual(derivedFromTerm) :
+                                    writeVirtualEntry(assertionString,provenanceString,publicationInfoString, derivedFromTerm, index)
+                        else :
+                            provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(v_tuple["wasDerivedFrom"],index)
+                            if checkVirtual(v_tuple["wasDerivedFrom"]) :
+                                writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_tuple["wasDerivedFrom"], index)
                     if not provenanceString is "" :
                         provenanceString += " .\n"
-                    if ("wasGeneratedBy" in v_tuple ) and (checkVirtual(v_tuple["wasGeneratedBy"])) :
-                        writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_tuple["wasGeneratedBy"], index)
-                    if ("wasDerivedFrom" in v_tuple) and (checkVirtual(v_tuple["wasDerivedFrom"])) :
-                        writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_tuple["wasDerivedFrom"], index)
+                    #if ("wasGeneratedBy" in v_tuple ) and (checkVirtual(v_tuple["wasGeneratedBy"])) :
+                    #    writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_tuple["wasGeneratedBy"], index)
+                    #if ("wasDerivedFrom" in v_tuple) and (checkVirtual(v_tuple["wasDerivedFrom"])) :
+                    #    writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_tuple["wasDerivedFrom"], index)
     except :
         print "Warning: Unable to create virtual entry."
 
@@ -466,11 +508,31 @@ if data_fn != "" :
                             try :
                                 provenanceString += "\n\t" + kb + a_tuple["Column"].replace(" ","_") + "-" + identifierString + "\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
                                 if "wasDerivedFrom" in a_tuple :
-                                    provenanceString += " ;\n\t\tprov:wasDerivedFrom\t" + convertVirtualToKGEntry(a_tuple["wasDerivedFrom"], identifierString)
+                                    if ',' in a_tuple["wasDerivedFrom"] :
+                                        derivedFromTerms = parseString(a_tuple["wasDerivedFrom"],',')
+                                        for derivedFromTerm in derivedFromTerms :
+                                            provenanceString += " ;\n\t\tprov:wasDerivedFrom\t" + convertVirtualToKGEntry(derivedFromTerm, identifierString)
+                                            if checkVirtual(derivedFromTerm) :
+                                                if derivedFromTerm not in vref_list :
+                                                    vref_list.append(derivedFromTerm)
+                                    else :
+                                        provenanceString += " ;\n\t\tprov:wasDerivedFrom\t" + convertVirtualToKGEntry(a_tuple["wasDerivedFrom"], identifierString)
                                     if checkVirtual(a_tuple["wasDerivedFrom"]) :
                                         if a_tuple["wasDerivedFrom"] not in vref_list :
                                             vref_list.append(a_tuple["wasDerivedFrom"])
                                 if "wasGeneratedBy" in a_tuple :
+                                    if ',' in a_tuple["wasGeneratedBy"] :
+                                        generatedByTerms = parseString(a_tuple["wasGeneratedBy"],',')
+                                        for generatedByTerm in generatedByTerms :
+                                            provenanceString += " ;\n\t\tprov:wasGeneratedBy\t" + convertVirtualToKGEntry(generatedByTerm, identifierString)
+                                            if checkVirtual(generatedByTerm) :
+                                                if generatedByTerm not in vref_list :
+                                                    vref_list.append(generatedByTerm)
+                                    else :
+                                        provenanceString += " ;\n\t\tprov:wasGeneratedBy\t" + convertVirtualToKGEntry(a_tuple["wasGeneratedBy"], identifierString)
+                                    if checkVirtual(a_tuple["wasGeneratedBy"]) :
+                                        if a_tuple["wasGeneratedBy"] not in vref_list :
+                                            vref_list.append(a_tuple["wasGeneratedBy"])
                                     provenanceString += " ;\n\t\tprov:wasGeneratedBy\t" + convertVirtualToKGEntry(a_tuple["wasGeneratedBy"], identifierString)
                                     if checkVirtual(a_tuple["wasGeneratedBy"]) :
                                         if a_tuple["wasGeneratedBy"] not in vref_list :
