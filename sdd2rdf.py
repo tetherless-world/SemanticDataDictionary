@@ -484,10 +484,12 @@ if data_fn != "" :
                                     if cb_fn is not None :
                                         if a_tuple["Column"] in cb_tuple :
                                             for tuple_row in cb_tuple[a_tuple["Column"]] :
-                                                if ("Code" in tuple_row) and tuple_row['Code'] == row[col_headers.index(a_tuple["Column"])+1] :
+                                                if ("Code" in tuple_row) and tuple_row['Code'] == str(row[col_headers.index(a_tuple["Column"])+1]) :
                                                     if ("Class" in tuple_row) and (tuple_row['Class'] is not "") :
+                                                        print tuple_row["Class"]
                                                         assertionString += " ;\n\t\trdf:type\t" + tuple_row['Class']
                                                     if ("Label" in tuple_row) and (tuple_row['Label'] is not "") :
+                                                        print tuple_row["Label"]
                                                         assertionString += " ;\n\t\trdfs:label\t\"" + tuple_row['Label'] + "\"^^xsd:string"
                                     if str(row[col_headers.index(a_tuple["Column"])]).isdigit() :
                                         assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:integer"
