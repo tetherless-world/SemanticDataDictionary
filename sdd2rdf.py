@@ -373,8 +373,8 @@ def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, v
     except :
         print "Warning: Unable to create virtual entry."
 
-writeVirtualRDF(virtual_list, virtual_tuples, output_file)
 writeActualRDF(actual_list, actual_tuples, output_file)
+writeVirtualRDF(virtual_list, virtual_tuples, output_file)
 
 if cb_fn is not None :
     try :
@@ -437,14 +437,13 @@ if data_fn != "" :
             else :
                 identifierString = str(row[id_index])
             try:
-                if row_num==1:
-                    output_file.write(kb + "head-" + identifierString + " {")
-                    output_file.write("\n\t" + kb + "nanoPub-" + identifierString)
-                    output_file.write("\n\t\trdf:type np:Nanopublication")
-                    output_file.write(" ;\n\t\tnp:hasAssertion " + kb + "assertion-" + identifierString)
-                    output_file.write(" ;\n\t\tnp:hasProvenance " + kb + "provenance-" + identifierString)
-                    output_file.write(" ;\n\t\tnp:hasPublicationInfo " + kb + "pubInfo-" + identifierString)
-                    output_file.write(" .\n}\n\n")# Nanopublication head
+                output_file.write(kb + "head-" + identifierString + " {")
+                output_file.write("\n\t" + kb + "nanoPub-" + identifierString)
+                output_file.write("\n\t\trdf:type np:Nanopublication")
+                output_file.write(" ;\n\t\tnp:hasAssertion " + kb + "assertion-" + identifierString)
+                output_file.write(" ;\n\t\tnp:hasProvenance " + kb + "provenance-" + identifierString)
+                output_file.write(" ;\n\t\tnp:hasPublicationInfo " + kb + "pubInfo-" + identifierString)
+                output_file.write(" .\n}\n\n")# Nanopublication head
             except : 
                 print "Warning: Something went wrong when creating Nanopublicatipon head."
             try :
@@ -486,10 +485,8 @@ if data_fn != "" :
                                             for tuple_row in cb_tuple[a_tuple["Column"]] :
                                                 if ("Code" in tuple_row) and tuple_row['Code'] == str(row[col_headers.index(a_tuple["Column"])+1]) :
                                                     if ("Class" in tuple_row) and (tuple_row['Class'] is not "") :
-                                                        print tuple_row["Class"]
                                                         assertionString += " ;\n\t\trdf:type\t" + tuple_row['Class']
                                                     if ("Label" in tuple_row) and (tuple_row['Label'] is not "") :
-                                                        print tuple_row["Label"]
                                                         assertionString += " ;\n\t\trdfs:label\t\"" + tuple_row['Label'] + "\"^^xsd:string"
                                     if str(row[col_headers.index(a_tuple["Column"])]).isdigit() :
                                         assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:integer"
