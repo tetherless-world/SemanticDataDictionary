@@ -341,8 +341,8 @@ def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, v
                         elif ("Role" not in v_tuple) and ("Relation" not in v_tuple) :
                             assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(v_tuple["inRelationTo"],index)
                     assertionString += " .\n"
-                    if  "wasGeneratedBy" in v_tuple or "wasDerivedFrom" in v_tuple  :
-                        provenanceString += "\n\t" + kb + v_tuple["Column"][2:] + "-" + index + "\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
+                    #if  "wasGeneratedBy" in v_tuple or "wasDerivedFrom" in v_tuple  :
+                    provenanceString += "\n\t" + kb + v_tuple["Column"][2:] + "-" + index + "\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
                     if "wasGeneratedBy" in v_tuple : 
                         if ',' in v_tuple["wasGeneratedBy"] :
                             generatedByTerms = parseString(v_tuple["wasGeneratedBy"],',')
@@ -365,8 +365,8 @@ def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, v
                             provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(v_tuple["wasDerivedFrom"],index)
                             if checkVirtual(v_tuple["wasDerivedFrom"]) and v_tuple["wasDerivedFrom"] not in vref_list :
                                 vref_list.append(v_tuple["wasDerivedFrom"]);
-                    if  "wasGeneratedBy" in v_tuple or "wasDerivedFrom" in v_tuple  :
-                        provenanceString += " .\n"
+                    #if  "wasGeneratedBy" in v_tuple or "wasDerivedFrom" in v_tuple  :
+                    provenanceString += " .\n"
         return [assertionString,provenanceString,publicationInfoString,vref_list]
     except :
         print "Warning: Unable to create virtual entry."
@@ -408,7 +408,6 @@ if data_fn != "" :
         # ensure that there is a column annotated as the sio:Identifier or hasco:originalID in the data file:
         # TODO make sure this is getting the first available ID property for the _subject_ (and not anything else)
         id_index=None
-        row_num=0
         col_headers=list(data_file.columns.values)
         try :
             for a_tuple in actual_tuples :
@@ -431,7 +430,11 @@ if data_fn != "" :
             provenanceString = ''
             publicationInfoString = ''
             if (id_index is None) :
-                identifierString = hashlib.md5(str(row)).hexdigest()
+                id_string=''
+                for term in row :
+                    id_string+=str(term)
+                #print id_string
+                identifierString = hashlib.md5(id_string).hexdigest()
             else :
                 identifierString = str(row[id_index])
             try:
@@ -442,9 +445,9 @@ if data_fn != "" :
                 output_file.write(" ;\n\t\tnp:hasProvenance " + kb + "provenance-" + identifierString)
                 output_file.write(" ;\n\t\tnp:hasPublicationInfo " + kb + "pubInfo-" + identifierString)
                 output_file.write(" .\n}\n\n")# Nanopublication head
-            except : 
-                print "Warning: Something went wrong when creating Nanopublicatipon head."
-            try :
+            #except : 
+            #    print "Warning: Something went wrong when creating Nanopublicatipon head."
+            #try :
                 vref_list = []
                 for a_tuple in actual_tuples :
                     #print a_tuple
@@ -553,16 +556,14 @@ if data_fn != "" :
             except:
                 print "Error: Something went wrong when processing actual tuples."
                 sys.exit(1)
-            if row_num != 0 :
-                output_file.write(kb + "assertion-" + identifierString + " {")
-                output_file.write(assertionString + "\n}\n\n")
-                output_file.write(kb + "provenance-" + identifierString + " {")
-                provenanceString = "\n\t" + kb + "assertion-" + identifierString + " prov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString
-                output_file.write(provenanceString + "\n}\n\n")
-                output_file.write(kb + "pubInfo-" + identifierString + " {")
-                publicationInfoString = "\n\t" + kb + "nanoPub-" + identifierString + " prov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + publicationInfoString
-                output_file.write(publicationInfoString + "\n}\n\n")
-            row_num += 1
+            output_file.write(kb + "assertion-" + identifierString + " {")
+            output_file.write(assertionString + "\n}\n\n")
+            output_file.write(kb + "provenance-" + identifierString + " {")
+            provenanceString = "\n\t" + kb + "assertion-" + identifierString + " prov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString
+            output_file.write(provenanceString + "\n}\n\n")
+            output_file.write(kb + "pubInfo-" + identifierString + " {")
+            publicationInfoString = "\n\t" + kb + "nanoPub-" + identifierString + " prov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + publicationInfoString
+            output_file.write(publicationInfoString + "\n}\n\n")
     except :
         print "Warning: Unable to process Data file"
 
