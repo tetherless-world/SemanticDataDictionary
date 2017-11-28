@@ -309,8 +309,7 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
     output_file.write(kb + "pubInfo-actual_entry {\n\t" + kb + "nanoPub-actual_entry\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .")
     output_file.write(publicationInfoString + "\n}\n\n")
 
-def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, v_column, index) : 
-    #print v_column
+def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, vref_list, v_column, index) : 
     try :
         for v_tuple in virtual_tuples :
             if (v_tuple["Column"] == v_column) :
@@ -349,27 +348,26 @@ def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, v
                             generatedByTerms = parseString(v_tuple["wasGeneratedBy"],',')
                             for generatedByTerm in generatedByTerms :
                                 provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(generatedByTerm,index)
-                                if checkVirtual(generatedByTerm) :
-                                    # Needs some debugging
-                                    writeVirtualEntry(assertionString,provenanceString,publicationInfoString, generatedByTerm, index)
+                                if checkVirtual(generatedByTerm) and generatedByTerm not in vref_list :
+                                    vref_list.append(generatedByTerm)
                         else :
                             provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(v_tuple["wasGeneratedBy"],index)
-                            if checkVirtual(v_tuple["wasGeneratedBy"]) :
-                                writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_tuple["wasGeneratedBy"], index)
+                            if checkVirtual(v_tuple["wasGeneratedBy"]) and v_tuple["wasGeneratedBy"] not in vref_list :
+                                vref_list.append(v_tuple["wasGeneratedBy"]);
                     if "wasDerivedFrom" in v_tuple : 
                         if ',' in v_tuple["wasDerivedFrom"] :
                             derivedFromTerms = parseString(v_tuple["wasDerivedFrom"],',')
                             for derivedFromTerm in derivedFromTerms :
                                 provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(derivedFromTerm,index)
-                                if checkVirtual(derivedFromTerm) :
-                                    writeVirtualEntry(assertionString,provenanceString,publicationInfoString, derivedFromTerm, index)
+                                if checkVirtual(derivedFromTerm) and derivedFromTerm not in vref_list :
+                                    vref_list.append(derivedFromTerm);
                         else :
                             provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(v_tuple["wasDerivedFrom"],index)
-                            if checkVirtual(v_tuple["wasDerivedFrom"]) :
-                                writeVirtualEntry(assertionString,provenanceString,publicationInfoString, v_tuple["wasDerivedFrom"], index)
+                            if checkVirtual(v_tuple["wasDerivedFrom"]) and v_tuple["wasDerivedFrom"] not in vref_list :
+                                vref_list.append(v_tuple["wasDerivedFrom"]);
                     if  "wasGeneratedBy" in v_tuple or "wasDerivedFrom" in v_tuple  :
                         provenanceString += " .\n"
-        return [assertionString,provenanceString,publicationInfoString]
+        return [assertionString,provenanceString,publicationInfoString,vref_list]
     except :
         print "Warning: Unable to create virtual entry."
 
@@ -549,7 +547,7 @@ if data_fn != "" :
                             print "Unable to process tuple" + a_tuple.__str__()
                 try: 
                     for vref in vref_list : 
-                        [assertionString,provenanceString,publicationInfoString] = writeVirtualEntry(assertionString,provenanceString,publicationInfoString, vref, identifierString)
+                        [assertionString,provenanceString,publicationInfoString,vref_list] = writeVirtualEntry(assertionString,provenanceString,publicationInfoString, vref_list, vref, identifierString)
                 except :
                     print "Warning: Something went writing vref entries."
             except:
