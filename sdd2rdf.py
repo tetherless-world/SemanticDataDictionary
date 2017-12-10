@@ -272,10 +272,10 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
             assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo)
             actual_tuple["inRelationTo"]=item.inRelationTo
         if (pd.notnull(item.Label)) :
-            assertionString += " ;\n\t\trdfs:label \"" + item.Label + "\"^^xsd:String" 
+            assertionString += " ;\n\t\trdfs:label \"" + item.Label + "\"^^xsd:string" 
             actual_tuple["Label"]=item.Label
         if (pd.notnull(item.Comment)) :
-            assertionString += " ;\n\t\trdfs:comment \"" + item.Comment + "\"^^xsd:String"
+            assertionString += " ;\n\t\trdfs:comment \"" + item.Comment + "\"^^xsd:string"
             actual_tuple["Comment"]=item.Comment
         assertionString += " .\n" 
         provenanceString += "\n\t" + kb + item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","")
@@ -473,25 +473,33 @@ if data_fn != "" :
                                         if a_tuple["Time"] not in vref_list :
                                             vref_list.append(a_tuple["Time"])
                                 if "Label" in a_tuple :
-                                    assertionString += " ;\n\t\trdfs:label \"" + a_tuple["Label"] + "\"^^xsd:String"
+                                    assertionString += " ;\n\t\trdfs:label \"" + a_tuple["Label"] + "\"^^xsd:string"
                                 if "Comment" in a_tuple :
-                                    assertionString += " ;\n\t\trdfs:comment \"" + a_tuple["Comment"] + "\"^^xsd:String"
+                                    assertionString += " ;\n\t\trdfs:comment \"" + a_tuple["Comment"] + "\"^^xsd:string"
                             except :
                                 print "Error writing initial assertion elements"
                             try :
-                                if row[col_headers.index(a_tuple["Column"])] != "" :
+                                if row[col_headers.index(a_tuple["Column"])+1] != "" :
                                     #print row[col_headers.index(a_tuple["Column"])]
                                     if cb_fn is not None :
                                         if a_tuple["Column"] in cb_tuple :
                                             for tuple_row in cb_tuple[a_tuple["Column"]] :
                                                 if ("Code" in tuple_row) and tuple_row['Code'] == str(row[col_headers.index(a_tuple["Column"])+1]) :
                                                     if ("Class" in tuple_row) and (tuple_row['Class'] is not "") :
-                                                        assertionString += " ;\n\t\trdf:type\t" + tuple_row['Class']
+                                                        if ',' in tuple_row['Class'] :
+                                                            classTerms = parseString(tuple_row['Class'],',')
+                                                            for classTerm in classTerms :
+                                                                assertionString += " ;\n\t\trdf:type\t" + classTerm
+                                                        else :
+                                                            assertionString += " ;\n\t\trdf:type\t" + tuple_row['Class']
                                                     if ("Label" in tuple_row) and (tuple_row['Label'] is not "") :
                                                         assertionString += " ;\n\t\trdfs:label\t\"" + tuple_row['Label'] + "\"^^xsd:string"
-                                    if str(row[col_headers.index(a_tuple["Column"])]).isdigit() :
+                                    #print str(row[col_headers.index(a_tuple["Column"])])
+                                    if str(row[col_headers.index(a_tuple["Column"])+1]) == "nan" :
+                                        assertionString = assertionString
+                                    elif str(row[col_headers.index(a_tuple["Column"])+1]).isdigit() :
                                         assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:integer"
-                                    elif isfloat(str(row[col_headers.index(a_tuple["Column"])])) :
+                                    elif isfloat(str(row[col_headers.index(a_tuple["Column"])+1])) :
                                         assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:float"
                                     else :
                                         assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:string"
