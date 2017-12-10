@@ -496,7 +496,7 @@ if data_fn != "" :
                                                         assertionString += " ;\n\t\trdfs:label\t\"" + tuple_row['Label'] + "\"^^xsd:string"
                                     #print str(row[col_headers.index(a_tuple["Column"])])
                                     if str(row[col_headers.index(a_tuple["Column"])+1]) == "nan" :
-                                        assertionString = assertionString
+                                        pass
                                     elif str(row[col_headers.index(a_tuple["Column"])+1]).isdigit() :
                                         assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:integer"
                                     elif isfloat(str(row[col_headers.index(a_tuple["Column"])+1])) :
@@ -505,7 +505,7 @@ if data_fn != "" :
                                         assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:string"
                                 assertionString += " .\n"
                             except :
-                                print "Error writing data value to assertion string"
+                                print "Error writing data value to assertion string:", row[col_headers.index(a_tuple["Column"])+1]
                             try :
                                 provenanceString += "\n\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","") + "-" + identifierString + "\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
                                 if "wasDerivedFrom" in a_tuple :
@@ -531,10 +531,6 @@ if data_fn != "" :
                                                     vref_list.append(generatedByTerm)
                                     else :
                                         provenanceString += " ;\n\t\tprov:wasGeneratedBy\t" + convertVirtualToKGEntry(a_tuple["wasGeneratedBy"], identifierString)
-                                    if checkVirtual(a_tuple["wasGeneratedBy"]) :
-                                        if a_tuple["wasGeneratedBy"] not in vref_list :
-                                            vref_list.append(a_tuple["wasGeneratedBy"])
-                                    provenanceString += " ;\n\t\tprov:wasGeneratedBy\t" + convertVirtualToKGEntry(a_tuple["wasGeneratedBy"], identifierString)
                                     if checkVirtual(a_tuple["wasGeneratedBy"]) :
                                         if a_tuple["wasGeneratedBy"] not in vref_list :
                                             vref_list.append(a_tuple["wasGeneratedBy"])
