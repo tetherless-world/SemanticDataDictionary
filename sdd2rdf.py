@@ -407,36 +407,36 @@ if data_fn != "" :
     try :
         # ensure that there is a column annotated as the sio:Identifier or hasco:originalID in the data file:
         # TODO make sure this is getting the first available ID property for the _subject_ (and not anything else)
-        id_index=None
         col_headers=list(data_file.columns.values)
+        #id_index=None
         try :
             for a_tuple in actual_tuples :
                 if ((a_tuple["Attribute"] == "hasco:originalID") or (a_tuple["Attribute"] == "sio:Identifier")) :
                     if(a_tuple["Column"] in col_headers) :
                         #print a_tuple["Column"]
-                        id_index = col_headers.index(a_tuple["Column"]) + 1
+                        #id_index = col_headers.index(a_tuple["Column"]) + 1
                         #print id_index
                         for v_tuple in virtual_tuples :
                             if (a_tuple["isAttributeOf"] == v_tuple["Column"]) :
                                 v_tuple["Subject"]=a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","")
-                #if (id_index is None) :
-                    #print "Warning: To process Data without a \"hasco:originalID\" or \"sio:Identifier\" Attribute in the SDD, for each row an md5 sum of the cell values will be used."
-                    #print "Error: To process Data it is necessary to have a \"hasco:originalID\" or \"sio:Identifier\" Attribute in the SDD."
-                    #sys.exit(1)
         except: 
             print "Error processing column headers"
         for row in data_file.itertuples() :
             assertionString = ''
             provenanceString = ''
             publicationInfoString = ''
-            if (id_index is None) :
+            id_string=''
+            for term in row :
+                id_string+=str(term)
+            identifierString = hashlib.md5(id_string).hexdigest()
+            '''if (id_index is None) :
                 id_string=''
                 for term in row :
                     id_string+=str(term)
                 #print id_string
                 identifierString = hashlib.md5(id_string).hexdigest()
             else :
-                identifierString = str(row[id_index])
+                identifierString = str(row[id_index])'''
             try:
                 output_file.write(kb + "head-" + identifierString + " {")
                 output_file.write("\n\t" + kb + "nanoPub-" + identifierString)
