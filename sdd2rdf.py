@@ -34,6 +34,7 @@ kb = config['Prefixes']['base_uri'] + ":"
 
 sdd_fn = config['Source Files']['dictionary']
 cb_fn = config['Source Files']['codebook']
+timeline_fn = config['Source Files']['timeline']
 cmap_fn = config['Source Files']['code_mappings']
 data_fn = config['Source Files']['data_file']
 
@@ -66,6 +67,7 @@ virtual_list = []
 actual_tuples = []
 virtual_tuples = []
 cb_tuple = {}
+timeline_tuple = {}
 
 try :
     sdd_file = pd.read_csv(sdd_fn)
@@ -220,6 +222,27 @@ def writeVirtualRDF(virtual_list, virtual_tuples, output_file) :
             virtual_tuple["wasGeneratedBy"]=item.wasGeneratedBy
         provenanceString += " .\n"
         virtual_tuples.append(virtual_tuple)
+    
+    if timeline_fn is not None :
+        for key in timeline_tuple :
+            assertionString += "\n\t" + convertVirtualToKGEntry(key)
+            for timeEntry in timeline_tuple[key] :
+                if 'Type' in timeEntry :
+                    assertionString += " ;\n\t\trdf:subClassOf\t" + timeEntry['Type']
+                if 'Label' in timeEntry :
+                    assertionString += " ;\n\t\trdfs:label\t\"" + timeEntry['Label'] + "\"^^xsd:string"
+                if 'Start' in timeEntry and 'End' in timeEntry and timeEntry['Start'] == timeEntry['End']:
+                    assertionString += " ;\n\t\tsio:hasValue " + str(timeEntry['Start'])
+                if 'Start' in timeEntry :
+                    assertionString += " ;\n\t\tsio:hasStartTime [ sio:hasValue " + str(timeEntry['Start']) + " ]"
+                if 'End' in timeEntry :
+                    assertionString += " ;\n\t\tsio:hasEndTime [ sio:hasValue " + str(timeEntry['End']) + " ]"
+                if 'Unit' in timeEntry :
+                    assertionString += " ;\n\t\tsio:hasUnit\t" + timeEntry['Unit']
+                if 'inRelationTo' in timeEntry :
+                    assertionString += " ;\n\t\tsio:inRelationTo\t" + convertVirtualToKGEntry(timeEntry['inRelationTo'], index)
+                assertionString += " .\n"
+            provenanceString += "\n\t" + convertVirtualToKGEntry(key) + "\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n"
     output_file.write(kb + "assertion-virtual_entry {")
     output_file.write(assertionString + "\n}\n\n")
     output_file.write(kb + "provenance-virtual_entry {")
@@ -278,6 +301,7 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
             assertionString += " ;\n\t\trdfs:comment \"" + item.Comment + "\"^^xsd:string"
             actual_tuple["Comment"]=item.Comment
         assertionString += " .\n" 
+        
         provenanceString += "\n\t" + kb + item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","")
         provenanceString += "\n\t\tprov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
         if (pd.notnull(item.wasDerivedFrom)) :
@@ -311,6 +335,25 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
 
 def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, vref_list, v_column, index) : 
     try :
+        if timeline_fn is not None :
+            if v_column in timeline_tuple :
+                assertionString += "\n\t" + convertVirtualToKGEntry(v_column, index) + "\trdf:type\t" + convertVirtualToKGEntry(v_column)
+                for timeEntry in timeline_tuple[v_column] :
+                    if 'Type' in timeEntry :
+                        assertionString += " ;\n\t\trdf:type\t" + timeEntry['Type']
+                    if 'Label' in timeEntry :
+                        assertionString += " ;\n\t\trdfs:label\t\"" + timeEntry['Label'] + "\"^^xsd:string"
+                    if 'Start' in timeEntry and 'End' in timeEntry and timeEntry['Start'] == timeEntry['End']:
+                        assertionString += " ;\n\t\tsio:hasValue " + str(timeEntry['Start'])
+                    if 'Start' in timeEntry :
+                        assertionString += " ;\n\t\tsio:hasStartTime [ sio:hasValue " + str(timeEntry['Start']) + " ]"
+                    if 'End' in timeEntry :
+                        assertionString += " ;\n\t\tsio:hasEndTime [ sio:hasValue " + str(timeEntry['End']) + " ]"
+                    if 'Unit' in timeEntry :
+                        assertionString += " ;\n\t\tsio:hasUnit\t" + timeEntry['Unit']
+                    if 'inRelationTo' in timeEntry :
+                        assertionString += " ;\n\t\tsio:inRelationTo\t" + convertVirtualToKGEntry(timeEntry['inRelationTo'], index)
+                assertionString += " .\n"
         for v_tuple in virtual_tuples :
             if (v_tuple["Column"] == v_column) :
                 if "Study" in v_tuple :
@@ -371,9 +414,6 @@ def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, v
     except :
         print "Warning: Unable to create virtual entry."
 
-writeActualRDF(actual_list, actual_tuples, output_file)
-writeVirtualRDF(virtual_list, virtual_tuples, output_file)
-
 if cb_fn is not None :
     try :
         cb_file = pd.read_csv(cb_fn)
@@ -397,6 +437,37 @@ if cb_fn is not None :
             row_num += 1
     except :
         print "Warning: Unable to process Codebook file"
+
+if timeline_fn is not None :
+    try :
+        timeline_file = pd.read_csv(timeline_fn)
+    except :
+        print "Error: The specified Codebook file does not exist."
+        sys.exit(1)
+    try :
+        inner_tuple_list = []
+        row_num=0
+        for row in timeline_file.itertuples():
+            if (pd.notnull(row.Name) and row.Name not in timeline_tuple) :
+                inner_tuple_list=[]
+            inner_tuple = {}
+            inner_tuple["Type"]=row.Type
+            if(pd.notnull(row.Label)):
+                inner_tuple["Label"]=row.Label
+            if(pd.notnull(row.Start)) :
+                inner_tuple["Start"]=row.Start
+            if(pd.notnull(row.End)) :
+                inner_tuple["End"]=row.End
+            if(pd.notnull(row.Unit)) :
+                inner_tuple["Unit"]=row.Unit
+            inner_tuple_list.append(inner_tuple)
+            timeline_tuple[row.Name]=inner_tuple_list
+            row_num += 1
+    except :
+        print "Warning: Unable to process Timeline file"
+
+writeActualRDF(actual_list, actual_tuples, output_file)
+writeVirtualRDF(virtual_list, virtual_tuples, output_file)
 
 if data_fn != "" :
     try :
