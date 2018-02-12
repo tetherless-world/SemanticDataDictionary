@@ -16,7 +16,7 @@ studyRef = None
 
 # Need to implement input flags rather than ordering
 if (len(sys.argv) < 2) :
-    #print "Usage: python sdd2rdf.py <SDD_file> [<data_file>] [<codebook_file>] [<output_file>] [kb_prefix]\nOptional arguments can be skipped by entering '!'"
+    #print "Usage: python sdd2rdf.py <DM_file> [<data_file>] [<codebook_file>] [<output_file>] [kb_prefix]\nOptional arguments can be skipped by entering '!'"
     print "Usage: python sdd2rdf.py <configuration_file>"
     sys.exit(1)
 
@@ -32,9 +32,16 @@ except:
 prefix_fn = config['Prefixes']['prefixes']
 kb = config['Prefixes']['base_uri'] + ":"
 
-sdd_fn = config['Source Files']['dictionary']
-cb_fn = config['Source Files']['codebook']
-timeline_fn = config['Source Files']['timeline']
+dm_fn = config['Source Files']['dictionary']
+
+if 'codebook' in config['Source Files'] :
+    cb_fn = config['Source Files']['codebook']
+else :
+    cb_fn = None
+if 'timeline' in config['Source Files'] :
+    timeline_fn = config['Source Files']['timeline']
+else :
+    timeline_fn = None
 cmap_fn = config['Source Files']['code_mappings']
 data_fn = config['Source Files']['data_file']
 
@@ -61,30 +68,30 @@ unit_code_list = []
 unit_uri_list = []
 unit_label_list = []
 
-actual_list = []
-virtual_list = []
+explicit_entry_list = []
+virtual_entry_list = []
 
-actual_tuples = []
-virtual_tuples = []
+explicit_entry_tuples = []
+virtual_entry_tuples = []
 cb_tuple = {}
 timeline_tuple = {}
 
 try :
-    sdd_file = pd.read_csv(sdd_fn)
+    dm_file = pd.read_csv(dm_fn)
 except:
     print "Error: The specified SDD file does not exist."
     sys.exit(1)
 
 try: 
-    # Set virtual and actual columns
-    for row in sdd_file.itertuples() :
+    # Set virtual and explicit entries
+    for row in dm_file.itertuples() :
         if (pd.isnull(row.Column)) :
             print "Error: The SDD must have a column named 'Column'"
             sys.exit(1)
         if row.Column.startswith("??") :
-            virtual_list.append(row)
+            virtual_entry_list.append(row)
         else :
-            actual_list.append(row)
+            explicit_entry_list.append(row)
 except : 
     print "Something went wrong when trying to read the SDD"
     sys.exit(1)
@@ -127,7 +134,7 @@ def convertVirtualToKGEntry(*args) :
             return kb + args[0][2:]
     elif (':' not in args[0]) :
         # Check for entry in column list
-        for item in actual_list :
+        for item in explicit_entry_list :
             if args[0] == item.Column :
                 if (len(args) == 2) :
                     return kb + args[0] + "-" + args[1]
@@ -154,7 +161,7 @@ def isfloat(value):
     except ValueError:
         return False
 
-def writeVirtualRDF(virtual_list, virtual_tuples, output_file) :
+def writeVirtualEntryTrig(virtual_entry_list, virtual_entry_tuples, output_file) :
     assertionString = ''
     provenanceString = ''
     output_file.write(kb + "head-virtual_entry { ")
@@ -163,7 +170,7 @@ def writeVirtualRDF(virtual_list, virtual_tuples, output_file) :
     output_file.write(" ;\n\t\tnp:hasProvenance " + kb + "provenance-virtual_entry")
     output_file.write(" ;\n\t\tnp:hasPublicationInfo " + kb + "pubInfo-virtual_entry")
     output_file.write(" .\n}\n\n")
-    for item in virtual_list :
+    for item in virtual_entry_list :
         virtual_tuple = {}
         assertionString += "\n\t" + kb + item.Column[2:] + "\trdf:type\towl:Class"
         assertionString += " ;\n\t\trdfs:label \"" + item.Column[2:] + "\""
@@ -192,7 +199,7 @@ def writeVirtualRDF(virtual_list, virtual_tuples, output_file) :
             virtual_tuple["Column"]=item.Column
             virtual_tuple["Attribute"]=codeMapper(item.Attribute)
         else :
-            print "Warning: Virtual column not assigned an Entity or Attribute value, or was assigned both."
+            print "Warning: Virtual entry not assigned an Entity or Attribute value, or was assigned both."
             virtual_tuple["Column"]=item.Column
         
         # If there is a value in the inRelationTo column ...
@@ -221,11 +228,11 @@ def writeVirtualRDF(virtual_list, virtual_tuples, output_file) :
             provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(item.wasGeneratedBy)
             virtual_tuple["wasGeneratedBy"]=item.wasGeneratedBy
         provenanceString += " .\n"
-        virtual_tuples.append(virtual_tuple)
+        virtual_entry_tuples.append(virtual_tuple)
     
     if timeline_fn is not None :
         for key in timeline_tuple :
-            assertionString += "\n\t" + convertVirtualToKGEntry(key)
+            assertionString += "\n\t" + convertVirtualToKGEntry(key) + "\trdf:type\towl:Class "
             for timeEntry in timeline_tuple[key] :
                 if 'Type' in timeEntry :
                     assertionString += " ;\n\t\trdf:subClassOf\t" + timeEntry['Type']
@@ -240,7 +247,7 @@ def writeVirtualRDF(virtual_list, virtual_tuples, output_file) :
                 if 'Unit' in timeEntry :
                     assertionString += " ;\n\t\tsio:hasUnit\t" + timeEntry['Unit']
                 if 'inRelationTo' in timeEntry :
-                    assertionString += " ;\n\t\tsio:inRelationTo\t" + convertVirtualToKGEntry(timeEntry['inRelationTo'], index)
+                    assertionString += " ;\n\t\tsio:inRelationTo\t" + convertVirtualToKGEntry(timeEntry['inRelationTo'])
                 assertionString += " .\n"
             provenanceString += "\n\t" + convertVirtualToKGEntry(key) + "\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n"
     output_file.write(kb + "assertion-virtual_entry {")
@@ -250,18 +257,18 @@ def writeVirtualRDF(virtual_list, virtual_tuples, output_file) :
     output_file.write(provenanceString + "\n}\n\n")
     output_file.write(kb + "pubInfo-virtual_entry {\n\t" + kb + "nanoPub-virtual_entry\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n}\n\n")
 
-def writeActualRDF(actual_list, actual_tuples, output_file) :
+def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_file) :
     assertionString = ''
     provenanceString = ''
     publicationInfoString = ''
-    output_file.write(kb + "head-actual_entry { ")
-    output_file.write("\n\t" + kb + "nanoPub-actual_entry\trdf:type np:Nanopublication")
-    output_file.write(" ;\n\t\tnp:hasAssertion " + kb + "assertion-actual_entry")
-    output_file.write(" ;\n\t\tnp:hasProvenance " + kb + "provenance-actual_entry")
-    output_file.write(" ;\n\t\tnp:hasPublicationInfo " + kb + "pubInfo-actual_entry")
+    output_file.write(kb + "head-explicit_entry { ")
+    output_file.write("\n\t" + kb + "nanoPub-explicit_entry\trdf:type np:Nanopublication")
+    output_file.write(" ;\n\t\tnp:hasAssertion " + kb + "assertion-explicit_entry")
+    output_file.write(" ;\n\t\tnp:hasProvenance " + kb + "provenance-explicit_entry")
+    output_file.write(" ;\n\t\tnp:hasPublicationInfo " + kb + "pubInfo-explicit_entry")
     output_file.write(" .\n}\n\n")
-    for item in actual_list :
-        actual_tuple = {}
+    for item in explicit_entry_list :
+        explicit_entry_tuple = {}
         assertionString += "\n\t" + kb + item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","") + "\trdf:type\towl:Class"
         if (pd.notnull(item.Attribute)) :
             if ',' in item.Attribute :
@@ -270,36 +277,36 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
                     assertionString += " ;\n\t\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper(attribute))
             else :
                 assertionString += " ;\n\t\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper(item.Attribute))
-            actual_tuple["Column"]=item.Column
-            actual_tuple["Attribute"]=codeMapper(item.Attribute)
+            explicit_entry_tuple["Column"]=item.Column
+            explicit_entry_tuple["Attribute"]=codeMapper(item.Attribute)
         else :
             assertionString += " ;\n\t\trdfs:subClassOf\tsio:Attribute"
-            actual_tuple["Column"]=item.Column
-            actual_tuple["Attribute"]=codeMapper("sio:Attribute")
-            print "Warning: Actual column not assigned an Attribute value."
+            explicit_entry_tuple["Column"]=item.Column
+            explicit_entry_tuple["Attribute"]=codeMapper("sio:Attribute")
+            print "Warning: Explicit entry not assigned an Attribute value."
         if (pd.notnull(item.attributeOf)) :
             assertionString += " ;\n\t\tsio:isAttributeOf " + convertVirtualToKGEntry(item.attributeOf)
-            actual_tuple["isAttributeOf"]=item.attributeOf
+            explicit_entry_tuple["isAttributeOf"]=item.attributeOf
         else :
-            print "WARN: Actual column not assigned an isAttributeOf value. Skipping...."
+            print "Warning: Explicit entry not assigned an isAttributeOf value. Skipping...."
         if (pd.notnull(item.Unit)) :
             assertionString += " ;\n\t\tsio:hasUnit " + codeMapper(item.Unit)
-            actual_tuple["Unit"] = codeMapper(item.Unit)
+            explicit_entry_tuple["Unit"] = codeMapper(item.Unit)
         if (pd.notnull(item.Time)) :
             assertionString += " ;\n\t\tsio:existsAt " + convertVirtualToKGEntry(item.Time)
-            actual_tuple["Time"]=item.Time
+            explicit_entry_tuple["Time"]=item.Time
         if (pd.notnull(item.Relation) and pd.notnull(item.inRelationTo)) :
             assertionString += " ;\n\t\t" + item.Relation + " " + convertVirtualToKGEntry(item.inRelationTo)
-            actual_tuple["Relation"]=item.Relation
+            explicit_entry_tuple["Relation"]=item.Relation
         elif (pd.notnull(item.inRelationTo)) :
             assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo)
-            actual_tuple["inRelationTo"]=item.inRelationTo
+            explicit_entry_tuple["inRelationTo"]=item.inRelationTo
         if (pd.notnull(item.Label)) :
             assertionString += " ;\n\t\trdfs:label \"" + item.Label + "\"^^xsd:string" 
-            actual_tuple["Label"]=item.Label
+            explicit_entry_tuple["Label"]=item.Label
         if (pd.notnull(item.Comment)) :
             assertionString += " ;\n\t\trdfs:comment \"" + item.Comment + "\"^^xsd:string"
-            actual_tuple["Comment"]=item.Comment
+            explicit_entry_tuple["Comment"]=item.Comment
         assertionString += " .\n" 
         
         provenanceString += "\n\t" + kb + item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","")
@@ -311,7 +318,7 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
                     provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(derivedFromTerm)
             else :
                 provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(item.wasDerivedFrom)
-            actual_tuple["wasDerivedFrom"]=item.wasDerivedFrom
+            explicit_entry_tuple["wasDerivedFrom"]=item.wasDerivedFrom
         if (pd.notnull(item.wasGeneratedBy)) :
             if ',' in item.wasGeneratedBy :
                 generatedByTerms = parseString(item.wasGeneratedBy,',')
@@ -319,18 +326,18 @@ def writeActualRDF(actual_list, actual_tuples, output_file) :
                     provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(generatedByTerm)
             else :
                 provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(item.wasGeneratedBy)
-            actual_tuple["wasGeneratedBy"]=item.wasGeneratedBy
+            explicit_entry_tuple["wasGeneratedBy"]=item.wasGeneratedBy
         provenanceString += " .\n"
         if (pd.notnull(item.hasPosition)) :
             publicationInfoString += "\n\t" + kb + item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","") + "\thasco:hasPosition\t\"" + str(item.hasPosition) + "\"^^xsd:integer ."
-            actual_tuple["hasPosition"]=item.hasPosition
-        actual_tuples.append(actual_tuple)
-    output_file.write(kb + "assertion-actual_entry {")
+            explicit_entry_tuple["hasPosition"]=item.hasPosition
+        explicit_entry_tuples.append(explicit_entry_tuple)
+    output_file.write(kb + "assertion-explicit_entry {")
     output_file.write(assertionString + "\n}\n\n")
-    output_file.write(kb + "provenance-actual_entry {")
-    provenanceString = "\n\t" + kb + "assertion-actual_entry\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString
+    output_file.write(kb + "provenance-explicit_entry {")
+    provenanceString = "\n\t" + kb + "assertion-explicit_entry\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString
     output_file.write(provenanceString + "\n}\n\n")
-    output_file.write(kb + "pubInfo-actual_entry {\n\t" + kb + "nanoPub-actual_entry\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .")
+    output_file.write(kb + "pubInfo-explicit_entry {\n\t" + kb + "nanoPub-explicit_entry\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .")
     output_file.write(publicationInfoString + "\n}\n\n")
 
 def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, vref_list, v_column, index) : 
@@ -353,8 +360,10 @@ def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, v
                         assertionString += " ;\n\t\tsio:hasUnit\t" + timeEntry['Unit']
                     if 'inRelationTo' in timeEntry :
                         assertionString += " ;\n\t\tsio:inRelationTo\t" + convertVirtualToKGEntry(timeEntry['inRelationTo'], index)
+                        if checkVirtual(timeEntry['inRelationTo']) and timeEntry['inRelationTo'] not in vref_list :
+                            vref_list.append(timeEntry['inRelationTo'])
                 assertionString += " .\n"
-        for v_tuple in virtual_tuples :
+        for v_tuple in virtual_entry_tuples :
             if (v_tuple["Column"] == v_column) :
                 if "Study" in v_tuple :
                     continue
@@ -442,7 +451,7 @@ if timeline_fn is not None :
     try :
         timeline_file = pd.read_csv(timeline_fn)
     except :
-        print "Error: The specified Codebook file does not exist."
+        print "Error: The specified Timeline file does not exist."
         sys.exit(1)
     try :
         inner_tuple_list = []
@@ -460,14 +469,16 @@ if timeline_fn is not None :
                 inner_tuple["End"]=row.End
             if(pd.notnull(row.Unit)) :
                 inner_tuple["Unit"]=row.Unit
+            if(pd.notnull(row.inRelationTo)) :
+                inner_tuple["inRelationTo"]=row.inRelationTo
             inner_tuple_list.append(inner_tuple)
             timeline_tuple[row.Name]=inner_tuple_list
             row_num += 1
     except :
         print "Warning: Unable to process Timeline file"
 
-writeActualRDF(actual_list, actual_tuples, output_file)
-writeVirtualRDF(virtual_list, virtual_tuples, output_file)
+writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_file)
+writeVirtualEntryTrig(virtual_entry_list, virtual_entry_tuples, output_file)
 
 if data_fn != "" :
     try :
@@ -481,13 +492,13 @@ if data_fn != "" :
         col_headers=list(data_file.columns.values)
         #id_index=None
         try :
-            for a_tuple in actual_tuples :
+            for a_tuple in explicit_entry_tuples :
                 if ((a_tuple["Attribute"] == "hasco:originalID") or (a_tuple["Attribute"] == "sio:Identifier")) :
                     if(a_tuple["Column"] in col_headers) :
                         #print a_tuple["Column"]
                         #id_index = col_headers.index(a_tuple["Column"]) + 1
                         #print id_index
-                        for v_tuple in virtual_tuples :
+                        for v_tuple in virtual_entry_tuples :
                             if (a_tuple["isAttributeOf"] == v_tuple["Column"]) :
                                 v_tuple["Subject"]=a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","")
         except: 
@@ -520,7 +531,7 @@ if data_fn != "" :
             #    print "Warning: Something went wrong when creating Nanopublicatipon head."
             #try :
                 vref_list = []
-                for a_tuple in actual_tuples :
+                for a_tuple in explicit_entry_tuples :
                     #print a_tuple
                     if (a_tuple["Column"] in col_headers ) :
                         try :
@@ -547,8 +558,12 @@ if data_fn != "" :
                                     assertionString += " ;\n\t\trdfs:label \"" + a_tuple["Label"] + "\"^^xsd:string"
                                 if "Comment" in a_tuple :
                                     assertionString += " ;\n\t\trdfs:comment \"" + a_tuple["Comment"] + "\"^^xsd:string"
-                            except :
-                                print "Error writing initial assertion elements"
+                            except Exception as e:
+                                print "Error writing initial assertion elements: "
+                                if hasattr(e, 'message'):
+                                    print(e.message)
+                                else:
+                                    print(e)
                             try :
                                 if row[col_headers.index(a_tuple["Column"])+1] != "" :
                                     #print row[col_headers.index(a_tuple["Column"])]
@@ -629,7 +644,7 @@ if data_fn != "" :
                 except :
                     print "Warning: Something went writing vref entries."
             except:
-                print "Error: Something went wrong when processing actual tuples."
+                print "Error: Something went wrong when processing explicit tuples."
                 sys.exit(1)
             output_file.write(kb + "assertion-" + identifierString + " {")
             output_file.write(assertionString + "\n}\n\n")
