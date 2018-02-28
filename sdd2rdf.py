@@ -279,11 +279,20 @@ def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_fi
                 assertionString += " ;\n\t\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper(item.Attribute))
             explicit_entry_tuple["Column"]=item.Column
             explicit_entry_tuple["Attribute"]=codeMapper(item.Attribute)
+        elif (pd.notnull(item.Entity)) :
+            if ',' in item.Entity :
+                entities = parseString(item.Entity,',')
+                for entity in entities :
+                    assertionString += " ;\n\t\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper(entity))
+            else :
+                assertionString += " ;\n\t\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper(item.Entity))
+            explicit_entry_tuple["Column"]=item.Column
+            explicit_entry_tuple["Entity"]=codeMapper(item.Entity)
         else :
             assertionString += " ;\n\t\trdfs:subClassOf\tsio:Attribute"
             explicit_entry_tuple["Column"]=item.Column
             explicit_entry_tuple["Attribute"]=codeMapper("sio:Attribute")
-            print "Warning: Explicit entry not assigned an Attribute value."
+            print "Warning: Explicit entry not assigned an Attribute or Entity value."
         if (pd.notnull(item.attributeOf)) :
             assertionString += " ;\n\t\tsio:isAttributeOf " + convertVirtualToKGEntry(item.attributeOf)
             explicit_entry_tuple["isAttributeOf"]=item.attributeOf
@@ -557,12 +566,20 @@ if data_fn != "" :
                         try :
                             try :
                                 assertionString += "\n\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","") + "-" + identifierString + "\trdf:type\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","")
-                                if ',' in a_tuple["Attribute"] :
-                                    attributes = parseString(a_tuple["Attribute"],',')
-                                    for attribute in attributes :
-                                         assertionString + " ;\n\trdf:type\t" + attribute
-                                else :
-                                    " ;\n\trdf:type\t" + a_tuple["Attribute"]
+                                if "Attribute" in a_tuple :
+                                    if ',' in a_tuple["Attribute"] :
+                                        attributes = parseString(a_tuple["Attribute"],',')
+                                        for attribute in attributes :
+                                            assertionString += " ;\n\t\trdf:type\t" + attribute
+                                    else :
+                                        assertionString += " ;\n\t\trdf:type\t" + a_tuple["Attribute"]
+                                if "Entity" in a_tuple :
+                                    if ',' in a_tuple["Entity"] :
+                                        entities = parseString(a_tuple["Entity"],',')
+                                        for entity in entities :
+                                            assertionString += " ;\n\t\trdf:type\t" + entity
+                                    else :
+                                        assertionString += " ;\n\t\trdf:type\t" + a_tuple["Entity"]
                                 if "isAttributeOf" in a_tuple :
                                     assertionString += " ;\n\t\tsio:isAttributeOf " + convertVirtualToKGEntry(a_tuple["isAttributeOf"],identifierString)
                                     if checkVirtual(a_tuple["isAttributeOf"]) :
