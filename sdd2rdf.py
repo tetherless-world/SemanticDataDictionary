@@ -288,19 +288,39 @@ def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_fi
             assertionString += " ;\n\t\tsio:isAttributeOf " + convertVirtualToKGEntry(item.attributeOf)
             explicit_entry_tuple["isAttributeOf"]=item.attributeOf
         else :
-            print "Warning: Explicit entry not assigned an isAttributeOf value. Skipping...."
+            print "Warning: Explicit entry not assigned an isAttributeOf value."
         if (pd.notnull(item.Unit)) :
             assertionString += " ;\n\t\tsio:hasUnit " + codeMapper(item.Unit)
             explicit_entry_tuple["Unit"] = codeMapper(item.Unit)
         if (pd.notnull(item.Time)) :
             assertionString += " ;\n\t\tsio:existsAt " + convertVirtualToKGEntry(item.Time)
             explicit_entry_tuple["Time"]=item.Time
-        if (pd.notnull(item.Relation) and pd.notnull(item.inRelationTo)) :
-            assertionString += " ;\n\t\t" + item.Relation + " " + convertVirtualToKGEntry(item.inRelationTo)
-            explicit_entry_tuple["Relation"]=item.Relation
-        elif (pd.notnull(item.inRelationTo)) :
-            assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo)
+        if (pd.notnull(item.inRelationTo)) :
             explicit_entry_tuple["inRelationTo"]=item.inRelationTo
+            # If there is a value in the Relation column but not the Role column ...
+            if (pd.notnull(item.Relation)) and (pd.isnull(item.Role)) :
+                assertionString += " ;\n\t\t" + item.Relation + " " + convertVirtualToKGEntry(item.inRelationTo) 
+                explicit_entry_tuple["Relation"]=item.Relation
+            # If there is a value in the Role column but not the Relation column ...
+            elif (pd.isnull(item.Relation)) and (pd.notnull(item.Role)) :
+                assertionString += " ;\n\t\tsio:hasRole [ rdf:type\t" + item.Role + " ;\n\t\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo) + " ]"
+                explicit_entry_tuple["Role"]=item.Role
+            # If there is a value in the Role and Relation columns ...
+            elif (pd.notnull(item.Relation)) and (pd.notnull(item.Role)) :
+                explicit_entry_tuple["Relation"]=item.Relation
+                explicit_entry_tuple["Role"]=item.Role
+                assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo) 
+#        if (pd.notnull(item.Relation) and pd.notnull(item.inRelationTo)) :
+#            assertionString += " ;\n\t\t" + item.Relation + " " + convertVirtualToKGEntry(item.inRelationTo)
+#            explicit_entry_tuple["Relation"]=item.Relation
+#            explicit_entry_tuple["inRelationTo"]=item.inRelationTo
+#        elif (pd.notnull(item.Role) and pd.notnull(item.inRelationTo)) :
+#            assertionString += " ;\n\t\t" + item.Relation + " " + convertVirtualToKGEntry(item.inRelationTo)
+#            explicit_entry_tuple["Role"]=item.Role
+#            explicit_entry_tuple["inRelationTo"]=item.inRelationTo
+#        elif (pd.notnull(item.inRelationTo)) :
+#            assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo)
+#            explicit_entry_tuple["inRelationTo"]=item.inRelationTo
         if (pd.notnull(item.Label)) :
             assertionString += " ;\n\t\trdfs:label \"" + item.Label + "\"^^xsd:string" 
             explicit_entry_tuple["Label"]=item.Label
@@ -543,10 +563,11 @@ if data_fn != "" :
                                          assertionString + " ;\n\trdf:type\t" + attribute
                                 else :
                                     " ;\n\trdf:type\t" + a_tuple["Attribute"]
-                                assertionString += " ;\n\t\tsio:isAttributeOf " + convertVirtualToKGEntry(a_tuple["isAttributeOf"],identifierString)
-                                if checkVirtual(a_tuple["isAttributeOf"]) :
-                                    if a_tuple["isAttributeOf"] not in vref_list :
-                                        vref_list.append(a_tuple["isAttributeOf"])
+                                if "isAttributeOf" in a_tuple :
+                                    assertionString += " ;\n\t\tsio:isAttributeOf " + convertVirtualToKGEntry(a_tuple["isAttributeOf"],identifierString)
+                                    if checkVirtual(a_tuple["isAttributeOf"]) :
+                                        if a_tuple["isAttributeOf"] not in vref_list :
+                                            vref_list.append(a_tuple["isAttributeOf"])
                                 if "Unit" in a_tuple :
                                     assertionString += " ;\n\t\tsio:hasUnit " + a_tuple["Unit"]
                                 if "Time" in a_tuple :
@@ -558,6 +579,17 @@ if data_fn != "" :
                                     assertionString += " ;\n\t\trdfs:label \"" + a_tuple["Label"] + "\"^^xsd:string"
                                 if "Comment" in a_tuple :
                                     assertionString += " ;\n\t\trdfs:comment \"" + a_tuple["Comment"] + "\"^^xsd:string"
+                                if "inRelationTo" in a_tuple :
+                                    if checkVirtual(a_tuple["inRelationTo"]) :
+                                        if a_tuple["inRelationTo"] not in vref_list :
+                                            vref_list.append(a_tuple["inRelationTo"])
+                                    if "Relation" in a_tuple :
+                                        assertionString += " ;\n\t\t" + a_tuple["Relation"] + "\t" + convertVirtualToKGEntry(a_tuple["inRelationTo"], identifierString)
+                                    elif "Role" in a_tuple :
+                                        assertionString += " ;\n\t\tsio:hasRole [ rdf:type\t" + a_tuple["Role"] + " ;\n\t\t\tsio:inRelationTo " + convertVirtualToKGEntry(a_tuple["inRelationTo"]) + " ]"
+                                    else :
+                                        assertionString += " ;\n\t\tsio:inRelationTo\t" + convertVirtualToKGEntry(a_tuple["inRelationTo"], identifierString)
+
                             except Exception as e:
                                 print "Error writing initial assertion elements: "
                                 if hasattr(e, 'message'):
@@ -569,8 +601,11 @@ if data_fn != "" :
                                     #print row[col_headers.index(a_tuple["Column"])]
                                     if cb_fn is not None :
                                         if a_tuple["Column"] in cb_tuple :
+                                            #print a_tuple["Column"]
                                             for tuple_row in cb_tuple[a_tuple["Column"]] :
-                                                if ("Code" in tuple_row) and tuple_row['Code'] == str(row[col_headers.index(a_tuple["Column"])+1]) :
+                                                #print tuple_row
+                                                if ("Code" in tuple_row) and (str(tuple_row['Code']) == str(row[col_headers.index(a_tuple["Column"])+1]) ):
+                                                    #print tuple_row['Code']
                                                     if ("Class" in tuple_row) and (tuple_row['Class'] is not "") :
                                                         if ',' in tuple_row['Class'] :
                                                             classTerms = parseString(tuple_row['Class'],',')
@@ -620,14 +655,16 @@ if data_fn != "" :
                                     if checkVirtual(a_tuple["wasGeneratedBy"]) :
                                         if a_tuple["wasGeneratedBy"] not in vref_list :
                                             vref_list.append(a_tuple["wasGeneratedBy"])
-                                if "inRelationTo" in a_tuple :
-                                    if checkVirtual(a_tuple["inRelationTo"]) :
-                                        if a_tuple["inRelationTo"] not in vref_list :
-                                            vref_list.append(a_tuple["inRelationTo"])
-                                    if "Relation" in a_tuple :
-                                        provenanceString += " ;\n\t\t" + a_tuple["Relation"] + "\t" + convertVirtualToKGEntry(a_tuple["inRelationTo"], identifierString)
-                                    else :
-                                        provenanceString += " ;\n\t\tsio:inRelationTo\t" + convertVirtualToKGEntry(a_tuple["inRelationTo"], identifierString)
+#                                if "inRelationTo" in a_tuple :
+#                                    if checkVirtual(a_tuple["inRelationTo"]) :
+#                                        if a_tuple["inRelationTo"] not in vref_list :
+#                                            vref_list.append(a_tuple["inRelationTo"])
+#                                    if "Relation" in a_tuple :
+#                                        provenanceString += " ;\n\t\t" + a_tuple["Relation"] + "\t" + convertVirtualToKGEntry(a_tuple["inRelationTo"], identifierString)
+#                                    elif "Role" in a_tuple :
+#                                        provenanceString += " ;\n\t\tsio:hasRole [ rdf:type\t" + a_tuple["Role"] + " ;\n\t\t\tsio:inRelationTo " + convertVirtualToKGEntry(a_tuple["inRelationTo"]) + " ]"
+#                                    else :
+#                                        provenanceString += " ;\n\t\tsio:inRelationTo\t" + convertVirtualToKGEntry(a_tuple["inRelationTo"], identifierString)
                                 provenanceString += " .\n"
                                 publicationInfoString += "\n\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","") + "-" + identifierString
                                 publicationInfoString += "\n\t\tprov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
