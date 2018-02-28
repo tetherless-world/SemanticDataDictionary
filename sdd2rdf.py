@@ -522,14 +522,16 @@ if data_fn != "" :
         #id_index=None
         try :
             for a_tuple in explicit_entry_tuples :
-                if ((a_tuple["Attribute"] == "hasco:originalID") or (a_tuple["Attribute"] == "sio:Identifier")) :
-                    if(a_tuple["Column"] in col_headers) :
-                        #print a_tuple["Column"]
-                        #id_index = col_headers.index(a_tuple["Column"]) + 1
-                        #print id_index
-                        for v_tuple in virtual_entry_tuples :
-                            if (a_tuple["isAttributeOf"] == v_tuple["Column"]) :
-                                v_tuple["Subject"]=a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","")
+                if "Attribute" in a_tuple :
+                    if ((a_tuple["Attribute"] == "hasco:originalID") or (a_tuple["Attribute"] == "sio:Identifier")) :
+                        if(a_tuple["Column"] in col_headers) :
+                            #print a_tuple["Column"]
+                            #id_index = col_headers.index(a_tuple["Column"]) + 1
+                            #print id_index
+                            for v_tuple in virtual_entry_tuples :
+                                if "isAttributeOf" in a_tuple :
+                                    if (a_tuple["isAttributeOf"] == v_tuple["Column"]) :
+                                        v_tuple["Subject"]=a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","")
         except: 
             print "Error processing column headers"
         for row in data_file.itertuples() :
