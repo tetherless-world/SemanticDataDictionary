@@ -340,7 +340,8 @@ def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_fi
         
         provenanceString += "\n\t" + kb + item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-")
         provenanceString += "\n\t\tprov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
-        if ("wasDerivedFrom" in item and pd.notnull(item.wasDerivedFrom)) :
+        #if ("wasDerivedFrom" in item and pd.notnull(item.wasDerivedFrom)) :
+        if(pd.notnull(item.wasDerivedFrom)) :
             if ',' in item.wasDerivedFrom :
                 derivedFromTerms = parseString(item.wasDerivedFrom,',')
                 for derivedFromTerm in derivedFromTerms :
@@ -348,7 +349,8 @@ def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_fi
             else :
                 provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(item.wasDerivedFrom)
             explicit_entry_tuple["wasDerivedFrom"]=item.wasDerivedFrom
-        if ("wasGeneratedBy" in item and pd.notnull(item.wasGeneratedBy)) :
+        #if ("wasGeneratedBy" in item and pd.notnull(item.wasGeneratedBy)) :
+        if(pd.notnull(item.wasGeneratedBy)) :
             if ',' in item.wasGeneratedBy :
                 generatedByTerms = parseString(item.wasGeneratedBy,',')
                 for generatedByTerm in generatedByTerms :
