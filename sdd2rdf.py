@@ -77,7 +77,7 @@ cb_tuple = {}
 timeline_tuple = {}
 
 try :
-    dm_file = pd.read_csv(dm_fn)
+    dm_file = pd.read_csv(dm_fn, dtype=object)
 except:
     print "Error: The specified SDD file does not exist."
     sys.exit(1)
@@ -456,7 +456,7 @@ def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, v
 
 if cb_fn is not None :
     try :
-        cb_file = pd.read_csv(cb_fn)
+        cb_file = pd.read_csv(cb_fn, dtype=object)
     except :
         print "Error: The specified Codebook file does not exist."
         sys.exit(1)
@@ -480,7 +480,7 @@ if cb_fn is not None :
 
 if timeline_fn is not None :
     try :
-        timeline_file = pd.read_csv(timeline_fn)
+        timeline_file = pd.read_csv(timeline_fn, dtype=object)
     except :
         print "Error: The specified Timeline file does not exist."
         sys.exit(1)
@@ -513,7 +513,7 @@ writeVirtualEntryTrig(virtual_entry_list, virtual_entry_tuples, output_file)
 
 if data_fn != "" :
     try :
-        data_file = pd.read_csv(data_fn)
+        data_file = pd.read_csv(data_fn, dtype=object)
     except :
         print "Error: The specified Data file does not exist."
         sys.exit(1)
