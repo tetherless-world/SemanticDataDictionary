@@ -137,9 +137,9 @@ def convertVirtualToKGEntry(*args) :
         for item in explicit_entry_list :
             if args[0] == item.Column :
                 if (len(args) == 2) :
-                    return kb + args[0] + "-" + args[1]
+                    return kb + args[0].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "-" + args[1]
                 else :
-                    return kb + args[0]
+                    return kb + args[0].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-")
         return '"' + args[0] + "\"^^xsd:string"
     else :
         return args[0]
@@ -269,7 +269,7 @@ def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_fi
     output_file.write(" .\n}\n\n")
     for item in explicit_entry_list :
         explicit_entry_tuple = {}
-        assertionString += "\n\t" + kb + item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","") + "\trdf:type\towl:Class"
+        assertionString += "\n\t" + kb + item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "\trdf:type\towl:Class"
         if (pd.notnull(item.Attribute)) :
             if ',' in item.Attribute :
                 attributes = parseString(item.Attribute,',')
@@ -330,17 +330,17 @@ def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_fi
 #        elif (pd.notnull(item.inRelationTo)) :
 #            assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo)
 #            explicit_entry_tuple["inRelationTo"]=item.inRelationTo
-        if (pd.notnull(item.Label)) :
+        if ("Label" in item and pd.notnull(item.Label)) :
             assertionString += " ;\n\t\trdfs:label \"" + item.Label + "\"^^xsd:string" 
             explicit_entry_tuple["Label"]=item.Label
-        if (pd.notnull(item.Comment)) :
+        if ("Comment" in item and pd.notnull(item.Comment)) :
             assertionString += " ;\n\t\trdfs:comment \"" + item.Comment + "\"^^xsd:string"
             explicit_entry_tuple["Comment"]=item.Comment
         assertionString += " .\n" 
         
-        provenanceString += "\n\t" + kb + item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","")
+        provenanceString += "\n\t" + kb + item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-")
         provenanceString += "\n\t\tprov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
-        if (pd.notnull(item.wasDerivedFrom)) :
+        if ("wasDerivedFrom" in item and pd.notnull(item.wasDerivedFrom)) :
             if ',' in item.wasDerivedFrom :
                 derivedFromTerms = parseString(item.wasDerivedFrom,',')
                 for derivedFromTerm in derivedFromTerms :
@@ -348,7 +348,7 @@ def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_fi
             else :
                 provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(item.wasDerivedFrom)
             explicit_entry_tuple["wasDerivedFrom"]=item.wasDerivedFrom
-        if (pd.notnull(item.wasGeneratedBy)) :
+        if ("wasGeneratedBy" in item and pd.notnull(item.wasGeneratedBy)) :
             if ',' in item.wasGeneratedBy :
                 generatedByTerms = parseString(item.wasGeneratedBy,',')
                 for generatedByTerm in generatedByTerms :
@@ -357,8 +357,8 @@ def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_fi
                 provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(item.wasGeneratedBy)
             explicit_entry_tuple["wasGeneratedBy"]=item.wasGeneratedBy
         provenanceString += " .\n"
-        if (pd.notnull(item.hasPosition)) :
-            publicationInfoString += "\n\t" + kb + item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","") + "\thasco:hasPosition\t\"" + str(item.hasPosition) + "\"^^xsd:integer ."
+        if ("hasPosition" in item and pd.notnull(item.hasPosition)) :
+            publicationInfoString += "\n\t" + kb + item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "\thasco:hasPosition\t\"" + str(item.hasPosition) + "\"^^xsd:integer ."
             explicit_entry_tuple["hasPosition"]=item.hasPosition
         explicit_entry_tuples.append(explicit_entry_tuple)
     output_file.write(kb + "assertion-explicit_entry {")
@@ -531,7 +531,7 @@ if data_fn != "" :
                             for v_tuple in virtual_entry_tuples :
                                 if "isAttributeOf" in a_tuple :
                                     if (a_tuple["isAttributeOf"] == v_tuple["Column"]) :
-                                        v_tuple["Subject"]=a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","")
+                                        v_tuple["Subject"]=a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-")
         except: 
             print "Error processing column headers"
         for row in data_file.itertuples() :
@@ -567,7 +567,7 @@ if data_fn != "" :
                     if (a_tuple["Column"] in col_headers ) :
                         try :
                             try :
-                                assertionString += "\n\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","") + "-" + identifierString + "\trdf:type\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","")
+                                assertionString += "\n\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "-" + identifierString + "\trdf:type\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-")
                                 if "Attribute" in a_tuple :
                                     if ',' in a_tuple["Attribute"] :
                                         attributes = parseString(a_tuple["Attribute"],',')
@@ -635,19 +635,22 @@ if data_fn != "" :
                                                     if ("Label" in tuple_row) and (tuple_row['Label'] is not "") :
                                                         assertionString += " ;\n\t\trdfs:label\t\"" + tuple_row['Label'] + "\"^^xsd:string"
                                     #print str(row[col_headers.index(a_tuple["Column"])])
-                                    if str(row[col_headers.index(a_tuple["Column"])+1]) == "nan" :
-                                        pass
-                                    elif str(row[col_headers.index(a_tuple["Column"])+1]).isdigit() :
-                                        assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:integer"
-                                    elif isfloat(str(row[col_headers.index(a_tuple["Column"])+1])) :
-                                        assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:float"
-                                    else :
-                                        assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:string"
+                                    try :
+                                        if str(row[col_headers.index(a_tuple["Column"])+1]) == "nan" :
+                                            pass
+                                        elif str(row[col_headers.index(a_tuple["Column"])+1]).isdigit() :
+                                            assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:integer"
+                                        elif isfloat(str(row[col_headers.index(a_tuple["Column"])+1])) :
+                                            assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:float"
+                                        else :
+                                            assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:string"
+                                    except: 
+                                        print "Warning: unable to write value to assertion string:", row[col_headers.index(a_tuple["Column"])+1]
                                 assertionString += " .\n"
                             except :
                                 print "Error writing data value to assertion string:", row[col_headers.index(a_tuple["Column"])+1]
                             try :
-                                provenanceString += "\n\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","") + "-" + identifierString + "\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
+                                provenanceString += "\n\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "-" + identifierString + "\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
                                 if "wasDerivedFrom" in a_tuple :
                                     if ',' in a_tuple["wasDerivedFrom"] :
                                         derivedFromTerms = parseString(a_tuple["wasDerivedFrom"],',')
@@ -685,7 +688,7 @@ if data_fn != "" :
 #                                    else :
 #                                        provenanceString += " ;\n\t\tsio:inRelationTo\t" + convertVirtualToKGEntry(a_tuple["inRelationTo"], identifierString)
                                 provenanceString += " .\n"
-                                publicationInfoString += "\n\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","") + "-" + identifierString
+                                publicationInfoString += "\n\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "-" + identifierString
                                 publicationInfoString += "\n\t\tprov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
                                 if "hasPosition" in a_tuple :
                                     publicationInfoString += ";\n\t\thasco:hasPosition\t\"" + str(a_tuple["hasPosition"]) + "\"^^xsd:integer"
