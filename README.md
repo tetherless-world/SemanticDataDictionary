@@ -4,24 +4,26 @@ Tools and specifications for Semantic Data Dictionaries
 # SDD Specification
 The SDD may contain the following columns
 
-Column - Description - Related Property
-
-Column - Column header from dataset - 
-Label (OPTIONAL) - Label for the column - rdfs:label
-Comment (OPTIONAL) - Comment for the column - rdfs:comment
-Definition (OPTIONAL) - Column definition - skos:definition
-Attribute - URI of the base attribute type - sio:hasAttribute
-attributeOf - Entity having the attribute - sio:isAttributeOf
-Unit - Unit of measure for the attribute - sio:hasUnit
-Time - Time point attribute was measured - sio:existsAt
-Entity - URI of the entity type - rdf:type
-Role - Role that the entity plays - sio:hasRole
-Relation - alternate relation linked to inRelationTo column - 
-inRelationTo - entity related to the Role or described by the Relation - sio:inRelationTo
+| DM Column | Related Property | Description |
+|------------ | -------------| -------------|
+| Attribute    | _rdf:type_ | Class of attribute entry |
+| attributeOf | _sio:isAttributeOf_ | Entity having the attribute |
+| Column |  | Entry column header in dataset |
+| Comment | _rdfs:comment_ | Comment for the entry |
+| Definition | _skos:definition_ | Entry text definition|
+| Entity | _rdf:type_ | Class of entity entry |
+| Format | | Specifies the structure of the Unit value|
+| inRelationTo | _sio:inRelationTo_ | Entity that the role is linked to |
+| Label | _rdfs:label_ | Label for the entry |
+| Relation | | Custom relation that replaces inRelationTo |
+| Role | _sio:hasRole_ | Type of the role of the entry |
+| Time | _sio:existsAt_ | Time point of measurement |
+| Unit | _sio:hasUnit_ | Unit of Measure for entry |
+| wasDerivedFrom | _prov:wasDerivedFrom_ | Entity from which the entry was derived |
+| wasGeneratedBy | _prov:wasGeneratedBy_ | Activity from which the entry was produced |
 
 # sdd2owl
 store required prefixes in prefixes.txt file
 
-Usage: python sdd2owl.py <SDD_file> [ <data_file> ] [ <codebook_file> ] [ <output_file> ]
-
+Usage: python sdd2rdf.py <config_file> 
 
