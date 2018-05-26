@@ -287,7 +287,7 @@ def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_fi
             else :
                 assertionString += " ;\n\t\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper(item.Entity))
             explicit_entry_tuple["Column"]=item.Column
-            explicit_entry_tuple["Entity"]=codeMapper(item.Entity)
+            explicit_entry_tuple["Entity"]=codeMapper(	item.Entity)
         else :
             assertionString += " ;\n\t\trdfs:subClassOf\tsio:Attribute"
             explicit_entry_tuple["Column"]=item.Column
@@ -299,8 +299,8 @@ def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_fi
         else :
             print "Warning: Explicit entry not assigned an isAttributeOf value."
         if (pd.notnull(item.Unit)) :
-            assertionString += " ;\n\t\tsio:hasUnit " + codeMapper(item.Unit)
-            explicit_entry_tuple["Unit"] = codeMapper(item.Unit)
+            assertionString += " ;\n\t\tsio:hasUnit " + convertVirtualToKGEntry(codeMapper(item.Unit))
+            explicit_entry_tuple["Unit"] = convertVirtualToKGEntry(codeMapper(item.Unit))
         if (pd.notnull(item.Time)) :
             assertionString += " ;\n\t\tsio:existsAt " + convertVirtualToKGEntry(item.Time)
             explicit_entry_tuple["Time"]=item.Time
@@ -472,6 +472,9 @@ if cb_fn is not None :
                 inner_tuple["Label"]=row.Label
             if(pd.notnull(row.Class)) :
                 inner_tuple["Class"]=row.Class
+            #print row
+            if ("Resource" in row and pd.notnull(row.Resource)) :
+                inner_tuple["Resource"]=row.Resource
             inner_tuple_list.append(inner_tuple)
             cb_tuple[row.Column]=inner_tuple_list
             row_num += 1
@@ -634,6 +637,13 @@ if data_fn != "" :
                                                                 assertionString += " ;\n\t\trdf:type\t" + classTerm
                                                         else :
                                                             assertionString += " ;\n\t\trdf:type\t" + tuple_row['Class']
+                                                    if ("Resource" in tuple_row) and (tuple_row['Resource'] is not "") :
+                                                        if ',' in tuple_row['Resource'] :
+                                                            classTerms = parseString(tuple_row['Resource'],',')
+                                                            for classTerm in classTerms :
+                                                                assertionString += " ;\n\t\trdf:type\t" + convertVirtualToKGEntry(codeMapper(classTerm))
+                                                        else :
+                                                            assertionString += " ;\n\t\trdf:type\t" + convertVirtualToKGEntry(codeMapper(tuple_row['Resource']))
                                                     if ("Label" in tuple_row) and (tuple_row['Label'] is not "") :
                                                         assertionString += " ;\n\t\trdfs:label\t\"" + tuple_row['Label'] + "\"^^xsd:string"
                                     #print str(row[col_headers.index(a_tuple["Column"])])
