@@ -7,6 +7,7 @@ import time
 import pandas as pd
 import configparser
 import hashlib
+import os
 
 kb=":"
 out_fn = "out.ttl"
@@ -49,8 +50,9 @@ out_fn = config['Output Files']['out_file']
 
 if out_fn == "" :
     out_fn = "out.ttl"
-
+query_fn = "queryQ"
 output_file = open(out_fn,"w")
+query_file = open(query_fn,"w")
 prefix_file = open(prefix_fn,"r")
 prefixes = prefix_file.readlines()
 
@@ -78,22 +80,23 @@ timeline_tuple = {}
 
 try :
     dm_file = pd.read_csv(dm_fn, dtype=object)
-except:
-    print "Error: The specified SDD file does not exist."
+except Exception, e:
+    print "Current directory: " + os.getcwd() + "/ - " + str(os.path.isfile(dm_fn)) 
+    print "Error: The processing DM file \"" + dm_fn + "\": " + str(e)
     sys.exit(1)
 
 try: 
     # Set virtual and explicit entries
     for row in dm_file.itertuples() :
         if (pd.isnull(row.Column)) :
-            print "Error: The SDD must have a column named 'Column'"
+            print "Error: The DM must have a column named 'Column'"
             sys.exit(1)
         if row.Column.startswith("??") :
             virtual_entry_list.append(row)
         else :
             explicit_entry_list.append(row)
 except : 
-    print "Something went wrong when trying to read the SDD"
+    print "Something went wrong when trying to read the DM"
     sys.exit(1)
 
 #Using itertuples on a data frame makes the column heads case-sensitive
@@ -164,6 +167,7 @@ def isfloat(value):
 def writeVirtualEntryTrig(virtual_entry_list, virtual_entry_tuples, output_file) :
     assertionString = ''
     provenanceString = ''
+    whereString = '\n'
     output_file.write(kb + "head-virtual_entry { ")
     output_file.write("\n\t" + kb + "nanoPub-virtual_entry\trdf:type np:Nanopublication")
     output_file.write(" ;\n\t\tnp:hasAssertion " + kb + "assertion-virtual_entry")
@@ -172,16 +176,20 @@ def writeVirtualEntryTrig(virtual_entry_list, virtual_entry_tuples, output_file)
     output_file.write(" .\n}\n\n")
     for item in virtual_entry_list :
         virtual_tuple = {}
-        assertionString += "\n\t" + kb + item.Column[2:] + "\trdf:type\towl:Class"
-        assertionString += " ;\n\t\trdfs:label \"" + item.Column[2:] + "\""
+        assertionString += "\n\t" + kb + item.Column[2:] + "\trdf:type\towl:Class ;\n\t\trdfs:label \"" + item.Column[2:] + "\""
+        whereString += "  " + item.Column[1:] + "_V rdf:type "
         # Set the rdf:type of the virtual row to either the Attribute or Entity value (or else owl:Individual)
         if (pd.notnull(item.Entity)) and (pd.isnull(item.Attribute)) :
             if ',' in item.Entity :
                 entities = parseString(item.Entity,',')
                 for entity in entities :
                     assertionString += " ;\n\t\trdfs:subClassOf " + codeMapper(entity)
+                    whereString += codeMapper(entity) + " "
+                    if entities.index(entity) + 1 != len(entities) :
+                        whereString += ", "
             else :
                 assertionString += " ;\n\t\trdfs:subClassOf " + codeMapper(item.Entity)
+                whereString += codeMapper(item.Entity) + " "
             virtual_tuple["Column"]=item.Column
             virtual_tuple["Entity"]=codeMapper(item.Entity)
             if (virtual_tuple["Entity"] == "hasco:Study") :
@@ -193,42 +201,59 @@ def writeVirtualEntryTrig(virtual_entry_list, virtual_entry_tuples, output_file)
                 attributes = parseString(item.Attribute,',')
                 for attribute in attributes :
                     assertionString += " ;\n\t\trdfs:subClassOf " + codeMapper(attribute)
+                    whereString += codeMapper(attribute) + " "
+                    if attributes.index(attribute) + 1 != len(attributes) :
+                        whereString += ", "
             else :
                 assertionString += " ;\n\t\trdfs:subClassOf " + codeMapper(item.Attribute)
-            assertionString += " ;\n\t\trdfs:subClassOf " + codeMapper(item.Attribute)
+                whereString += codeMapper(item.Attribute) + " "
+                
+            #assertionString += " ;\n\t\trdfs:subClassOf " + codeMapper(item.Attribute)
             virtual_tuple["Column"]=item.Column
             virtual_tuple["Attribute"]=codeMapper(item.Attribute)
         else :
             print "Warning: Virtual entry not assigned an Entity or Attribute value, or was assigned both."
             virtual_tuple["Column"]=item.Column
+            whereString += "owl:Individual "
         
         # If there is a value in the inRelationTo column ...
         if (pd.notnull(item.inRelationTo)) :
             virtual_tuple["inRelationTo"]=item.inRelationTo
             # If there is a value in the Relation column but not the Role column ...
             if (pd.notnull(item.Relation)) and (pd.isnull(item.Role)) :
-                assertionString += " ;\n\t\t" + item.Relation + " " + convertVirtualToKGEntry(item.inRelationTo) 
+                assertionString += " ;\n\t\t" + item.Relation + " " + convertVirtualToKGEntry(item.inRelationTo)
+                whereString += ";\n    " + item.Relation + " " + item.inRelationTo[1:] + "_V " # Assumption that inRelationTo is virtual
                 virtual_tuple["Relation"]=item.Relation
             # If there is a value in the Role column but not the Relation column ...
             elif (pd.isnull(item.Relation)) and (pd.notnull(item.Role)) :
                 assertionString += " ;\n\t\tsio:hasRole [ rdf:type\t" + item.Role + " ;\n\t\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo) + " ]"
+                whereString += ";\n    sio:hasRole [ rdf:type " + item.Role + " ;\n      sio:inRelationTo " + item.inRelationTo[1:] + "_V ] " # Assumption that inRelationTo is virtual
                 virtual_tuple["Role"]=item.Role
             # If there is a value in the Role and Relation columns ...
             elif (pd.notnull(item.Relation)) and (pd.notnull(item.Role)) :
                 virtual_tuple["Relation"]=item.Relation
                 virtual_tuple["Role"]=item.Role
-                assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo) 
+                assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo)
+                whereString += ";\n    sio:inRelationTo " + item.inRelationTo[1:] + "_V " # Assumption that inRelationTo is virtual
+            elif (pd.isnull(item.Relation)) and (pd.isnull(item.Role)) :
+                assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo)
+                whereString += ";\n    sio:inRelationTo " + item.inRelationTo[1:] + "_V " # Assumption that inRelationTo is virtual
         assertionString += " .\n"
         provenanceString += "\n\t" + kb + item.Column[2:] 
         provenanceString +="\n\t\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
         if pd.notnull(item.wasDerivedFrom) :
             provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(item.wasDerivedFrom)
             virtual_tuple["wasDerivedFrom"]=item.wasDerivedFrom
+            whereString += ";\n    prov:wasDerivedFrom " + item.wasDerivedFrom[1:] + "_V " # Assumption that wasDerivedFrom is virtual
         if pd.notnull(item.wasGeneratedBy) :
             provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(item.wasGeneratedBy)
+            whereString += ";\n    prov:wasGeneratedBy " + item.wasGeneratedBy[1:] + "_V " # Assumption that wasGeneratedBy is virtual
             virtual_tuple["wasGeneratedBy"]=item.wasGeneratedBy
         provenanceString += " .\n"
+        whereString += ".\n\n"
         virtual_entry_tuples.append(virtual_tuple)
+    whereString += "}"
+    print whereString
     
     if timeline_fn is not None :
         for key in timeline_tuple :
@@ -261,6 +286,8 @@ def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_fi
     assertionString = ''
     provenanceString = ''
     publicationInfoString = ''
+    selectString = "SELECT "
+    whereString = "WHERE {\n"
     output_file.write(kb + "head-explicit_entry { ")
     output_file.write("\n\t" + kb + "nanoPub-explicit_entry\trdf:type np:Nanopublication")
     output_file.write(" ;\n\t\tnp:hasAssertion " + kb + "assertion-explicit_entry")
@@ -269,67 +296,77 @@ def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_fi
     output_file.write(" .\n}\n\n")
     for item in explicit_entry_list :
         explicit_entry_tuple = {}
-        assertionString += "\n\t" + kb + item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "\trdf:type\towl:Class"
+        term = item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-")
+        assertionString += "\n\t" + kb + term + "\trdf:type\towl:Class"
+        selectString += "?" + term.lower() + " "
+        whereString += "  ?" + term.lower() + "_E rdf:type "
         if (pd.notnull(item.Attribute)) :
             if ',' in item.Attribute :
                 attributes = parseString(item.Attribute,',')
                 for attribute in attributes :
                     assertionString += " ;\n\t\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper(attribute))
+                    whereString += str(codeMapper(attribute)) + " "
+                    if attributes.index(attribute) + 1 != len(attribute) :
+                        whereString += ", "
             else :
                 assertionString += " ;\n\t\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper(item.Attribute))
+                whereString += codeMapper(item.Attribute) + " "
             explicit_entry_tuple["Column"]=item.Column
-            explicit_entry_tuple["Attribute"]=codeMapper(item.Attribute)
+            explicit_entry_tuple["Attribute"]= str(codeMapper(item.Attribute))
         elif (pd.notnull(item.Entity)) :
             if ',' in item.Entity :
                 entities = parseString(item.Entity,',')
                 for entity in entities :
                     assertionString += " ;\n\t\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper(entity))
+                    whereString += str(codeMapper(entity)) + " "
+                    if entities.index(entity) + 1 != len(entities) :
+                        whereString += ", "
             else :
                 assertionString += " ;\n\t\trdfs:subClassOf " + convertVirtualToKGEntry(codeMapper(item.Entity))
+                whereString += str(codeMapper(item.Entity)) + " "
             explicit_entry_tuple["Column"]=item.Column
-            explicit_entry_tuple["Entity"]=codeMapper(	item.Entity)
+            explicit_entry_tuple["Entity"]=str(codeMapper(item.Entity))
         else :
             assertionString += " ;\n\t\trdfs:subClassOf\tsio:Attribute"
+            whereString += "sio:Attribute "
             explicit_entry_tuple["Column"]=item.Column
             explicit_entry_tuple["Attribute"]=codeMapper("sio:Attribute")
             print "Warning: Explicit entry not assigned an Attribute or Entity value."
         if (pd.notnull(item.attributeOf)) :
             assertionString += " ;\n\t\tsio:isAttributeOf " + convertVirtualToKGEntry(item.attributeOf)
+            whereString += ";\n    sio:isAttributeOf " + item.attributeOf[1:] + "_V " # Assumption attributeOf is virtual
             explicit_entry_tuple["isAttributeOf"]=item.attributeOf
         else :
             print "Warning: Explicit entry not assigned an isAttributeOf value."
         if (pd.notnull(item.Unit)) :
             assertionString += " ;\n\t\tsio:hasUnit " + convertVirtualToKGEntry(codeMapper(item.Unit))
+            whereString += " ;\n    sio:hasUnit " + codeMapper(item.Unit)
             explicit_entry_tuple["Unit"] = convertVirtualToKGEntry(codeMapper(item.Unit))
         if (pd.notnull(item.Time)) :
             assertionString += " ;\n\t\tsio:existsAt " + convertVirtualToKGEntry(item.Time)
+            whereString += " ;\n    sio:existsAt " + item.Time[1:] + "_V " # Assumption that time is virtual
             explicit_entry_tuple["Time"]=item.Time
         if (pd.notnull(item.inRelationTo)) :
             explicit_entry_tuple["inRelationTo"]=item.inRelationTo
             # If there is a value in the Relation column but not the Role column ...
             if (pd.notnull(item.Relation)) and (pd.isnull(item.Role)) :
-                assertionString += " ;\n\t\t" + item.Relation + " " + convertVirtualToKGEntry(item.inRelationTo) 
+                assertionString += " ;\n\t\t" + item.Relation + " " + convertVirtualToKGEntry(item.inRelationTo)
+                whereString += ";\n    " + item.Relation + " " + item.inRelationTo[1:] + "_V " # Assumption that inRelationTo is virtual
                 explicit_entry_tuple["Relation"]=item.Relation
             # If there is a value in the Role column but not the Relation column ...
             elif (pd.isnull(item.Relation)) and (pd.notnull(item.Role)) :
                 assertionString += " ;\n\t\tsio:hasRole [ rdf:type\t" + item.Role + " ;\n\t\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo) + " ]"
+                whereString += ";\n    sio:hasRole [ rdf:type " + item.Role + " ;\n      sio:inRelationTo " + item.inRelationTo[1:] + "_V ] " # Assumption that inRelationTo is virtual
                 explicit_entry_tuple["Role"]=item.Role
             # If there is a value in the Role and Relation columns ...
             elif (pd.notnull(item.Relation)) and (pd.notnull(item.Role)) :
                 explicit_entry_tuple["Relation"]=item.Relation
                 explicit_entry_tuple["Role"]=item.Role
-                assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo) 
-#        if (pd.notnull(item.Relation) and pd.notnull(item.inRelationTo)) :
-#            assertionString += " ;\n\t\t" + item.Relation + " " + convertVirtualToKGEntry(item.inRelationTo)
-#            explicit_entry_tuple["Relation"]=item.Relation
-#            explicit_entry_tuple["inRelationTo"]=item.inRelationTo
-#        elif (pd.notnull(item.Role) and pd.notnull(item.inRelationTo)) :
-#            assertionString += " ;\n\t\t" + item.Relation + " " + convertVirtualToKGEntry(item.inRelationTo)
-#            explicit_entry_tuple["Role"]=item.Role
-#            explicit_entry_tuple["inRelationTo"]=item.inRelationTo
-#        elif (pd.notnull(item.inRelationTo)) :
-#            assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo)
-#            explicit_entry_tuple["inRelationTo"]=item.inRelationTo
+                assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo)
+                whereString += ";\n    sio:inRelationTo " + item.inRelationTo[1:] + "_V " # Assumption that inRelationTo is virtual
+            elif (pd.isnull(item.Relation)) and (pd.isnull(item.Role)) :
+                assertionString += " ;\n\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo)
+                whereString += ";\n    sio:inRelationTo " + item.inRelationTo[1:] + "_V " # Assumption that inRelationTo is virtual 
         if ("Label" in item and pd.notnull(item.Label)) :
             assertionString += " ;\n\t\trdfs:label \"" + item.Label + "\"^^xsd:string" 
             explicit_entry_tuple["Label"]=item.Label
@@ -346,8 +383,10 @@ def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_fi
                 derivedFromTerms = parseString(item.wasDerivedFrom,',')
                 for derivedFromTerm in derivedFromTerms :
                     provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(derivedFromTerm)
+                    whereString += ";\n    prov:wasDerivedFrom " + derivedFromTerm[1:] + "_V " # Assumption that derivedFromTerm is virtual
             else :
                 provenanceString += " ;\n\t\tprov:wasDerivedFrom " + convertVirtualToKGEntry(item.wasDerivedFrom)
+                whereString += ";\n    prov:wasDerivedFrom " + item.wasDerivedFrom[1:] + "_V " # Assumption that wasDerivedFrom is virtual
             explicit_entry_tuple["wasDerivedFrom"]=item.wasDerivedFrom
         #if ("wasGeneratedBy" in item and pd.notnull(item.wasGeneratedBy)) :
         if(pd.notnull(item.wasGeneratedBy)) :
@@ -355,10 +394,13 @@ def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_fi
                 generatedByTerms = parseString(item.wasGeneratedBy,',')
                 for generatedByTerm in generatedByTerms :
                     provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(generatedByTerm)
+                    whereString += ";\n    prov:wasGeneratedBy " + generatedByTerm[1:] + "_V " # Assumption that generatedByTerm is virtual
             else :
                 provenanceString += " ;\n\t\tprov:wasGeneratedBy " + convertVirtualToKGEntry(item.wasGeneratedBy)
+                whereString += ";\n    prov:wasGeneratedBy " + item.wasGeneratedBy[1:] + "_V " # Assumption that wasGeneratedBy is virtual
             explicit_entry_tuple["wasGeneratedBy"]=item.wasGeneratedBy
         provenanceString += " .\n"
+        whereString += ";\n    sio:hasValue ?" + term.lower() + " . \n\n"
         if ("hasPosition" in item and pd.notnull(item.hasPosition)) :
             publicationInfoString += "\n\t" + kb + item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "\thasco:hasPosition\t\"" + str(item.hasPosition) + "\"^^xsd:integer ."
             explicit_entry_tuple["hasPosition"]=item.hasPosition
@@ -370,6 +412,8 @@ def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_fi
     output_file.write(provenanceString + "\n}\n\n")
     output_file.write(kb + "pubInfo-explicit_entry {\n\t" + kb + "nanoPub-explicit_entry\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .")
     output_file.write(publicationInfoString + "\n}\n\n")
+    print selectString
+    print whereString
 
 def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, vref_list, v_column, index) : 
     try :
@@ -457,8 +501,8 @@ def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, v
 if cb_fn is not None :
     try :
         cb_file = pd.read_csv(cb_fn, dtype=object)
-    except :
-        print "Error: The specified Codebook file does not exist."
+    except Exception, e:
+        print "Error: The processing Codebook file:" + str(e)
         sys.exit(1)
     try :
         inner_tuple_list = []
