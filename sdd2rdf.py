@@ -445,7 +445,7 @@ def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_fi
                     whereString += ";\n    prov:wasGeneratedBy " + [item.wasGeneratedBy + " ",item.wasGeneratedBy[1:] + "_V "][checkVirtual(item.wasGeneratedBy)]
             explicit_entry_tuple["wasGeneratedBy"]=item.wasGeneratedBy
         provenanceString += " .\n"
-        whereString += ";\n    sio:hasValue ?" + term.lower() + " . \n\n"
+        whereString += ";\n    sio:hasValue ?" + term.lower() + " .\n\n"
         if ("hasPosition" in item and pd.notnull(item.hasPosition)) :
             publicationInfoString += "\n\t" + kb + item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "\thasco:hasPosition\t\"" + str(item.hasPosition) + "\"^^xsd:integer ."
             explicit_entry_tuple["hasPosition"]=item.hasPosition
