@@ -59,7 +59,10 @@ prefix_file = open(prefix_fn,"r")
 prefixes = prefix_file.readlines()
 
 for prefix in prefixes :
+    #print prefix.find(">")
     output_file.write(prefix)
+    query_file.write(prefix[1:prefix.find(">")+1])
+    query_file.write("\n")
 output_file.write("\n")
 
 # K: parameterize this, too?
@@ -303,8 +306,8 @@ def writeVirtualEntryTrig(virtual_entry_list, virtual_entry_tuples, output_file,
     output_file.write(provenanceString + "\n}\n\n")
     output_file.write(kb + "pubInfo-virtual_entry {\n\t" + kb + "nanoPub-virtual_entry\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n}\n\n")
     whereString += "}"
-    print whereString
-    query_file.write(whereString)
+    #print whereString
+    query_file.write(whereString.replace('-','_'))
 
 def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_file, query_file) :
     assertionString = ''
@@ -383,7 +386,7 @@ def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_fi
             # If there is a value in the Role column but not the Relation column ...
             elif (pd.isnull(item.Relation)) and (pd.notnull(item.Role)) :
                 assertionString += " ;\n\t\tsio:hasRole [ rdf:type\t" + item.Role + " ;\n\t\t\tsio:inRelationTo " + convertVirtualToKGEntry(item.inRelationTo) + " ]"
-                whereString += ";\n    sio:hasRole [ rdf:type " + item.Role + " ;\n      sio:inRelationTo " + [item.inRelationTo + " ",item.inRelationTo[1:] + "_V "][checkVirtual(item.inRelationTo)]
+                whereString += ";\n    sio:hasRole [ rdf:type " + item.Role + " ;\n      sio:inRelationTo " + [item.inRelationTo + " ",item.inRelationTo[1:] + "_V "][checkVirtual(item.inRelationTo)] + " ]"
                 explicit_entry_tuple["Role"]=item.Role
             # If there is a value in the Role and Relation columns ...
             elif (pd.notnull(item.Relation)) and (pd.notnull(item.Role)) :
@@ -457,10 +460,10 @@ def writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_fi
     output_file.write(provenanceString + "\n}\n\n")
     output_file.write(kb + "pubInfo-explicit_entry {\n\t" + kb + "nanoPub-explicit_entry\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .")
     output_file.write(publicationInfoString + "\n}\n\n")
-    print selectString
-    print whereString
+    #print selectString
+    #print whereString
     query_file.write(selectString)
-    query_file.write(whereString)
+    query_file.write(whereString.replace('-','_'))
 
 def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, vref_list, v_column, index) : 
     try :
