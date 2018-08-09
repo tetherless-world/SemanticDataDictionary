@@ -8,7 +8,8 @@ import pandas as pd
 import configparser
 import hashlib
 import os
-
+reload(sys)
+sys.setdefaultencoding('utf8')
 kb=":"
 out_fn = "out.ttl"
 prefix_fn="prefixes.txt"
