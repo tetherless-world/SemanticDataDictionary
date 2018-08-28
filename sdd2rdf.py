@@ -626,7 +626,7 @@ if data_fn != "" :
                     if ((a_tuple["Attribute"] == "hasco:originalID") or (a_tuple["Attribute"] == "sio:Identifier")) :
                         if(a_tuple["Column"] in col_headers) :
                             #print a_tuple["Column"]
-                            #id_index = col_headers.index(a_tuple["Column"]) + 1
+                            #id_index = col_headers.index(a_tuple["Column"])# + 1
                             #print id_index
                             for v_tuple in virtual_entry_tuples :
                                 if "isAttributeOf" in a_tuple :
@@ -638,10 +638,14 @@ if data_fn != "" :
             assertionString = ''
             provenanceString = ''
             publicationInfoString = ''
+            #id_string = row[id_index]            
             id_string=''
-            for term in row :
-                id_string+=str(term)
-            identifierString = hashlib.md5(id_string).hexdigest()
+            for term in row[1:] :
+                if term is not None:
+                    id_string+=str(term)
+            #print row[1:]
+            #print id_string
+            npubIdentifier = hashlib.md5(id_string).hexdigest()
             '''if (id_index is None) :
                 id_string=''
                 for term in row :
@@ -651,12 +655,12 @@ if data_fn != "" :
             else :
                 identifierString = str(row[id_index])'''
             try:
-                output_file.write(kb + "head-" + identifierString + " {")
-                output_file.write("\n\t" + kb + "nanoPub-" + identifierString)
+                output_file.write(kb + "head-" + npubIdentifier + " {")
+                output_file.write("\n\t" + kb + "nanoPub-" + npubIdentifier)
                 output_file.write("\n\t\trdf:type np:Nanopublication")
-                output_file.write(" ;\n\t\tnp:hasAssertion " + kb + "assertion-" + identifierString)
-                output_file.write(" ;\n\t\tnp:hasProvenance " + kb + "provenance-" + identifierString)
-                output_file.write(" ;\n\t\tnp:hasPublicationInfo " + kb + "pubInfo-" + identifierString)
+                output_file.write(" ;\n\t\tnp:hasAssertion " + kb + "assertion-" + npubIdentifier)
+                output_file.write(" ;\n\t\tnp:hasProvenance " + kb + "provenance-" + npubIdentifier)
+                output_file.write(" ;\n\t\tnp:hasPublicationInfo " + kb + "pubInfo-" + npubIdentifier)
                 output_file.write(" .\n}\n\n")# Nanopublication head
             #except : 
             #    print "Warning: Something went wrong when creating Nanopublicatipon head."
@@ -665,6 +669,7 @@ if data_fn != "" :
                 for a_tuple in explicit_entry_tuples :
                     #print a_tuple
                     if (a_tuple["Column"] in col_headers ) :
+                        identifierString = hashlib.md5(str(row[col_headers.index(a_tuple["Column"])+1])).hexdigest()
                         try :
                             try :
                                 assertionString += "\n\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "-" + identifierString + "\trdf:type\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-")
@@ -683,17 +688,21 @@ if data_fn != "" :
                                     else :
                                         assertionString += " ;\n\t\trdf:type\t" + a_tuple["Entity"]
                                 if "isAttributeOf" in a_tuple :
-                                    assertionString += " ;\n\t\tsio:isAttributeOf " + convertVirtualToKGEntry(a_tuple["isAttributeOf"],identifierString)
                                     if checkVirtual(a_tuple["isAttributeOf"]) :
+                                        assertionString += " ;\n\t\tsio:isAttributeOf " + convertVirtualToKGEntry(a_tuple["isAttributeOf"],npubIdentifier)
                                         if a_tuple["isAttributeOf"] not in vref_list :
                                             vref_list.append(a_tuple["isAttributeOf"])
+                                    else:
+                                        assertionString += " ;\n\t\tsio:isAttributeOf " + convertVirtualToKGEntry(a_tuple["isAttributeOf"],identifierString)
                                 if "Unit" in a_tuple :
                                     assertionString += " ;\n\t\tsio:hasUnit " + a_tuple["Unit"]
                                 if "Time" in a_tuple :
-                                    assertionString += " ;\n\t\tsio:existsAt " + convertVirtualToKGEntry(a_tuple["Time"], identifierString)
                                     if checkVirtual(a_tuple["Time"]) :
+                                        assertionString += " ;\n\t\tsio:existsAt " + convertVirtualToKGEntry(a_tuple["Time"], npubIdentifier)
                                         if a_tuple["Time"] not in vref_list :
                                             vref_list.append(a_tuple["Time"])
+                                    else :
+                                        assertionString += " ;\n\t\tsio:existsAt " + convertVirtualToKGEntry(a_tuple["Time"], identifierString)
                                 if "Label" in a_tuple :
                                     assertionString += " ;\n\t\trdfs:label \"" + a_tuple["Label"] + "\"^^xsd:string"
                                 if "Comment" in a_tuple :
@@ -702,13 +711,19 @@ if data_fn != "" :
                                     if checkVirtual(a_tuple["inRelationTo"]) :
                                         if a_tuple["inRelationTo"] not in vref_list :
                                             vref_list.append(a_tuple["inRelationTo"])
-                                    if "Relation" in a_tuple :
-                                        assertionString += " ;\n\t\t" + a_tuple["Relation"] + "\t" + convertVirtualToKGEntry(a_tuple["inRelationTo"], identifierString)
-                                    elif "Role" in a_tuple :
-                                        assertionString += " ;\n\t\tsio:hasRole [ rdf:type\t" + a_tuple["Role"] + " ;\n\t\t\tsio:inRelationTo " + convertVirtualToKGEntry(a_tuple["inRelationTo"]) + " ]"
-                                    else :
-                                        assertionString += " ;\n\t\tsio:inRelationTo\t" + convertVirtualToKGEntry(a_tuple["inRelationTo"], identifierString)
-
+                                        if "Relation" in a_tuple :
+                                            assertionString += " ;\n\t\t" + a_tuple["Relation"] + "\t" + convertVirtualToKGEntry(a_tuple["inRelationTo"], npubIdentifier)
+                                        elif "Role" in a_tuple :
+                                            assertionString += " ;\n\t\tsio:hasRole [ rdf:type\t" + a_tuple["Role"] + " ;\n\t\t\tsio:inRelationTo " + convertVirtualToKGEntry(a_tuple["inRelationTo"],npubIdentifier) + " ]"
+                                        else :
+                                            assertionString += " ;\n\t\tsio:inRelationTo\t" + convertVirtualToKGEntry(a_tuple["inRelationTo"], npubIdentifier)
+                                    else:
+                                        if "Relation" in a_tuple :
+                                            assertionString += " ;\n\t\t" + a_tuple["Relation"] + "\t" + convertVirtualToKGEntry(a_tuple["inRelationTo"], identifierString)
+                                        elif "Role" in a_tuple :
+                                            assertionString += " ;\n\t\tsio:hasRole [ rdf:type\t" + a_tuple["Role"] + " ;\n\t\t\tsio:inRelationTo " + convertVirtualToKGEntry(a_tuple["inRelationTo"],identifierString) + " ]"
+                                        else :
+                                            assertionString += " ;\n\t\tsio:inRelationTo\t" + convertVirtualToKGEntry(a_tuple["inRelationTo"], identifierString)                       
                             except Exception as e:
                                 print "Error writing initial assertion elements: "
                                 if hasattr(e, 'message'):
@@ -754,18 +769,20 @@ if data_fn != "" :
                                     except: 
                                         print "Warning: unable to write value to assertion string:", row[col_headers.index(a_tuple["Column"])+1]
                                 assertionString += " .\n"
-                            except :
-                                print "Error writing data value to assertion string:", row[col_headers.index(a_tuple["Column"])+1]
+                            except Exception as e:
+                                print "Error writing data value to assertion string:", row[col_headers.index(a_tuple["Column"])+1], ": " + str(e)
                             try :
                                 provenanceString += "\n\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "-" + identifierString + "\tprov:generatedAtTime\t\"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
                                 if "wasDerivedFrom" in a_tuple :
                                     if ',' in a_tuple["wasDerivedFrom"] :
                                         derivedFromTerms = parseString(a_tuple["wasDerivedFrom"],',')
                                         for derivedFromTerm in derivedFromTerms :
-                                            provenanceString += " ;\n\t\tprov:wasDerivedFrom\t" + convertVirtualToKGEntry(derivedFromTerm, identifierString)
                                             if checkVirtual(derivedFromTerm) :
+                                                provenanceString += " ;\n\t\tprov:wasDerivedFrom\t" + convertVirtualToKGEntry(derivedFromTerm, npubIdentifier)
                                                 if derivedFromTerm not in vref_list :
                                                     vref_list.append(derivedFromTerm)
+                                            else :
+                                                provenanceString += " ;\n\t\tprov:wasDerivedFrom\t" + convertVirtualToKGEntry(derivedFromTerm, identifierString)
                                     else :
                                         provenanceString += " ;\n\t\tprov:wasDerivedFrom\t" + convertVirtualToKGEntry(a_tuple["wasDerivedFrom"], identifierString)
                                     if checkVirtual(a_tuple["wasDerivedFrom"]) :
@@ -775,10 +792,12 @@ if data_fn != "" :
                                     if ',' in a_tuple["wasGeneratedBy"] :
                                         generatedByTerms = parseString(a_tuple["wasGeneratedBy"],',')
                                         for generatedByTerm in generatedByTerms :
-                                            provenanceString += " ;\n\t\tprov:wasGeneratedBy\t" + convertVirtualToKGEntry(generatedByTerm, identifierString)
                                             if checkVirtual(generatedByTerm) :
+                                                provenanceString += " ;\n\t\tprov:wasGeneratedBy\t" + convertVirtualToKGEntry(generatedByTerm, npubIdentifier)
                                                 if generatedByTerm not in vref_list :
                                                     vref_list.append(generatedByTerm)
+                                            else:
+                                                provenanceString += " ;\n\t\tprov:wasGeneratedBy\t" + convertVirtualToKGEntry(generatedByTerm, identifierString)
                                     else :
                                         provenanceString += " ;\n\t\tprov:wasGeneratedBy\t" + convertVirtualToKGEntry(a_tuple["wasGeneratedBy"], identifierString)
                                     if checkVirtual(a_tuple["wasGeneratedBy"]) :
@@ -800,25 +819,25 @@ if data_fn != "" :
                                 if "hasPosition" in a_tuple :
                                     publicationInfoString += ";\n\t\thasco:hasPosition\t\"" + str(a_tuple["hasPosition"]) + "\"^^xsd:integer"
                                 publicationInfoString += " .\n"
-                            except :
-                                print "Error writing provenance or publication info"
-                        except :
-                            print "Unable to process tuple" + a_tuple.__str__()
+                            except Exception as e:
+                                print "Error writing provenance or publication info: " + str(e)
+                        except Exception as e:
+                            print "Unable to process tuple" + a_tuple.__str__() + ": " + str(e)
                 try: 
                     for vref in vref_list : 
-                        [assertionString,provenanceString,publicationInfoString,vref_list] = writeVirtualEntry(assertionString,provenanceString,publicationInfoString, vref_list, vref, identifierString)
-                except :
-                    print "Warning: Something went writing vref entries."
-            except:
-                print "Error: Something went wrong when processing explicit tuples."
+                        [assertionString,provenanceString,publicationInfoString,vref_list] = writeVirtualEntry(assertionString,provenanceString,publicationInfoString, vref_list, vref, npubIdentifier)
+                except Exception as e:
+                    print "Warning: Something went writing vref entries: " + str(e)
+            except Exception as e:
+                print "Error: Something went wrong when processing explicit tuples: " + str(e)
                 sys.exit(1)
-            output_file.write(kb + "assertion-" + identifierString + " {")
+            output_file.write(kb + "assertion-" + npubIdentifier + " {")
             output_file.write(assertionString + "\n}\n\n")
-            output_file.write(kb + "provenance-" + identifierString + " {")
-            provenanceString = "\n\t" + kb + "assertion-" + identifierString + " prov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString
+            output_file.write(kb + "provenance-" + npubIdentifier + " {")
+            provenanceString = "\n\t" + kb + "assertion-" + npubIdentifier + " prov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString
             output_file.write(provenanceString + "\n}\n\n")
-            output_file.write(kb + "pubInfo-" + identifierString + " {")
-            publicationInfoString = "\n\t" + kb + "nanoPub-" + identifierString + " prov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + publicationInfoString
+            output_file.write(kb + "pubInfo-" + npubIdentifier + " {")
+            publicationInfoString = "\n\t" + kb + "nanoPub-" + npubIdentifier + " prov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + publicationInfoString
             output_file.write(publicationInfoString + "\n}\n\n")
     except :
         print "Warning: Unable to process Data file"
