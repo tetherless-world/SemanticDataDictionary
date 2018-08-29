@@ -668,8 +668,13 @@ if data_fn != "" :
                 vref_list = []
                 for a_tuple in explicit_entry_tuples :
                     #print a_tuple
-                    if (a_tuple["Column"] in col_headers ) :
-                        identifierString = hashlib.md5(str(row[col_headers.index(a_tuple["Column"])+1])).hexdigest()
+                    if (a_tuple["Column"] in col_headers ) :                     
+                        typeString = ""
+                        if "Attribute" in a_tuple :
+                            typeString += str(a_tuple["Attribute"])
+                        if "Entity" in a_tuple :
+                            typeString += str(a_tuple["Entity"])
+                        identifierString = hashlib.md5(str(row[col_headers.index(a_tuple["Column"])+1])+typeString).hexdigest()
                         try :
                             try :
                                 assertionString += "\n\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "-" + identifierString + "\trdf:type\t" + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-")
