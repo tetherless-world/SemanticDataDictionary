@@ -26,8 +26,8 @@ if (len(sys.argv) < 2) :
 config = configparser.ConfigParser()
 try:
     config.read(sys.argv[1])
-except:
-    print "[ERROR] Unable to open configuration file."
+except Exception as e :
+    print "[ERROR] Unable to open configuration file:" + str(e)
     sys.exit(1)
 
 #unspecified parameters in the config file should set the corresponding read string to ""
@@ -101,8 +101,8 @@ try:
             virtual_entry_list.append(row)
         else :
             explicit_entry_list.append(row)
-except : 
-    print "Something went wrong when trying to read the DM"
+except Exception as e :
+    print "Something went wrong when trying to read the DM: " + str(e)
     sys.exit(1)
 
 #Using itertuples on a data frame makes the column heads case-sensitive
@@ -159,8 +159,8 @@ def checkVirtual(input_word) :
             return True
         else :
             return False
-    except :
-        print "Something went wrong in checkVirtual()"
+    except Exception as e:
+        print "Something went wrong in checkVirtual()" + str(e)
         sys.exit(1)
 
 def isfloat(value):
@@ -546,14 +546,14 @@ def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, v
                     #if  "wasGeneratedBy" in v_tuple or "wasDerivedFrom" in v_tuple  :
                     provenanceString += " .\n"
         return [assertionString,provenanceString,publicationInfoString,vref_list]
-    except :
-        print "Warning: Unable to create virtual entry."
+    except Exception as e :
+        print "Warning: Unable to create virtual entry: " + str(e)
 
 if cb_fn is not None :
     try :
         cb_file = pd.read_csv(cb_fn, dtype=object)
     except Exception, e:
-        print "Error: The processing Codebook file:" + str(e)
+        print "Error: The processing Codebook file: " + str(e)
         sys.exit(1)
     try :
         inner_tuple_list = []
@@ -573,14 +573,14 @@ if cb_fn is not None :
             inner_tuple_list.append(inner_tuple)
             cb_tuple[row.Column]=inner_tuple_list
             row_num += 1
-    except :
-        print "Warning: Unable to process Codebook file"
+    except Exception as e :
+        print "Warning: Unable to process Codebook file: " + str(e)
 
 if timeline_fn is not None :
     try :
         timeline_file = pd.read_csv(timeline_fn, dtype=object)
-    except :
-        print "Error: The specified Timeline file does not exist."
+    except Exception as e :
+        print "Error: The specified Timeline file does not exist: " + str(e)
         sys.exit(1)
     try :
         inner_tuple_list = []
@@ -603,8 +603,8 @@ if timeline_fn is not None :
             inner_tuple_list.append(inner_tuple)
             timeline_tuple[row.Name]=inner_tuple_list
             row_num += 1
-    except :
-        print "Warning: Unable to process Timeline file"
+    except Exception as e :
+        print "Warning: Unable to process Timeline file: " + str(e)
 
 writeExplicitEntryTrig(explicit_entry_list, explicit_entry_tuples, output_file, query_file)
 writeVirtualEntryTrig(virtual_entry_list, virtual_entry_tuples, output_file, query_file)
@@ -612,8 +612,8 @@ writeVirtualEntryTrig(virtual_entry_list, virtual_entry_tuples, output_file, que
 if data_fn != "" :
     try :
         data_file = pd.read_csv(data_fn, dtype=object)
-    except :
-        print "Error: The specified Data file does not exist."
+    except Exception as e :
+        print "Error: The specified Data file does not exist: " + str(e)
         sys.exit(1)
     try :
         # ensure that there is a column annotated as the sio:Identifier or hasco:originalID in the data file:
@@ -632,8 +632,8 @@ if data_fn != "" :
                                 if "isAttributeOf" in a_tuple :
                                     if (a_tuple["isAttributeOf"] == v_tuple["Column"]) :
                                         v_tuple["Subject"]=a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-")
-        except: 
-            print "Error processing column headers"
+        except Exception as e :
+            print "Error processing column headers: " + str(e)
         for row in data_file.itertuples() :
             assertionString = ''
             provenanceString = ''
@@ -662,8 +662,8 @@ if data_fn != "" :
                 output_file.write(" ;\n\t\tnp:hasProvenance " + kb + "provenance-" + npubIdentifier)
                 output_file.write(" ;\n\t\tnp:hasPublicationInfo " + kb + "pubInfo-" + npubIdentifier)
                 output_file.write(" .\n}\n\n")# Nanopublication head
-            #except : 
-            #    print "Warning: Something went wrong when creating Nanopublicatipon head."
+            #except Exception as e : 
+            #    print "Warning: Something went wrong when creating Nanopublicatipon head: " + str(e)
             #try :
                 vref_list = []
                 for a_tuple in explicit_entry_tuples :
@@ -674,6 +674,18 @@ if data_fn != "" :
                             typeString += str(a_tuple["Attribute"])
                         if "Entity" in a_tuple :
                             typeString += str(a_tuple["Entity"])
+                        if "Label" in a_tuple :
+                            typeString += str(a_tuple["Label"])
+                        if "Unit" in a_tuple :
+                            typeString += str(a_tuple["Unit"])
+                        if "Time" in a_tuple :
+                            typeString += str(a_tuple["Time"])
+                        if "inRelationTo" in a_tuple :
+                            typeString += str(a_tuple["inRelationTo"])
+                        if "wasGeneratedBy" in a_tuple :
+                            typeString += str(a_tuple["wasGeneratedBy"])
+                        if "wasDerivedFrom" in a_tuple :
+                            typeString += str(a_tuple["wasDerivedFrom"])
                         identifierString = hashlib.md5(str(row[col_headers.index(a_tuple["Column"])+1])+typeString).hexdigest()
                         try :
                             try :
@@ -771,8 +783,8 @@ if data_fn != "" :
                                             assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:float"
                                         else :
                                             assertionString += " ;\n\t\tsio:hasValue\t\"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:string"
-                                    except: 
-                                        print "Warning: unable to write value to assertion string:", row[col_headers.index(a_tuple["Column"])+1]
+                                    except Exception as e :
+                                        print "Warning: unable to write value to assertion string:", row[col_headers.index(a_tuple["Column"])+1] + ": " + str(e)
                                 assertionString += " .\n"
                             except Exception as e:
                                 print "Error writing data value to assertion string:", row[col_headers.index(a_tuple["Column"])+1], ": " + str(e)
@@ -844,7 +856,7 @@ if data_fn != "" :
             output_file.write(kb + "pubInfo-" + npubIdentifier + " {")
             publicationInfoString = "\n\t" + kb + "nanoPub-" + npubIdentifier + " prov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + publicationInfoString
             output_file.write(publicationInfoString + "\n}\n\n")
-    except :
-        print "Warning: Unable to process Data file"
+    except Exception as e :
+        print "Warning: Unable to process Data file: " + str(e)
 
 output_file.close()
