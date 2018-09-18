@@ -10,120 +10,6 @@ import hashlib
 import os
 reload(sys)
 sys.setdefaultencoding('utf8')
-kb=":"
-out_fn = "out.ttl"
-prefix_fn="prefixes.txt"
-
-studyRef = None
-
-# Need to implement input flags rather than ordering
-if (len(sys.argv) < 2) :
-    #print "Usage: python sdd2rdf.py <DM_file> [<data_file>] [<codebook_file>] [<output_file>] [kb_prefix]\nOptional arguments can be skipped by entering '!'"
-    print "Usage: python sdd2rdf.py <configuration_file>"
-    sys.exit(1)
-
-#file setup and configuration
-config = configparser.ConfigParser()
-try:
-    config.read(sys.argv[1])
-except Exception as e :
-    print "[ERROR] Unable to open configuration file:" + str(e)
-    sys.exit(1)
-
-#unspecified parameters in the config file should set the corresponding read string to ""
-prefix_fn = config['Prefixes']['prefixes']
-kb = config['Prefixes']['base_uri'] + ":"
-
-dm_fn = config['Source Files']['dictionary']
-
-if 'codebook' in config['Source Files'] :
-    cb_fn = config['Source Files']['codebook']
-else :
-    cb_fn = None
-
-if 'timeline' in config['Source Files'] :
-    timeline_fn = config['Source Files']['timeline']
-else :
-    timeline_fn = None
-
-cmap_fn = config['Source Files']['code_mappings']
-data_fn = config['Source Files']['data_file']
-
-out_fn = config['Output Files']['out_file']
-
-if 'query_file' in config['Output Files'] :
-    query_fn = config['Output Files']['query_file']
-else :    
-    query_fn = "queryQ"
-
-if 'swrl_file' in config['Output Files'] :
-    swrl_fn = config['Output Files']['swrl_file']
-else :    
-    swrl_fn = "swrlModel"
-
-if out_fn == "" :
-    out_fn = "out.ttl"
-
-output_file = open(out_fn,"w")
-query_file = open(query_fn,"w")
-swrl_file = open(swrl_fn,"w")
-prefix_file = open(prefix_fn,"r")
-prefixes = prefix_file.readlines()
-
-for prefix in prefixes :
-    #print prefix.find(">")
-    output_file.write(prefix)
-    query_file.write(prefix[1:prefix.find(">")+1])
-    query_file.write("\n")
-output_file.write("\n")
-
-# K: parameterize this, too?
-#code_mappings_url = 'https://raw.githubusercontent.com/tetherless-world/chear-ontology/master/code_mappings.csv'
-#code_mappings_response = urllib2.urlopen(code_mappings_url)
-#code_mappings_reader = csv.reader(code_mappings_response)
-code_mappings_reader = pd.read_csv(cmap_fn)
-
-unit_code_list = []
-unit_uri_list = []
-unit_label_list = []
-
-explicit_entry_list = []
-virtual_entry_list = []
-
-explicit_entry_tuples = []
-virtual_entry_tuples = []
-cb_tuple = {}
-timeline_tuple = {}
-
-try :
-    dm_file = pd.read_csv(dm_fn, dtype=object)
-except Exception, e:
-    print "Current directory: " + os.getcwd() + "/ - " + str(os.path.isfile(dm_fn)) 
-    print "Error: The processing DM file \"" + dm_fn + "\": " + str(e)
-    sys.exit(1)
-
-try: 
-    # Set virtual and explicit entries
-    for row in dm_file.itertuples() :
-        if (pd.isnull(row.Column)) :
-            print "Error: The DM must have a column named 'Column'"
-            sys.exit(1)
-        if row.Column.startswith("??") :
-            virtual_entry_list.append(row)
-        else :
-            explicit_entry_list.append(row)
-except Exception as e :
-    print "Something went wrong when trying to read the DM: " + str(e)
-    sys.exit(1)
-
-#Using itertuples on a data frame makes the column heads case-sensitive
-for code_row in code_mappings_reader.itertuples() :
-    if pd.notnull(code_row.code):
-        unit_code_list.append(code_row.code)
-    if pd.notnull(code_row.uri):
-        unit_uri_list.append(code_row.uri)
-    if pd.notnull(code_row.label):
-        unit_label_list.append(code_row.label)
 
 def parseString(input_string, delim) :
     my_list = input_string.split(delim)
@@ -174,10 +60,19 @@ def checkVirtual(input_word) :
         print "Something went wrong in checkVirtual()" + str(e)
         sys.exit(1)
 
-def isfloat(value):
+def isfloat(term):
     try:
-        float(value)
+        float(term)
         return True
+    except ValueError:
+        return False
+
+def isURI(term):
+    try:
+        if any(c in term for c in ("http://","https://")) :
+            return True
+        else:
+            return False
     except ValueError:
         return False
 
@@ -518,6 +413,204 @@ def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, v
         return [assertionString,provenanceString,publicationInfoString,vref_list]
     except Exception as e :
         print "Warning: Unable to create virtual entry: " + str(e)
+
+kb=":"
+out_fn = "out.ttl"
+prefix_fn="prefixes.txt"
+
+studyRef = None
+
+# Need to implement input flags rather than ordering
+if (len(sys.argv) < 2) :
+    #print "Usage: python sdd2rdf.py <DM_file> [<data_file>] [<codebook_file>] [<output_file>] [kb_prefix]\nOptional arguments can be skipped by entering '!'"
+    print "Usage: python sdd2rdf.py <configuration_file>"
+    sys.exit(1)
+
+#file setup and configuration
+config = configparser.ConfigParser()
+try:
+    config.read(sys.argv[1])
+except Exception as e :
+    print "[ERROR] Unable to open configuration file:" + str(e)
+    sys.exit(1)
+
+#unspecified parameters in the config file should set the corresponding read string to ""
+prefix_fn = config['Prefixes']['prefixes']
+kb = config['Prefixes']['base_uri'] + ":"
+
+dm_fn = config['Source Files']['dictionary']
+
+if 'codebook' in config['Source Files'] :
+    cb_fn = config['Source Files']['codebook']
+else :
+    cb_fn = None
+
+if 'timeline' in config['Source Files'] :
+    timeline_fn = config['Source Files']['timeline']
+else :
+    timeline_fn = None
+
+if 'infosheet' in config['Source Files'] :
+    infosheet_fn = config['Source Files']['infosheet']
+else :
+    infosheet_fn = None
+
+cmap_fn = config['Source Files']['code_mappings']
+data_fn = config['Source Files']['data_file']
+
+out_fn = config['Output Files']['out_file']
+
+if 'query_file' in config['Output Files'] :
+    query_fn = config['Output Files']['query_file']
+else :    
+    query_fn = "queryQ"
+
+if 'swrl_file' in config['Output Files'] :
+    swrl_fn = config['Output Files']['swrl_file']
+else :    
+    swrl_fn = "swrlModel"
+
+if out_fn == "" :
+    out_fn = "out.ttl"
+
+output_file = open(out_fn,"w")
+query_file = open(query_fn,"w")
+swrl_file = open(swrl_fn,"w")
+prefix_file = open(prefix_fn,"r")
+prefixes = prefix_file.readlines()
+
+for prefix in prefixes :
+    #print prefix.find(">")
+    output_file.write(prefix)
+    query_file.write(prefix[1:prefix.find(">")+1])
+    query_file.write("\n")
+output_file.write("\n")
+
+# K: parameterize this, too?
+#code_mappings_url = 'https://raw.githubusercontent.com/tetherless-world/chear-ontology/master/code_mappings.csv'
+#code_mappings_response = urllib2.urlopen(code_mappings_url)
+#code_mappings_reader = csv.reader(code_mappings_response)
+
+unit_code_list = []
+unit_uri_list = []
+unit_label_list = []
+
+explicit_entry_list = []
+virtual_entry_list = []
+
+explicit_entry_tuples = []
+virtual_entry_tuples = []
+cb_tuple = {}
+timeline_tuple = {}
+infosheet_tuple = {}
+
+if infosheet_fn is not None :
+    try :
+        infosheet_file = pd.read_csv(infosheet_fn, dtype=object)
+    except Exception as e :
+        print "Error: The specified Infosheet file does not exist or is unreadable: " + str(e)
+        sys.exit(1)
+    for row in infosheet_file.itertuples() :
+        if(pd.notnull(row.Value)):
+            infosheet_tuple[row.Attribute]=row.Value    
+    output_file.write(kb + "head-dataset_metadata { ")
+    output_file.write("\n    " + kb + "nanoPub-dataset_metadata    rdf:type np:Nanopublication")
+    output_file.write(" ;\n        np:hasAssertion    " + kb + "assertion-dataset_metadata")
+    output_file.write(" ;\n        np:hasProvenance    " + kb + "provenance-dataset_metadata")
+    output_file.write(" ;\n        np:hasPublicationInfo    " + kb + "pubInfo-dataset_metadata")
+    output_file.write(" .\n}\n\n")
+    assertionString = kb + "dataset"
+    provenanceString = "    " + kb + "dataset    <http://www.w3.org/ns/prov#generatedAtTime>    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
+    if "Type" in infosheet_tuple :
+        assertionString += "    rdf:type    <" + infosheet_tuple["Type"]+ ">"
+    else :
+        print "Error: The Infosheet file is missing the required Type value declaration"
+        sys.exit(1)
+    if "Title" in infosheet_tuple :
+        assertionString += " ;\n        <http://purl.org/dc/terms/title>    \"" + infosheet_tuple["Title"] + "\"^^xsd:string"
+    if "Alternative Title" in infosheet_tuple : # should check for multiple values
+        assertionString += " ;\n        <http://purl.org/dc/terms/dct/alternative>    \"" + infosheet_tuple["Alternative Title"] + "\"^^xsd:string"
+    if "Description" in infosheet_tuple :
+        assertionString += " ;\n        <http://purl.org/dc/terms/dct/description>    \"" + infosheet_tuple["Description"] + "\"^^xsd:string"
+    if "Date Created" in infosheet_tuple :
+        assertionString += " ;\n        <http://purl.org/dc/terms/dct/created>    \"" + infosheet_tuple["Date Created"] + "\"^^xsd:date"
+    if "Creators" in infosheet_tuple : # currently encoded as string, should also check if IRI, should check for multiple values
+        assertionString += " ;\n        <http://purl.org/dc/terms/dct/creator>    \"" + infosheet_tuple["Creators"] + "\"^^xsd:string"
+    if "Contributors" in infosheet_tuple : # currently encoded as string, should also check if IRI, should check for multiple values
+        assertionString += " ;\n        <http://purl.org/dc/terms/dct/contributor>    \"" + infosheet_tuple["Contributors"] + "\"^^xsd:string"
+    if "Publisher" in infosheet_tuple : # currently encoded as string, should also check if IRI, should check for multiple values
+        assertionString += " ;\n        <http://purl.org/dc/terms/dct/publisher>    \"" + infosheet_tuple["Publisher"] + "\"^^xsd:string"
+    if "Date of Issue" in infosheet_tuple :
+        assertionString += " ;\n        <http://purl.org/dc/terms/dct/issued>    \"" + infosheet_tuple["Date of Issue"] + "\"^^xsd:date"
+    if "Link" in infosheet_tuple :
+        assertionString += " ;\n        <http://xmlns.com/foaf/0.1/page>    <" + infosheet_tuple["Link"] + ">"
+    if "Identifier" in infosheet_tuple :
+        assertionString += " ;\n        <http://semanticscience.org/resource/hasIdentifier>    \n            [ rdf:type    <http://semanticscience.org/resource/Identifier> ; \n            <http://semanticscience.org/resource/hasValue>    \"" + infosheet_tuple["Identifier"] + "\"^^xsd:string ]"
+    if "Keywords" in infosheet_tuple : # should check for multiple values
+        assertionString += " ;\n        <http://www.w3.org/ns/dcat#keyword>    \"" + infosheet_tuple["Keywords"] + "\"^^xsd:string"
+    if "License" in infosheet_tuple : # should check if IRI
+        assertionString += " ;\n        <http://purl.org/dc/terms/dct/license>    \"" + infosheet_tuple["License"] + "\"^^xsd:string"
+    if "Rights" in infosheet_tuple : # should check for multiple values
+        assertionString += " ;\n        <http://purl.org/dc/terms/dct/rights>    \"" + infosheet_tuple["Rights"] + "\"^^xsd:string"
+    if "Language" in infosheet_tuple : # should check for multiple values
+        assertionString += " ;\n        <http://purl.org/dc/terms/dct/language>    \"" + infosheet_tuple["Language"] + "\"^^xsd:string"
+    if "Version" in infosheet_tuple :
+        provenanceString += " ;\n        <http://purl.org/pav/version>    \"" + infosheet_tuple["Version"] + "\"^^xsd:string"
+    if "Source" in infosheet_tuple : # should check for multiple values
+        provenanceString += " ;\n        <http://purl.org/dc/terms/dct/source>    \"" + infosheet_tuple["Source"] + "\"^^xsd:string"
+    if "File Format" in infosheet_tuple : # should check for multiple values
+        assertionString += " ;\n        <http://purl.org/dc/terms/dct/format>    \"" + infosheet_tuple["File Format"] + "\"^^xsd:string"
+    if "Documentation" in infosheet_tuple : # currently encoded as string, should check if IRI
+        provenanceString += " ;\n        <http://www.w3.org/ns/dcat#landingPage>    \"" + infosheet_tuple["Documentation"] + "\"^^xsd:string"   
+    if "Imports" in infosheet_tuple : # should check for multiple values
+        assertionString += " ;\n        <http://www.w3.org/2002/07/owl#imports>    \"" + infosheet_tuple["Imports"] + "\"^^xsd:string"
+    assertionString += " .\n"
+    provenanceString += " .\n"
+    output_file.write(kb + "assertion-dataset_metadata {\n    " + assertionString + "\n}\n\n")
+    output_file.write(kb + "provenance-dataset_metadata {\n    " + kb + "assertion-dataset_metadata    <http://www.w3.org/ns/prov#generatedAtTime>    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString + "\n}\n\n")
+    output_file.write(kb + "pubInfo-dataset_metadata {")
+    publicationInfoString = "\n    " + kb + "nanoPub-dataset_metadata    <http://www.w3.org/ns/prov#generatedAtTime>    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n"
+    output_file.write(publicationInfoString + "\n}\n\n")
+    # If SDD files included in Infosheet, they override the config declarations
+    if "Dictionary Mapping" in infosheet_tuple :
+        dm_fn = infosheet_tuple["Dictionary Mapping"] 
+    if "Codebook" in infosheet_tuple : 
+        cb_fn = infosheet_tuple["Codebook"]
+    if "Code Mapping" in infosheet_tuple : 
+        cmap_fn = infosheet_tuple["Code Mapping"]
+    if "Timeline" in infosheet_tuple : 
+        timeline_fn = infosheet_tuple["Timeline"]
+
+try :
+    dm_file = pd.read_csv(dm_fn, dtype=object)
+except Exception, e:
+    print "Current directory: " + os.getcwd() + "/ - " + str(os.path.isfile(dm_fn)) 
+    print "Error: The processing DM file \"" + dm_fn + "\": " + str(e)
+    sys.exit(1)
+
+try: 
+    # Set virtual and explicit entries
+    for row in dm_file.itertuples() :
+        if (pd.isnull(row.Column)) :
+            print "Error: The DM must have a column named 'Column'"
+            sys.exit(1)
+        if row.Column.startswith("??") :
+            virtual_entry_list.append(row)
+        else :
+            explicit_entry_list.append(row)
+except Exception as e :
+    print "Something went wrong when trying to read the DM: " + str(e)
+    sys.exit(1)
+
+code_mappings_reader = pd.read_csv(cmap_fn)
+#Using itertuples on a data frame makes the column heads case-sensitive
+for code_row in code_mappings_reader.itertuples() :
+    if pd.notnull(code_row.code):
+        unit_code_list.append(code_row.code)
+    if pd.notnull(code_row.uri):
+        unit_uri_list.append(code_row.uri)
+    if pd.notnull(code_row.label):
+        unit_label_list.append(code_row.label)
 
 if cb_fn is not None :
     try :
