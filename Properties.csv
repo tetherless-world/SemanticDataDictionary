@@ -1,0 +1,12 @@
+Column,Property
+Label,rdfs:label
+Comment,rdfs:comment
+Attribute,rdf:type
+attributeOf,sio:isAttributeOf
+Unit,sio:hasUnit
+Time,sio:existsAt
+Entity,rdf:type
+Role,sio:hasRole
+inRelationTo,sio:inRelationTo
+wasDerivedFrom,prov:wasDerivedFrom
+wasGeneratedBy,prov:wasGeneratedBy
