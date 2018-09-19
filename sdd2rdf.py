@@ -533,19 +533,19 @@ if infosheet_fn is not None :
     if "Title" in infosheet_tuple :
         assertionString += " ;\n        <http://purl.org/dc/terms/title>    \"" + infosheet_tuple["Title"] + "\"^^xsd:string"
     if "Alternative Title" in infosheet_tuple : # should check for multiple values
-        assertionString += " ;\n        <http://purl.org/dc/terms/dct/alternative>    \"" + infosheet_tuple["Alternative Title"] + "\"^^xsd:string"
+        assertionString += " ;\n        <http://purl.org/dc/terms/alternative>    \"" + infosheet_tuple["Alternative Title"] + "\"^^xsd:string"
     if "Description" in infosheet_tuple :
-        assertionString += " ;\n        <http://purl.org/dc/terms/dct/description>    \"" + infosheet_tuple["Description"] + "\"^^xsd:string"
+        assertionString += " ;\n        <http://purl.org/dc/terms/description>    \"" + infosheet_tuple["Description"] + "\"^^xsd:string"
     if "Date Created" in infosheet_tuple :
-        assertionString += " ;\n        <http://purl.org/dc/terms/dct/created>    \"" + infosheet_tuple["Date Created"] + "\"^^xsd:date"
+        assertionString += " ;\n        <http://purl.org/dc/terms/created>    \"" + infosheet_tuple["Date Created"] + "\"^^xsd:date"
     if "Creators" in infosheet_tuple : # currently encoded as string, should also check if IRI, should check for multiple values
-        assertionString += " ;\n        <http://purl.org/dc/terms/dct/creator>    \"" + infosheet_tuple["Creators"] + "\"^^xsd:string"
+        assertionString += " ;\n        <http://purl.org/dc/terms/creator>    \"" + infosheet_tuple["Creators"] + "\"^^xsd:string"
     if "Contributors" in infosheet_tuple : # currently encoded as string, should also check if IRI, should check for multiple values
-        assertionString += " ;\n        <http://purl.org/dc/terms/dct/contributor>    \"" + infosheet_tuple["Contributors"] + "\"^^xsd:string"
+        assertionString += " ;\n        <http://purl.org/dc/terms/contributor>    \"" + infosheet_tuple["Contributors"] + "\"^^xsd:string"
     if "Publisher" in infosheet_tuple : # currently encoded as string, should also check if IRI, should check for multiple values
-        assertionString += " ;\n        <http://purl.org/dc/terms/dct/publisher>    \"" + infosheet_tuple["Publisher"] + "\"^^xsd:string"
+        assertionString += " ;\n        <http://purl.org/dc/terms/publisher>    \"" + infosheet_tuple["Publisher"] + "\"^^xsd:string"
     if "Date of Issue" in infosheet_tuple :
-        assertionString += " ;\n        <http://purl.org/dc/terms/dct/issued>    \"" + infosheet_tuple["Date of Issue"] + "\"^^xsd:date"
+        assertionString += " ;\n        <http://purl.org/dc/terms/issued>    \"" + infosheet_tuple["Date of Issue"] + "\"^^xsd:date"
     if "Link" in infosheet_tuple :
         assertionString += " ;\n        <http://xmlns.com/foaf/0.1/page>    <" + infosheet_tuple["Link"] + ">"
     if "Identifier" in infosheet_tuple :
@@ -553,17 +553,17 @@ if infosheet_fn is not None :
     if "Keywords" in infosheet_tuple : # should check for multiple values
         assertionString += " ;\n        <http://www.w3.org/ns/dcat#keyword>    \"" + infosheet_tuple["Keywords"] + "\"^^xsd:string"
     if "License" in infosheet_tuple : # should check if IRI
-        assertionString += " ;\n        <http://purl.org/dc/terms/dct/license>    \"" + infosheet_tuple["License"] + "\"^^xsd:string"
+        assertionString += " ;\n        <http://purl.org/dc/terms/license>    \"" + infosheet_tuple["License"] + "\"^^xsd:string"
     if "Rights" in infosheet_tuple : # should check for multiple values
-        assertionString += " ;\n        <http://purl.org/dc/terms/dct/rights>    \"" + infosheet_tuple["Rights"] + "\"^^xsd:string"
+        assertionString += " ;\n        <http://purl.org/dc/terms/rights>    \"" + infosheet_tuple["Rights"] + "\"^^xsd:string"
     if "Language" in infosheet_tuple : # should check for multiple values
-        assertionString += " ;\n        <http://purl.org/dc/terms/dct/language>    \"" + infosheet_tuple["Language"] + "\"^^xsd:string"
+        assertionString += " ;\n        <http://purl.org/dc/terms/language>    \"" + infosheet_tuple["Language"] + "\"^^xsd:string"
     if "Version" in infosheet_tuple :
         provenanceString += " ;\n        <http://purl.org/pav/version>    \"" + infosheet_tuple["Version"] + "\"^^xsd:string"
     if "Source" in infosheet_tuple : # should check for multiple values
-        provenanceString += " ;\n        <http://purl.org/dc/terms/dct/source>    \"" + infosheet_tuple["Source"] + "\"^^xsd:string"
+        provenanceString += " ;\n        <http://purl.org/dc/terms/source>    \"" + infosheet_tuple["Source"] + "\"^^xsd:string"
     if "File Format" in infosheet_tuple : # should check for multiple values
-        assertionString += " ;\n        <http://purl.org/dc/terms/dct/format>    \"" + infosheet_tuple["File Format"] + "\"^^xsd:string"
+        assertionString += " ;\n        <http://purl.org/dc/terms/format>    \"" + infosheet_tuple["File Format"] + "\"^^xsd:string"
     if "Documentation" in infosheet_tuple : # currently encoded as string, should check if IRI
         provenanceString += " ;\n        <http://www.w3.org/ns/dcat#landingPage>    \"" + infosheet_tuple["Documentation"] + "\"^^xsd:string"   
     if "Imports" in infosheet_tuple : # should check for multiple values
