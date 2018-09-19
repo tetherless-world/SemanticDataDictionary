@@ -1,0 +1,25 @@
+Attribute,Value
+Type,http://purl.org/dc/dcmitype/Dataset
+Title,A Study on Cheese
+Alternative Title,Cheese Study
+Description,"This dataset describes the properties of cheese. Most of them included are very tasty, though some are quite smelly."
+Date Created,2018-09-18
+Creators,Sabbir Rashid
+Contributors,Sabbir's friends
+Publisher,Sabbir's Publisher
+Date of Issue,2018-09-18
+Link,"http://cs.rpi.edu/~rashis2/"
+Identifier,cheese-2018
+Keywords,"cheese,swiss,provolone,american cheese,cheddar"
+License,MIT Licence
+Rights,Rights Reserved
+Language,English
+Version,1.0
+Source,
+File Format,csv
+Documentation,
+Dictionary Mapping,
+Codebook,
+Code Mapping,
+Timeline,
+Imports,
