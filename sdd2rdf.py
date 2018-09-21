@@ -526,48 +526,93 @@ if infosheet_fn is not None :
     assertionString = kb + "dataset"
     provenanceString = "    " + kb + "dataset    <http://www.w3.org/ns/prov#generatedAtTime>    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
     if "Type" in infosheet_tuple :
-        assertionString += "    rdf:type    <" + infosheet_tuple["Type"]+ ">"
+        assertionString += "    rdf:type    " + [infosheet_tuple["Type"],"<" + infosheet_tuple["Type"] + ">"][isURI(infosheet_tuple["Type"])]
     else :
         print "Error: The Infosheet file is missing the required Type value declaration"
         sys.exit(1)
     if "Title" in infosheet_tuple :
         assertionString += " ;\n        <http://purl.org/dc/terms/title>    \"" + infosheet_tuple["Title"] + "\"^^xsd:string"
-    if "Alternative Title" in infosheet_tuple : # should check for multiple values
-        assertionString += " ;\n        <http://purl.org/dc/terms/alternative>    \"" + infosheet_tuple["Alternative Title"] + "\"^^xsd:string"
+    if "Alternative Title" in infosheet_tuple : 
+        if ',' in infosheet_tuple["Alternative Title"] :
+            alt_titles = parseString(infosheet_tuple["Alternative Title"],',')
+            for alt_title in alt_titles :
+                assertionString += " ;\n        <http://purl.org/dc/terms/alternative>    \"" + alt_title + "\"^^xsd:string"
+        else :
+            assertionString += " ;\n        <http://purl.org/dc/terms/alternative>    \"" + infosheet_tuple["Alternative Title"] + "\"^^xsd:string"
     if "Description" in infosheet_tuple :
         assertionString += " ;\n        <http://purl.org/dc/terms/description>    \"" + infosheet_tuple["Description"] + "\"^^xsd:string"
     if "Date Created" in infosheet_tuple :
         assertionString += " ;\n        <http://purl.org/dc/terms/created>    \"" + infosheet_tuple["Date Created"] + "\"^^xsd:date"
-    if "Creators" in infosheet_tuple : # currently encoded as string, should also check if IRI, should check for multiple values
-        assertionString += " ;\n        <http://purl.org/dc/terms/creator>    \"" + infosheet_tuple["Creators"] + "\"^^xsd:string"
-    if "Contributors" in infosheet_tuple : # currently encoded as string, should also check if IRI, should check for multiple values
-        assertionString += " ;\n        <http://purl.org/dc/terms/contributor>    \"" + infosheet_tuple["Contributors"] + "\"^^xsd:string"
-    if "Publisher" in infosheet_tuple : # currently encoded as string, should also check if IRI, should check for multiple values
-        assertionString += " ;\n        <http://purl.org/dc/terms/publisher>    \"" + infosheet_tuple["Publisher"] + "\"^^xsd:string"
+    if "Creators" in infosheet_tuple : 
+        if ',' in infosheet_tuple["Creators"] :
+            creators = parseString(infosheet_tuple["Creators"],',')
+            for creator in creators :
+                assertionString += " ;\n        <http://purl.org/dc/terms/creator>    " + ["\"" + creator + "\"^^xsd:string","<" + creator + ">"][isURI(creator)]
+        else :
+            assertionString += " ;\n        <http://purl.org/dc/terms/creator>    " + ["\"" + infosheet_tuple["Creators"] + "\"^^xsd:string","<" + infosheet_tuple["Creators"] + ">"][isURI(infosheet_tuple["Creators"])]
+    if "Contributors" in infosheet_tuple : 
+        if ',' in infosheet_tuple["Contributors"] :
+            contributors = parseString(infosheet_tuple["Contributors"],',')
+            for contributor in contributors :
+                assertionString += " ;\n        <http://purl.org/dc/terms/contributor>    " + ["\"" + contributor + "\"^^xsd:string","<" + contributor + ">"][isURI(contributor)]
+        else :
+            assertionString += " ;\n        <http://purl.org/dc/terms/contributor>    " + ["\"" + infosheet_tuple["Contributors"] + "\"^^xsd:string","<" + infosheet_tuple["Contributors"] + ">"][isURI(infosheet_tuple["Contributors"])]
+    if "Publisher" in infosheet_tuple :
+        if ',' in infosheet_tuple["Publisher"] :
+            publishers = parseString(infosheet_tuple["Publisher"],',')
+            for publisher in publishers :
+                assertionString += " ;\n        <http://purl.org/dc/terms/publisher>    " + ["\"" + publisher + "\"^^xsd:string","<" + publisher + ">"][isURI(publisher)]
+        else :
+            assertionString += " ;\n        <http://purl.org/dc/terms/publisher>    " + ["\"" + infosheet_tuple["Publisher"] + "\"^^xsd:string","<" + infosheet_tuple["Publisher"] + ">"][isURI(infosheet_tuple["Publisher"])]
     if "Date of Issue" in infosheet_tuple :
         assertionString += " ;\n        <http://purl.org/dc/terms/issued>    \"" + infosheet_tuple["Date of Issue"] + "\"^^xsd:date"
     if "Link" in infosheet_tuple :
         assertionString += " ;\n        <http://xmlns.com/foaf/0.1/page>    <" + infosheet_tuple["Link"] + ">"
     if "Identifier" in infosheet_tuple :
         assertionString += " ;\n        <http://semanticscience.org/resource/hasIdentifier>    \n            [ rdf:type    <http://semanticscience.org/resource/Identifier> ; \n            <http://semanticscience.org/resource/hasValue>    \"" + infosheet_tuple["Identifier"] + "\"^^xsd:string ]"
-    if "Keywords" in infosheet_tuple : # should check for multiple values
-        assertionString += " ;\n        <http://www.w3.org/ns/dcat#keyword>    \"" + infosheet_tuple["Keywords"] + "\"^^xsd:string"
-    if "License" in infosheet_tuple : # should check if IRI
-        assertionString += " ;\n        <http://purl.org/dc/terms/license>    \"" + infosheet_tuple["License"] + "\"^^xsd:string"
-    if "Rights" in infosheet_tuple : # should check for multiple values
-        assertionString += " ;\n        <http://purl.org/dc/terms/rights>    \"" + infosheet_tuple["Rights"] + "\"^^xsd:string"
-    if "Language" in infosheet_tuple : # should check for multiple values
+    if "Keywords" in infosheet_tuple :
+        if ',' in infosheet_tuple["Keywords"] :
+            keywords = parseString(infosheet_tuple["Keywords"],',')
+            for keyword in keywords :
+                assertionString += " ;\n        <http://www.w3.org/ns/dcat#keyword>    \"" + keyword + "\"^^xsd:string"
+        else :
+            assertionString += " ;\n        <http://www.w3.org/ns/dcat#keyword>    \"" + infosheet_tuple["Keywords"] + "\"^^xsd:string"
+    if "License" in infosheet_tuple : 
+        if ',' in infosheet_tuple["License"] :
+            licenses = parseString(infosheet_tuple["License"],',')
+            for license in license :
+                assertionString += " ;\n        <http://purl.org/dc/terms/license>    " + ["\"" + license + "\"^^xsd:string","<" + license + ">"][isURI(license)]
+        else :
+            assertionString += " ;\n        <http://purl.org/dc/terms/license>    " + ["\"" + infosheet_tuple["License"] + "\"^^xsd:string","<" + infosheet_tuple["License"] + ">"][isURI(infosheet_tuple["License"])]
+    if "Rights" in infosheet_tuple :
+        if ',' in infosheet_tuple["Rights"] :
+            rights = parseString(infosheet_tuple["Rights"],',')
+            for right in rights :
+                assertionString += " ;\n        <http://purl.org/dc/terms/rights>    " + ["\"" + right + "\"^^xsd:string","<" + right + ">"][isURI(right)]
+        else :
+            assertionString += " ;\n        <http://purl.org/dc/terms/rights>    " + ["\"" + infosheet_tuple["Rights"] + "\"^^xsd:string","<" + infosheet_tuple["Rights"] + ">"][isURI(infosheet_tuple["Rights"])]
+    if "Language" in infosheet_tuple :
         assertionString += " ;\n        <http://purl.org/dc/terms/language>    \"" + infosheet_tuple["Language"] + "\"^^xsd:string"
     if "Version" in infosheet_tuple :
-        provenanceString += " ;\n        <http://purl.org/pav/version>    \"" + infosheet_tuple["Version"] + "\"^^xsd:string"
-    if "Source" in infosheet_tuple : # should check for multiple values
-        provenanceString += " ;\n        <http://purl.org/dc/terms/source>    \"" + infosheet_tuple["Source"] + "\"^^xsd:string"
-    if "File Format" in infosheet_tuple : # should check for multiple values
+        provenanceString += " ;\n        <http://purl.org/pav/version>    " + ["\"" + infosheet_tuple["Version"] + "\"^^xsd:string","<" + infosheet_tuple["Version"] + ">"][isURI(infosheet_tuple["Version"])]
+    if "Source" in infosheet_tuple : 
+        if ',' in infosheet_tuple["Source"] :
+            sources = parseString(infosheet_tuple["Source"],',')
+            for source in sources :
+                provenanceString += " ;\n        <http://purl.org/dc/terms/source>    \"" + source + "\"^^xsd:string"
+        else :
+            provenanceString += " ;\n        <http://purl.org/dc/terms/source>    " + ["\"" + infosheet_tuple["Source"] + "\"^^xsd:string","<" + infosheet_tuple["Source"] + ">"][isURI(infosheet_tuple["Source"])]
+    if "File Format" in infosheet_tuple :
         assertionString += " ;\n        <http://purl.org/dc/terms/format>    \"" + infosheet_tuple["File Format"] + "\"^^xsd:string"
-    if "Documentation" in infosheet_tuple : # currently encoded as string, should check if IRI
-        provenanceString += " ;\n        <http://www.w3.org/ns/dcat#landingPage>    \"" + infosheet_tuple["Documentation"] + "\"^^xsd:string"   
-    if "Imports" in infosheet_tuple : # should check for multiple values
-        assertionString += " ;\n        <http://www.w3.org/2002/07/owl#imports>    \"" + infosheet_tuple["Imports"] + "\"^^xsd:string"
+    if "Documentation" in infosheet_tuple : # currently encoded as URI, should confirm that it really is one
+        provenanceString += " ;\n        <http://www.w3.org/ns/dcat#landingPage>    <" + infosheet_tuple["Documentation"] + ">"   
+    if "Imports" in infosheet_tuple :
+        if ',' in infosheet_tuple["Imports"] :
+            imports = parseString(infosheet_tuple["Imports"],',')
+            for imp in imports :
+                assertionString += " ;\n        <http://www.w3.org/2002/07/owl#imports>    " + [imp,"<" + imp + ">"][isURI(imp)]
+        else :
+            assertionString += " ;\n        <http://www.w3.org/2002/07/owl#imports>    " + [infosheet_tuple["Imports"],"<" + infosheet_tuple["Imports"] + ">"][isURI(infosheet_tuple["Imports"])]
     assertionString += " .\n"
     provenanceString += " .\n"
     output_file.write(kb + "assertion-dataset_metadata {\n    " + assertionString + "\n}\n\n")
