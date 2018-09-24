@@ -542,30 +542,30 @@ if infosheet_fn is not None :
     if "Description" in infosheet_tuple :
         assertionString += " ;\n        <http://purl.org/dc/terms/description>    \"" + infosheet_tuple["Description"] + "\"^^xsd:string"
     if "Date Created" in infosheet_tuple :
-        assertionString += " ;\n        <http://purl.org/dc/terms/created>    \"" + infosheet_tuple["Date Created"] + "\"^^xsd:date"
+        provenanceString += " ;\n        <http://purl.org/dc/terms/created>    \"" + infosheet_tuple["Date Created"] + "\"^^xsd:date"
     if "Creators" in infosheet_tuple : 
         if ',' in infosheet_tuple["Creators"] :
             creators = parseString(infosheet_tuple["Creators"],',')
             for creator in creators :
-                assertionString += " ;\n        <http://purl.org/dc/terms/creator>    " + ["\"" + creator + "\"^^xsd:string","<" + creator + ">"][isURI(creator)]
+                provenanceString += " ;\n        <http://purl.org/dc/terms/creator>    " + ["\"" + creator + "\"^^xsd:string","<" + creator + ">"][isURI(creator)]
         else :
-            assertionString += " ;\n        <http://purl.org/dc/terms/creator>    " + ["\"" + infosheet_tuple["Creators"] + "\"^^xsd:string","<" + infosheet_tuple["Creators"] + ">"][isURI(infosheet_tuple["Creators"])]
+            provenanceString += " ;\n        <http://purl.org/dc/terms/creator>    " + ["\"" + infosheet_tuple["Creators"] + "\"^^xsd:string","<" + infosheet_tuple["Creators"] + ">"][isURI(infosheet_tuple["Creators"])]
     if "Contributors" in infosheet_tuple : 
         if ',' in infosheet_tuple["Contributors"] :
             contributors = parseString(infosheet_tuple["Contributors"],',')
             for contributor in contributors :
-                assertionString += " ;\n        <http://purl.org/dc/terms/contributor>    " + ["\"" + contributor + "\"^^xsd:string","<" + contributor + ">"][isURI(contributor)]
+                provenanceString += " ;\n        <http://purl.org/dc/terms/contributor>    " + ["\"" + contributor + "\"^^xsd:string","<" + contributor + ">"][isURI(contributor)]
         else :
-            assertionString += " ;\n        <http://purl.org/dc/terms/contributor>    " + ["\"" + infosheet_tuple["Contributors"] + "\"^^xsd:string","<" + infosheet_tuple["Contributors"] + ">"][isURI(infosheet_tuple["Contributors"])]
+            provenanceString += " ;\n        <http://purl.org/dc/terms/contributor>    " + ["\"" + infosheet_tuple["Contributors"] + "\"^^xsd:string","<" + infosheet_tuple["Contributors"] + ">"][isURI(infosheet_tuple["Contributors"])]
     if "Publisher" in infosheet_tuple :
         if ',' in infosheet_tuple["Publisher"] :
             publishers = parseString(infosheet_tuple["Publisher"],',')
             for publisher in publishers :
-                assertionString += " ;\n        <http://purl.org/dc/terms/publisher>    " + ["\"" + publisher + "\"^^xsd:string","<" + publisher + ">"][isURI(publisher)]
+                provenanceString += " ;\n        <http://purl.org/dc/terms/publisher>    " + ["\"" + publisher + "\"^^xsd:string","<" + publisher + ">"][isURI(publisher)]
         else :
-            assertionString += " ;\n        <http://purl.org/dc/terms/publisher>    " + ["\"" + infosheet_tuple["Publisher"] + "\"^^xsd:string","<" + infosheet_tuple["Publisher"] + ">"][isURI(infosheet_tuple["Publisher"])]
+            provenanceString += " ;\n        <http://purl.org/dc/terms/publisher>    " + ["\"" + infosheet_tuple["Publisher"] + "\"^^xsd:string","<" + infosheet_tuple["Publisher"] + ">"][isURI(infosheet_tuple["Publisher"])]
     if "Date of Issue" in infosheet_tuple :
-        assertionString += " ;\n        <http://purl.org/dc/terms/issued>    \"" + infosheet_tuple["Date of Issue"] + "\"^^xsd:date"
+        provenanceString += " ;\n        <http://purl.org/dc/terms/issued>    \"" + infosheet_tuple["Date of Issue"] + "\"^^xsd:date"
     if "Link" in infosheet_tuple :
         assertionString += " ;\n        <http://xmlns.com/foaf/0.1/page>    <" + infosheet_tuple["Link"] + ">"
     if "Identifier" in infosheet_tuple :
