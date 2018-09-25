@@ -539,6 +539,8 @@ if infosheet_fn is not None :
                 assertionString += " ;\n        <http://purl.org/dc/terms/alternative>    \"" + alt_title + "\"^^xsd:string"
         else :
             assertionString += " ;\n        <http://purl.org/dc/terms/alternative>    \"" + infosheet_tuple["Alternative Title"] + "\"^^xsd:string"
+    if "Comment" in infosheet_tuple :
+        assertionString += " ;\n        <http://www.w3.org/2000/01/rdf-schema#comment>    \"" + infosheet_tuple["Comment"] + "\"^^xsd:string"
     if "Description" in infosheet_tuple :
         assertionString += " ;\n        <http://purl.org/dc/terms/description>    \"" + infosheet_tuple["Description"] + "\"^^xsd:string"
     if "Date Created" in infosheet_tuple :
@@ -580,7 +582,7 @@ if infosheet_fn is not None :
     if "License" in infosheet_tuple : 
         if ',' in infosheet_tuple["License"] :
             licenses = parseString(infosheet_tuple["License"],',')
-            for license in license :
+            for license in licenses :
                 assertionString += " ;\n        <http://purl.org/dc/terms/license>    " + ["\"" + license + "\"^^xsd:string","<" + license + ">"][isURI(license)]
         else :
             assertionString += " ;\n        <http://purl.org/dc/terms/license>    " + ["\"" + infosheet_tuple["License"] + "\"^^xsd:string","<" + infosheet_tuple["License"] + ">"][isURI(infosheet_tuple["License"])]
@@ -595,6 +597,18 @@ if infosheet_fn is not None :
         assertionString += " ;\n        <http://purl.org/dc/terms/language>    \"" + infosheet_tuple["Language"] + "\"^^xsd:string"
     if "Version" in infosheet_tuple :
         provenanceString += " ;\n        <http://purl.org/pav/version>    " + ["\"" + infosheet_tuple["Version"] + "\"^^xsd:string","<" + infosheet_tuple["Version"] + ">"][isURI(infosheet_tuple["Version"])]
+        provenanceString += " ;\n        <http://www.w3.org/2002/07/owl/versionInfo>    " + ["\"" + infosheet_tuple["Version"] + "\"^^xsd:string","<" + infosheet_tuple["Version"] + ">"][isURI(infosheet_tuple["Version"])]
+    if "Previous Version" in infosheet_tuple :
+        provenanceString += " ;\n        <http://purl.org/pav/previousVersion>    " + ["\"" + infosheet_tuple["Previous Version"] + "\"^^xsd:string","<" + infosheet_tuple["Previous Version"] + ">"][isURI(infosheet_tuple["Previous Version"])]
+    if "Version Of" in infosheet_tuple :
+        provenanceString += " ;\n        <http://purl.org/dc/terms/isVersionOf>    " + ["\"" + infosheet_tuple["Version Of"] + "\"^^xsd:string","<" + infosheet_tuple["Version Of"] + ">"][isURI(infosheet_tuple["Version Of"])]
+    if "Standards" in infosheet_tuple : 
+        if ',' in infosheet_tuple["Standards"] :
+            standards = parseString(infosheet_tuple["Standards"],',')
+            for standard in standards :
+                assertionString += " ;\n        <http://purl.org/dc/terms/conformsTo>    " + ["\"" + standard + "\"^^xsd:string","<" + standard + ">"][isURI(standard)]
+        else :
+            assertionString += " ;\n        <http://purl.org/dc/terms/conformsTo>    " + ["\"" + infosheet_tuple["Standards"] + "\"^^xsd:string","<" + infosheet_tuple["Standards"] + ">"][isURI(infosheet_tuple["Standards"])]
     if "Source" in infosheet_tuple : 
         if ',' in infosheet_tuple["Source"] :
             sources = parseString(infosheet_tuple["Source"],',')
