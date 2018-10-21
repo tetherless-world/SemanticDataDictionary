@@ -29,7 +29,7 @@ def codeMapper(input_word) :
             unitVal = unit_uri_list[unit_index]
     return unitVal    
 
-def convertVirtualToKGEntry(*args) :
+def convertImplicitToKGEntry(*args) :
     if (args[0][:2] == "??") :
         if (studyRef is not None ) :
             if (args[0]==studyRef) :
@@ -50,14 +50,14 @@ def convertVirtualToKGEntry(*args) :
     else :
         return args[0]
 
-def checkVirtual(input_word) :
+def checkImplicit(input_word) :
     try:
         if (input_word[:2] == "??") :
             return True
         else :
             return False
     except Exception as e:
-        print "Something went wrong in checkVirtual()" + str(e)
+        print "Something went wrong in checkImplicit()" + str(e)
         sys.exit(1)
 
 def isfloat(term):
@@ -125,9 +125,9 @@ def writeClassAttributeOrEntity(item, term, input_tuple, assertionString, whereS
 
 def writeClassAttributeOf(item, term, input_tuple, assertionString, whereString, swrlString) :
     if (pd.notnull(item.attributeOf)) :
-        assertionString += " ;\n        " + properties_tuple["attributeOf"] + "    " + convertVirtualToKGEntry(item.attributeOf)
-        whereString += ";\n    " + properties_tuple["attributeOf"] + "    " +  [item.attributeOf + " ",item.attributeOf[1:] + "_V "][checkVirtual(item.attributeOf)]
-        swrlString += properties_tuple["attributeOf"] + "(" + term + " , " + [item.attributeOf,item.attributeOf[1:] + "_V"][checkVirtual(item.attributeOf)] + ") ^ "
+        assertionString += " ;\n        " + properties_tuple["attributeOf"] + "    " + convertImplicitToKGEntry(item.attributeOf)
+        whereString += ";\n    " + properties_tuple["attributeOf"] + "    " +  [item.attributeOf + " ",item.attributeOf[1:] + "_V "][checkImplicit(item.attributeOf)]
+        swrlString += properties_tuple["attributeOf"] + "(" + term + " , " + [item.attributeOf,item.attributeOf[1:] + "_V"][checkImplicit(item.attributeOf)] + ") ^ "
         input_tuple["isAttributeOf"]=item.attributeOf
     return [input_tuple, assertionString, whereString, swrlString]
 
@@ -142,9 +142,9 @@ def writeClassUnit(item, term, input_tuple, assertionString, whereString, swrlSt
 
 def writeClassTime(item, term, input_tuple, assertionString, whereString, swrlString) :
     if (pd.notnull(item.Time)) :
-        assertionString += " ;\n        " + properties_tuple["Time"] + "    " + convertVirtualToKGEntry(item.Time)
-        whereString += " ;\n    " + properties_tuple["Time"] + "     " + [item.Time + " ",item.Time[1:] + "_V "][checkVirtual(item.Time)]
-        swrlString += properties_tuple["Time"] + "(" + term + " , " + [item.Time + " ",item.Time[1:] + "_V "][checkVirtual(item.Time)] + ") ^ "
+        assertionString += " ;\n        " + properties_tuple["Time"] + "    " + convertImplicitToKGEntry(item.Time)
+        whereString += " ;\n    " + properties_tuple["Time"] + "     " + [item.Time + " ",item.Time[1:] + "_V "][checkImplicit(item.Time)]
+        swrlString += properties_tuple["Time"] + "(" + term + " , " + [item.Time + " ",item.Time[1:] + "_V "][checkImplicit(item.Time)] + ") ^ "
         input_tuple["Time"]=item.Time
     return [input_tuple, assertionString, whereString, swrlString]
 
@@ -153,100 +153,101 @@ def writeClassRelation(item, term, input_tuple, assertionString, whereString, sw
         input_tuple["inRelationTo"]=item.inRelationTo
         # If there is a value in the Relation column but not the Role column ...
         if (pd.notnull(item.Relation)) and (pd.isnull(item.Role)) :
-            assertionString += " ;\n        " + item.Relation + " " + convertVirtualToKGEntry(item.inRelationTo)
+            assertionString += " ;\n        " + item.Relation + " " + convertImplicitToKGEntry(item.inRelationTo)
             if(isSchemaVar(item.inRelationTo)):
                 whereString += ";\n    " + item.Relation + " ?" + item.inRelationTo.lower() + "_E "
                 swrlString += item.Relation + "(" + term + " , " + "?" + item.inRelationTo.lower() + "_E) ^ "
             else :
-                whereString += ";\n    " + item.Relation + " " + [item.inRelationTo + " ",item.inRelationTo[1:] + "_V "][checkVirtual(item.inRelationTo)]
-                swrlString += item.Relation + "(" + term + " , " + [item.inRelationTo,item.inRelationTo[1:] + "_V"][checkVirtual(item.inRelationTo)] + ") ^ "
+                whereString += ";\n    " + item.Relation + " " + [item.inRelationTo + " ",item.inRelationTo[1:] + "_V "][checkImplicit(item.inRelationTo)]
+                swrlString += item.Relation + "(" + term + " , " + [item.inRelationTo,item.inRelationTo[1:] + "_V"][checkImplicit(item.inRelationTo)] + ") ^ "
             input_tuple["Relation"]=item.Relation
         # If there is a value in the Role column but not the Relation column ...
         elif (pd.isnull(item.Relation)) and (pd.notnull(item.Role)) :
-            assertionString += " ;\n        " + properties_tuple["Role"] + "    [ rdf:type    " + item.Role + " ;\n            " + properties_tuple["inRelationTo"] + "    " + convertVirtualToKGEntry(item.inRelationTo) + " ]"
-            whereString += ";\n    " + properties_tuple["Role"] + "    [ rdf:type " + item.Role + " ;\n      " + properties_tuple["inRelationTo"] + "    " + [item.inRelationTo + " ",item.inRelationTo[1:] + "_V "][checkVirtual(item.inRelationTo)] + " ]"
+            assertionString += " ;\n        " + properties_tuple["Role"] + "    [ rdf:type    " + item.Role + " ;\n            " + properties_tuple["inRelationTo"] + "    " + convertImplicitToKGEntry(item.inRelationTo) + " ]"
+            whereString += ";\n    " + properties_tuple["Role"] + "    [ rdf:type " + item.Role + " ;\n      " + properties_tuple["inRelationTo"] + "    " + [item.inRelationTo + " ",item.inRelationTo[1:] + "_V "][checkImplicit(item.inRelationTo)] + " ]"
             swrlString += "" # add appropriate swrl term
             input_tuple["Role"]=item.Role
         # If there is a value in the Role and Relation columns ...
         elif (pd.notnull(item.Relation)) and (pd.notnull(item.Role)) :
             input_tuple["Relation"]=item.Relation
             input_tuple["Role"]=item.Role
-            assertionString += " ;\n        " + properties_tuple["inRelationTo"] + "    " + convertVirtualToKGEntry(item.inRelationTo)
+            assertionString += " ;\n        " + properties_tuple["inRelationTo"] + "    " + convertImplicitToKGEntry(item.inRelationTo)
             if(isSchemaVar(item.inRelationTo)):
                 whereString += ";\n    " + properties_tuple["inRelationTo"] + "    ?" + item.inRelationTo.lower() + "_E "
                 swrlString += "" # add appropriate swrl term
             else :
-                whereString += ";\n    " + properties_tuple["inRelationTo"] + "    " + [item.inRelationTo + " ",item.inRelationTo[1:] + "_V "][checkVirtual(item.inRelationTo)]
+                whereString += ";\n    " + properties_tuple["inRelationTo"] + "    " + [item.inRelationTo + " ",item.inRelationTo[1:] + "_V "][checkImplicit(item.inRelationTo)]
                 swrlString += "" # add appropriate swrl term
         elif (pd.isnull(item.Relation)) and (pd.isnull(item.Role)) :
-            assertionString += " ;\n        " + properties_tuple["inRelationTo"] + "    " + convertVirtualToKGEntry(item.inRelationTo)
+            assertionString += " ;\n        " + properties_tuple["inRelationTo"] + "    " + convertImplicitToKGEntry(item.inRelationTo)
             if(isSchemaVar(item.inRelationTo)):
                 whereString += ";\n    " + properties_tuple["inRelationTo"] + "    ?" + item.inRelationTo.lower() + "_E "
                 swrlString += properties_tuple["inRelationTo"] + "(" + term + " , " + "?" + item.inRelationTo.lower() + "_E) ^ "
             else :
-                whereString += ";\n    " + properties_tuple["inRelationTo"] + "    " + [item.inRelationTo + " ",item.inRelationTo[1:] + "_V "][checkVirtual(item.inRelationTo)] 
-                swrlString += properties_tuple["inRelationTo"] + "(" + term + " , " + [item.inRelationTo,item.inRelationTo[1:] + "_V"][checkVirtual(item.inRelationTo)] + ") ^ "
+                whereString += ";\n    " + properties_tuple["inRelationTo"] + "    " + [item.inRelationTo + " ",item.inRelationTo[1:] + "_V "][checkImplicit(item.inRelationTo)] 
+                swrlString += properties_tuple["inRelationTo"] + "(" + term + " , " + [item.inRelationTo,item.inRelationTo[1:] + "_V"][checkImplicit(item.inRelationTo)] + ") ^ "
     return [input_tuple, assertionString, whereString, swrlString]
 
 def writeClassWasDerivedFrom(item, term, input_tuple, provenanceString, whereString, swrlString) :
     if pd.notnull(item.wasDerivedFrom) :
-        provenanceString += " ;\n        " + properties_tuple["wasDerivedFrom"] + "    " + convertVirtualToKGEntry(item.wasDerivedFrom)
+        provenanceString += " ;\n        " + properties_tuple["wasDerivedFrom"] + "    " + convertImplicitToKGEntry(item.wasDerivedFrom)
         input_tuple["wasDerivedFrom"]=item.wasDerivedFrom
         if(isSchemaVar(item.wasDerivedFrom)):
             whereString += ";\n    " + properties_tuple["wasDerivedFrom"] + "    ?" + item.wasDerivedFrom.lower() + "_E "
             swrlString += properties_tuple["wasDerivedFrom"] + "(" + term + " , " + "?" + item.wasDerivedFrom.lower() + "_E) ^ " 
         else :
-            whereString += ";\n    " + properties_tuple["wasDerivedFrom"] + "    " + [item.wasDerivedFrom + " ",item.wasDerivedFrom[1:] + "_V "][checkVirtual(item.wasDerivedFrom)]
-            swrlString += properties_tuple["wasDerivedFrom"] + "(" + term + " , " + [item.wasDerivedFrom,item.wasDerivedFrom[1:] + "_V"][checkVirtual(item.wasDerivedFrom)] + ") ^ " 
+            whereString += ";\n    " + properties_tuple["wasDerivedFrom"] + "    " + [item.wasDerivedFrom + " ",item.wasDerivedFrom[1:] + "_V "][checkImplicit(item.wasDerivedFrom)]
+            swrlString += properties_tuple["wasDerivedFrom"] + "(" + term + " , " + [item.wasDerivedFrom,item.wasDerivedFrom[1:] + "_V"][checkImplicit(item.wasDerivedFrom)] + ") ^ " 
     return [input_tuple, provenanceString, whereString, swrlString]
 
 def writeClassWasGeneratedBy(item, term, input_tuple, provenanceString, whereString, swrlString) :
     if pd.notnull(item.wasGeneratedBy) :
-        provenanceString += " ;\n        " + properties_tuple["wasGeneratedBy"] + "    " + convertVirtualToKGEntry(item.wasGeneratedBy)
+        provenanceString += " ;\n        " + properties_tuple["wasGeneratedBy"] + "    " + convertImplicitToKGEntry(item.wasGeneratedBy)
         input_tuple["wasGeneratedBy"]=item.wasGeneratedBy
         if(isSchemaVar(item.wasDerivedFrom)):
             whereString += ";\n    " + properties_tuple["wasGeneratedBy"] + "    ?" + item.wasGeneratedBy.lower() + "_E "
             swrlString += properties_tuple["wasGeneratedBy"] + "(" + term + " , " + "?" + item.wasGeneratedBy.lower() + "_E) ^ " 
         else :
-            whereString += ";\n    " + properties_tuple["wasGeneratedBy"] + "    " + [item.wasGeneratedBy + " ",item.wasGeneratedBy[1:] + "_V "][checkVirtual(item.wasGeneratedBy)]
-            swrlString += properties_tuple["wasGeneratedBy"] + "(" + term + " , " + [item.wasGeneratedBy,item.wasGeneratedBy[1:] + "_V"][checkVirtual(item.wasGeneratedBy)] + ") ^ " 
+            whereString += ";\n    " + properties_tuple["wasGeneratedBy"] + "    " + [item.wasGeneratedBy + " ",item.wasGeneratedBy[1:] + "_V "][checkImplicit(item.wasGeneratedBy)]
+            swrlString += properties_tuple["wasGeneratedBy"] + "(" + term + " , " + [item.wasGeneratedBy,item.wasGeneratedBy[1:] + "_V"][checkImplicit(item.wasGeneratedBy)] + ") ^ " 
     return [input_tuple, provenanceString, whereString, swrlString]
 
-def writeVirtualEntryTuples(virtual_entry_list, timeline_tuple, output_file, query_file, swrl_file) :
-    virtual_entry_tuples = []
+def writeImplicitEntryTuples(implicit_entry_list, timeline_tuple, output_file, query_file, swrl_file, dm_fn) :
+    implicit_entry_tuples = []
     assertionString = ''
     provenanceString = ''
     whereString = '\n'
     swrlString = ''
-    output_file.write(kb + "head-virtual_entry { ")
-    output_file.write("\n    " + kb + "nanoPub-virtual_entry    rdf:type np:Nanopublication")
-    output_file.write(" ;\n        np:hasAssertion " + kb + "assertion-virtual_entry")
-    output_file.write(" ;\n        np:hasProvenance " + kb + "provenance-virtual_entry")
-    output_file.write(" ;\n        np:hasPublicationInfo " + kb + "pubInfo-virtual_entry")
+    datasetIdentifier = hashlib.md5(dm_fn).hexdigest()
+    output_file.write(kb + "head-implicit_entry-" + datasetIdentifier + " { ")
+    output_file.write("\n    " + kb + "nanoPub-implicit_entry-" + datasetIdentifier + "    rdf:type np:Nanopublication")
+    output_file.write(" ;\n        np:hasAssertion " + kb + "assertion-implicit_entry-" + datasetIdentifier)
+    output_file.write(" ;\n        np:hasProvenance " + kb + "provenance-implicit_entry-" + datasetIdentifier)
+    output_file.write(" ;\n        np:hasPublicationInfo " + kb + "pubInfo-implicit_entry-" + datasetIdentifier)
     output_file.write(" .\n}\n\n")
-    for item in virtual_entry_list :
-        virtual_tuple = {}
+    for item in implicit_entry_list :
+        implicit_tuple = {}
         assertionString += "\n    " + kb + item.Column[2:] + "    rdf:type    owl:Class ;\n        " + properties_tuple["Label"] + "    \"" + item.Column[2:] + "\""
-        term_virt = item.Column[1:] + "_V"
-        whereString += "  " + term_virt + " rdf:type " 
-        virtual_tuple["Column"]=item.Column       
-        [virtual_tuple, assertionString, whereString, swrlString] = writeClassAttributeOrEntity(item, term_virt, virtual_tuple, assertionString, whereString, swrlString)
-        [virtual_tuple, assertionString, whereString, swrlString] = writeClassAttributeOf(item, term_virt, virtual_tuple, assertionString, whereString, swrlString)
-        [virtual_tuple, assertionString, whereString, swrlString] = writeClassUnit(item, term_virt, virtual_tuple, assertionString, whereString, swrlString)
-        [virtual_tuple, assertionString, whereString, swrlString] = writeClassTime(item, term_virt, virtual_tuple, assertionString, whereString, swrlString)
-        [virtual_tuple, assertionString, whereString, swrlString] = writeClassRelation(item, term_virt, virtual_tuple, assertionString, whereString, swrlString)
+        term_implicit = item.Column[1:] + "_V"
+        whereString += "  " + term_implicit + " rdf:type " 
+        implicit_tuple["Column"]=item.Column       
+        [implicit_tuple, assertionString, whereString, swrlString] = writeClassAttributeOrEntity(item, term_implicit, implicit_tuple, assertionString, whereString, swrlString)
+        [implicit_tuple, assertionString, whereString, swrlString] = writeClassAttributeOf(item, term_implicit, implicit_tuple, assertionString, whereString, swrlString)
+        [implicit_tuple, assertionString, whereString, swrlString] = writeClassUnit(item, term_implicit, implicit_tuple, assertionString, whereString, swrlString)
+        [implicit_tuple, assertionString, whereString, swrlString] = writeClassTime(item, term_implicit, implicit_tuple, assertionString, whereString, swrlString)
+        [implicit_tuple, assertionString, whereString, swrlString] = writeClassRelation(item, term_implicit, implicit_tuple, assertionString, whereString, swrlString)
         assertionString += " .\n"
         provenanceString += "\n    " + kb + item.Column[2:] 
         provenanceString +="\n        prov:generatedAtTime    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
-        [virtual_tuple, provenanceString, whereString, swrlString] = writeClassWasGeneratedBy(item, term_virt, virtual_tuple, provenanceString, whereString, swrlString)
-        [virtual_tuple, provenanceString, whereString, swrlString] = writeClassWasDerivedFrom(item, term_virt, virtual_tuple, provenanceString, whereString, swrlString)
+        [implicit_tuple, provenanceString, whereString, swrlString] = writeClassWasGeneratedBy(item, term_implicit, implicit_tuple, provenanceString, whereString, swrlString)
+        [implicit_tuple, provenanceString, whereString, swrlString] = writeClassWasDerivedFrom(item, term_implicit, implicit_tuple, provenanceString, whereString, swrlString)
         provenanceString += " .\n"
         whereString += ".\n\n"
-        virtual_entry_tuples.append(virtual_tuple)
+        implicit_entry_tuples.append(implicit_tuple)
 
     if timeline_tuple != {}:
         for key in timeline_tuple :
-            assertionString += "\n    " + convertVirtualToKGEntry(key) + "    rdf:type    owl:Class "
+            assertionString += "\n    " + convertImplicitToKGEntry(key) + "    rdf:type    owl:Class "
             for timeEntry in timeline_tuple[key] :
                 if 'Type' in timeEntry :
                     assertionString += " ;\n        rdf:subClassOf    " + timeEntry['Type']
@@ -261,22 +262,22 @@ def writeVirtualEntryTuples(virtual_entry_list, timeline_tuple, output_file, que
                 if 'Unit' in timeEntry :
                     assertionString += " ;\n        " + properties_tuple["Unit"] + "    " + timeEntry['Unit']
                 if 'inRelationTo' in timeEntry :
-                    assertionString += " ;\n        " + properties_tuple["inRelationTo"] + "    " + convertVirtualToKGEntry(timeEntry['inRelationTo'])
+                    assertionString += " ;\n        " + properties_tuple["inRelationTo"] + "    " + convertImplicitToKGEntry(timeEntry['inRelationTo'])
                 assertionString += " .\n"
-            provenanceString += "\n    " + convertVirtualToKGEntry(key) + "    prov:generatedAtTime    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n"
-    output_file.write(kb + "assertion-virtual_entry {")
+            provenanceString += "\n    " + convertImplicitToKGEntry(key) + "    prov:generatedAtTime    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n"
+    output_file.write(kb + "assertion-implicit_entry-" + datasetIdentifier + " {")
     output_file.write(assertionString + "\n}\n\n")
-    output_file.write(kb + "provenance-virtual_entry {")
-    provenanceString = "\n    " + kb + "assertion-virtual_entry    prov:generatedAtTime    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString
+    output_file.write(kb + "provenance-implicit_entry-" + datasetIdentifier + " {")
+    provenanceString = "\n    " + kb + "assertion-implicit_entry-" + datasetIdentifier + "    prov:generatedAtTime    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString
     output_file.write(provenanceString + "\n}\n\n")
-    output_file.write(kb + "pubInfo-virtual_entry {\n    " + kb + "nanoPub-virtual_entry    prov:generatedAtTime    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n}\n\n")
+    output_file.write(kb + "pubInfo-implicit_entry-" + datasetIdentifier + " {\n    " + kb + "nanoPub-implicit_entry-" + datasetIdentifier + "    prov:generatedAtTime    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n}\n\n")
     whereString += "}"
     #print whereString
     query_file.write(whereString.replace('-','_'))
     swrl_file.write(swrlString[:-2])
-    return virtual_entry_tuples
+    return implicit_entry_tuples
 
-def writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_file) :
+def writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_file, dm_fn) :
     explicit_entry_tuples = []
     assertionString = ''
     provenanceString = ''
@@ -284,11 +285,12 @@ def writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_
     selectString = "SELECT "
     whereString = "WHERE {\n"
     swrlString = ""
-    output_file.write(kb + "head-explicit_entry { ")
-    output_file.write("\n    " + kb + "nanoPub-explicit_entry    rdf:type np:Nanopublication")
-    output_file.write(" ;\n        np:hasAssertion " + kb + "assertion-explicit_entry")
-    output_file.write(" ;\n        np:hasProvenance " + kb + "provenance-explicit_entry")
-    output_file.write(" ;\n        np:hasPublicationInfo " + kb + "pubInfo-explicit_entry")
+    datasetIdentifier = hashlib.md5(dm_fn).hexdigest()
+    output_file.write(kb + "head-explicit_entry-" + datasetIdentifier + " { ")
+    output_file.write("\n    " + kb + "nanoPub-explicit_entry-" + datasetIdentifier + "    rdf:type np:Nanopublication")
+    output_file.write(" ;\n        np:hasAssertion " + kb + "assertion-explicit_entry-" + datasetIdentifier)
+    output_file.write(" ;\n        np:hasProvenance " + kb + "provenance-explicit_entry-" + datasetIdentifier)
+    output_file.write(" ;\n        np:hasPublicationInfo " + kb + "pubInfo-explicit_entry-" + datasetIdentifier)
     output_file.write(" .\n}\n\n")
     for item in explicit_entry_list :
         explicit_entry_tuple = {}
@@ -321,12 +323,12 @@ def writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_
             publicationInfoString += "\n    " + kb + term + "    hasco:hasPosition    \"" + str(item.hasPosition) + "\"^^xsd:integer ."
             explicit_entry_tuple["hasPosition"]=item.hasPosition
         explicit_entry_tuples.append(explicit_entry_tuple)
-    output_file.write(kb + "assertion-explicit_entry {")
+    output_file.write(kb + "assertion-explicit_entry-" + datasetIdentifier + " {")
     output_file.write(assertionString + "\n}\n\n")
-    output_file.write(kb + "provenance-explicit_entry {")
-    provenanceString = "\n    " + kb + "assertion-explicit_entry    prov:generatedAtTime    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString
+    output_file.write(kb + "provenance-explicit_entry-" + datasetIdentifier + " {")
+    provenanceString = "\n    " + kb + "assertion-explicit_entry-" + datasetIdentifier + "    prov:generatedAtTime    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString
     output_file.write(provenanceString + "\n}\n\n")
-    output_file.write(kb + "pubInfo-explicit_entry {\n    " + kb + "nanoPub-explicit_entry    prov:generatedAtTime    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .")
+    output_file.write(kb + "pubInfo-explicit_entry-" + datasetIdentifier + " {\n    " + kb + "nanoPub-explicit_entry-" + datasetIdentifier + "    prov:generatedAtTime    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .")
     output_file.write(publicationInfoString + "\n}\n\n")
     #print selectString
     #print whereString
@@ -335,11 +337,11 @@ def writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_
     swrl_file.write(swrlString)
     return explicit_entry_tuples
 
-def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, virtual_entry_tuples, timeline_tuple, vref_list, v_column, index) : 
+def writeImplicitEntry(assertionString, provenanceString,publicationInfoString, implicit_entry_tuples, timeline_tuple, vref_list, v_column, index) : 
     try :
         if timeline_tuple != {} :
             if v_column in timeline_tuple :
-                assertionString += "\n    " + convertVirtualToKGEntry(v_column, index) + "    rdf:type    " + convertVirtualToKGEntry(v_column)
+                assertionString += "\n    " + convertImplicitToKGEntry(v_column, index) + "    rdf:type    " + convertImplicitToKGEntry(v_column)
                 for timeEntry in timeline_tuple[v_column] :
                     if 'Type' in timeEntry :
                         assertionString += " ;\n        rdf:type    " + timeEntry['Type']
@@ -354,11 +356,11 @@ def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, v
                     if 'Unit' in timeEntry :
                         assertionString += " ;\n        " + properties_tuple["Unit"] + "    " + timeEntry['Unit']
                     if 'inRelationTo' in timeEntry :
-                        assertionString += " ;\n        " + properties_tuple["inRelationTo"] + "    " + convertVirtualToKGEntry(timeEntry['inRelationTo'], index)
-                        if checkVirtual(timeEntry['inRelationTo']) and timeEntry['inRelationTo'] not in vref_list :
+                        assertionString += " ;\n        " + properties_tuple["inRelationTo"] + "    " + convertImplicitToKGEntry(timeEntry['inRelationTo'], index)
+                        if checkImplicit(timeEntry['inRelationTo']) and timeEntry['inRelationTo'] not in vref_list :
                             vref_list.append(timeEntry['inRelationTo'])
                 assertionString += " .\n"
-        for v_tuple in virtual_entry_tuples :
+        for v_tuple in implicit_entry_tuples :
             if (v_tuple["Column"] == v_column) :
                 if "Study" in v_tuple :
                     continue
@@ -382,11 +384,11 @@ def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, v
                         assertionString += ";\n        sio:hasIdentifier " + kb + v_tuple["Subject"] + "-" + index
                     if "inRelationTo" in v_tuple :
                         if ("Role" in v_tuple) and ("Relation" not in v_tuple) :
-                            assertionString += " ;\n        " + properties_tuple["Role"] + "    [ rdf:type    " + v_tuple["Role"] + " ;\n            " + properties_tuple["inRelationTo"] + "    " + convertVirtualToKGEntry(v_tuple["inRelationTo"], index) + " ]"
+                            assertionString += " ;\n        " + properties_tuple["Role"] + "    [ rdf:type    " + v_tuple["Role"] + " ;\n            " + properties_tuple["inRelationTo"] + "    " + convertImplicitToKGEntry(v_tuple["inRelationTo"], index) + " ]"
                         elif ("Role" not in v_tuple) and ("Relation" in v_tuple) :
-                            assertionString += " ;\n        " + v_tuple["Relation"] + " " + convertVirtualToKGEntry(v_tuple["inRelationTo"],index)
+                            assertionString += " ;\n        " + v_tuple["Relation"] + " " + convertImplicitToKGEntry(v_tuple["inRelationTo"],index)
                         elif ("Role" not in v_tuple) and ("Relation" not in v_tuple) :
-                            assertionString += " ;\n        " + properties_tuple["inRelationTo"] + "    " + convertVirtualToKGEntry(v_tuple["inRelationTo"],index)
+                            assertionString += " ;\n        " + properties_tuple["inRelationTo"] + "    " + convertImplicitToKGEntry(v_tuple["inRelationTo"],index)
                     assertionString += " .\n"
                     #if  "wasGeneratedBy" in v_tuple or "wasDerivedFrom" in v_tuple  :
                     provenanceString += "\n    " + kb + v_tuple["Column"][2:] + "-" + index + "    prov:generatedAtTime    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
@@ -394,29 +396,29 @@ def writeVirtualEntry(assertionString, provenanceString,publicationInfoString, v
                         if ',' in v_tuple["wasGeneratedBy"] :
                             generatedByTerms = parseString(v_tuple["wasGeneratedBy"],',')
                             for generatedByTerm in generatedByTerms :
-                                provenanceString += " ;\n        " + properties_tuple["wasGeneratedBy"] + "    " + convertVirtualToKGEntry(generatedByTerm,index)
-                                if checkVirtual(generatedByTerm) and generatedByTerm not in vref_list :
+                                provenanceString += " ;\n        " + properties_tuple["wasGeneratedBy"] + "    " + convertImplicitToKGEntry(generatedByTerm,index)
+                                if checkImplicit(generatedByTerm) and generatedByTerm not in vref_list :
                                     vref_list.append(generatedByTerm)
                         else :
-                            provenanceString += " ;\n        " + properties_tuple["wasGeneratedBy"] + "    " + convertVirtualToKGEntry(v_tuple["wasGeneratedBy"],index)
-                            if checkVirtual(v_tuple["wasGeneratedBy"]) and v_tuple["wasGeneratedBy"] not in vref_list :
+                            provenanceString += " ;\n        " + properties_tuple["wasGeneratedBy"] + "    " + convertImplicitToKGEntry(v_tuple["wasGeneratedBy"],index)
+                            if checkImplicit(v_tuple["wasGeneratedBy"]) and v_tuple["wasGeneratedBy"] not in vref_list :
                                 vref_list.append(v_tuple["wasGeneratedBy"]);
                     if "wasDerivedFrom" in v_tuple : 
                         if ',' in v_tuple["wasDerivedFrom"] :
                             derivedFromTerms = parseString(v_tuple["wasDerivedFrom"],',')
                             for derivedFromTerm in derivedFromTerms :
-                                provenanceString += " ;\n        " + properties_tuple["wasDerivedFrom"] + "    " + convertVirtualToKGEntry(derivedFromTerm,index)
-                                if checkVirtual(derivedFromTerm) and derivedFromTerm not in vref_list :
+                                provenanceString += " ;\n        " + properties_tuple["wasDerivedFrom"] + "    " + convertImplicitToKGEntry(derivedFromTerm,index)
+                                if checkImplicit(derivedFromTerm) and derivedFromTerm not in vref_list :
                                     vref_list.append(derivedFromTerm);
                         else :
-                            provenanceString += " ;\n        " + properties_tuple["wasDerivedFrom"] + "    " + convertVirtualToKGEntry(v_tuple["wasDerivedFrom"],index)
-                            if checkVirtual(v_tuple["wasDerivedFrom"]) and v_tuple["wasDerivedFrom"] not in vref_list :
+                            provenanceString += " ;\n        " + properties_tuple["wasDerivedFrom"] + "    " + convertImplicitToKGEntry(v_tuple["wasDerivedFrom"],index)
+                            if checkImplicit(v_tuple["wasDerivedFrom"]) and v_tuple["wasDerivedFrom"] not in vref_list :
                                 vref_list.append(v_tuple["wasDerivedFrom"]);
                     #if  "wasGeneratedBy" in v_tuple or "wasDerivedFrom" in v_tuple  :
                     provenanceString += " .\n"
         return [assertionString,provenanceString,publicationInfoString,vref_list]
     except Exception as e :
-        print "Warning: Unable to create virtual entry: " + str(e)
+        print "Warning: Unable to create implicit entry: " + str(e)
 
 def processInfosheet(output_file, dm_fn, cb_fn, cmap_fn, timeline_fn):
     infosheet_tuple = {}
@@ -429,15 +431,25 @@ def processInfosheet(output_file, dm_fn, cb_fn, cmap_fn, timeline_fn):
             return [dm_fn, cb_fn, cmap_fn, timeline_fn]
         for row in infosheet_file.itertuples() :
             if(pd.notnull(row.Value)):
-                infosheet_tuple[row.Attribute]=row.Value    
-        output_file.write(kb + "head-dataset_metadata { ")
-        output_file.write("\n    " + kb + "nanoPub-dataset_metadata    rdf:type np:Nanopublication")
-        output_file.write(" ;\n        np:hasAssertion    " + kb + "assertion-dataset_metadata")
-        output_file.write(" ;\n        np:hasProvenance    " + kb + "provenance-dataset_metadata")
-        output_file.write(" ;\n        np:hasPublicationInfo    " + kb + "pubInfo-dataset_metadata")
+                infosheet_tuple[row.Attribute]=row.Value   
+        # If SDD files included in Infosheet, they override the config declarations
+        if "Dictionary Mapping" in infosheet_tuple :
+            dm_fn = infosheet_tuple["Dictionary Mapping"] 
+        if "Codebook" in infosheet_tuple : 
+            cb_fn = infosheet_tuple["Codebook"]
+        if "Code Mapping" in infosheet_tuple : 
+            cmap_fn = infosheet_tuple["Code Mapping"]
+        if "Timeline" in infosheet_tuple : 
+            timeline_fn = infosheet_tuple["Timeline"]
+        datasetIdentifier = hashlib.md5(dm_fn).hexdigest()
+        output_file.write(kb + "head-dataset_metadata-" + datasetIdentifier + " { ")
+        output_file.write("\n    " + kb + "nanoPub-dataset_metadata-" + datasetIdentifier + "    rdf:type np:Nanopublication")
+        output_file.write(" ;\n        np:hasAssertion    " + kb + "assertion-dataset_metadata-" + datasetIdentifier)
+        output_file.write(" ;\n        np:hasProvenance    " + kb + "provenance-dataset_metadata-" + datasetIdentifier)
+        output_file.write(" ;\n        np:hasPublicationInfo    " + kb + "pubInfo-dataset_metadata-" + datasetIdentifier)
         output_file.write(" .\n}\n\n")
-        assertionString = kb + "dataset"
-        provenanceString = "    " + kb + "dataset    <http://www.w3.org/ns/prov#generatedAtTime>    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
+        assertionString = kb + "dataset-" + datasetIdentifier
+        provenanceString = "    " + kb + "dataset-" + datasetIdentifier + "    <http://www.w3.org/ns/prov#generatedAtTime>    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
         if "Type" in infosheet_tuple :
             assertionString += "    rdf:type    " + [infosheet_tuple["Type"],"<" + infosheet_tuple["Type"] + ">"][isURI(infosheet_tuple["Type"])]
         else :
@@ -542,20 +554,11 @@ def processInfosheet(output_file, dm_fn, cb_fn, cmap_fn, timeline_fn):
                 assertionString += " ;\n        <http://www.w3.org/2002/07/owl#imports>    " + [infosheet_tuple["Imports"],"<" + infosheet_tuple["Imports"] + ">"][isURI(infosheet_tuple["Imports"])]
         assertionString += " .\n"
         provenanceString += " .\n"
-        output_file.write(kb + "assertion-dataset_metadata {\n    " + assertionString + "\n}\n\n")
-        output_file.write(kb + "provenance-dataset_metadata {\n    " + kb + "assertion-dataset_metadata    <http://www.w3.org/ns/prov#generatedAtTime>    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString + "\n}\n\n")
-        output_file.write(kb + "pubInfo-dataset_metadata {")
-        publicationInfoString = "\n    " + kb + "nanoPub-dataset_metadata    <http://www.w3.org/ns/prov#generatedAtTime>    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n"
+        output_file.write(kb + "assertion-dataset_metadata-" + datasetIdentifier + " {\n    " + assertionString + "\n}\n\n")
+        output_file.write(kb + "provenance-dataset_metadata-" + datasetIdentifier + " {\n    " + kb + "assertion-dataset_metadata-" + datasetIdentifier + "    <http://www.w3.org/ns/prov#generatedAtTime>    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString + "\n}\n\n")
+        output_file.write(kb + "pubInfo-dataset_metadata-" + datasetIdentifier + " {")
+        publicationInfoString = "\n    " + kb + "nanoPub-dataset_metadata-" + datasetIdentifier + "    <http://www.w3.org/ns/prov#generatedAtTime>    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n"
         output_file.write(publicationInfoString + "\n}\n\n")
-        # If SDD files included in Infosheet, they override the config declarations
-        if "Dictionary Mapping" in infosheet_tuple :
-            dm_fn = infosheet_tuple["Dictionary Mapping"] 
-        if "Codebook" in infosheet_tuple : 
-            cb_fn = infosheet_tuple["Codebook"]
-        if "Code Mapping" in infosheet_tuple : 
-            cmap_fn = infosheet_tuple["Code Mapping"]
-        if "Timeline" in infosheet_tuple : 
-            timeline_fn = infosheet_tuple["Timeline"]
     return [dm_fn, cb_fn, cmap_fn, timeline_fn]
 
 def processPrefixes(output_file,query_file):
@@ -647,19 +650,19 @@ def processDictionaryMapping(dm_fn):
         print "Error: The processing DM file \"" + dm_fn + "\": " + str(e)
         sys.exit(1)
     try: 
-        # Set virtual and explicit entries
+        # Set implicit and explicit entries
         for row in dm_file.itertuples() :
             if (pd.isnull(row.Column)) :
                 print "Error: The DM must have a column named 'Column'"
                 sys.exit(1)
             if row.Column.startswith("??") :
-                virtual_entry_list.append(row)
+                implicit_entry_list.append(row)
             else :
                 explicit_entry_list.append(row)
     except Exception as e :
         print "Something went wrong when trying to read the DM: " + str(e)
         sys.exit(1)
-    return [explicit_entry_list,virtual_entry_list]
+    return [explicit_entry_list,implicit_entry_list]
 
 def processCodebook(cb_fn):
     cb_tuple = {}
@@ -690,7 +693,7 @@ def processCodebook(cb_fn):
             print "Warning: Unable to process Codebook file: " + str(e)
     return cb_tuple
 
-def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_tuple, explicit_entry_tuples, virtual_entry_tuples):
+def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_tuple, explicit_entry_tuples, implicit_entry_tuples):
     if data_fn != None :
         try :
             data_file = pd.read_csv(data_fn, dtype=object)
@@ -710,7 +713,7 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                 #print a_tuple["Column"]
                                 #id_index = col_headers.index(a_tuple["Column"])# + 1
                                 #print id_index
-                                for v_tuple in virtual_entry_tuples :
+                                for v_tuple in implicit_entry_tuples :
                                     if "isAttributeOf" in a_tuple :
                                         if (a_tuple["isAttributeOf"] == v_tuple["Column"]) :
                                             v_tuple["Subject"]=a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-")
@@ -787,42 +790,42 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                         else :
                                             assertionString += " ;\n        rdf:type    " + a_tuple["Entity"]
                                     if "isAttributeOf" in a_tuple :
-                                        if checkVirtual(a_tuple["isAttributeOf"]) :
-                                            assertionString += " ;\n        " + properties_tuple["attributeOf"] + "    " + convertVirtualToKGEntry(a_tuple["isAttributeOf"],npubIdentifier)
+                                        if checkImplicit(a_tuple["isAttributeOf"]) :
+                                            assertionString += " ;\n        " + properties_tuple["attributeOf"] + "    " + convertImplicitToKGEntry(a_tuple["isAttributeOf"],npubIdentifier)
                                             if a_tuple["isAttributeOf"] not in vref_list :
                                                 vref_list.append(a_tuple["isAttributeOf"])
                                         else:
-                                            assertionString += " ;\n        " + properties_tuple["attributeOf"] + "    " + convertVirtualToKGEntry(a_tuple["isAttributeOf"],identifierString)
+                                            assertionString += " ;\n        " + properties_tuple["attributeOf"] + "    " + convertImplicitToKGEntry(a_tuple["isAttributeOf"],identifierString)
                                     if "Unit" in a_tuple :
                                         assertionString += " ;\n        " + properties_tuple["Unit"] + "    " + a_tuple["Unit"]
                                     if "Time" in a_tuple :
-                                        if checkVirtual(a_tuple["Time"]) :
-                                            assertionString += " ;\n        " + properties_tuple["Time"] + "    " + convertVirtualToKGEntry(a_tuple["Time"], npubIdentifier)
+                                        if checkImplicit(a_tuple["Time"]) :
+                                            assertionString += " ;\n        " + properties_tuple["Time"] + "    " + convertImplicitToKGEntry(a_tuple["Time"], npubIdentifier)
                                             if a_tuple["Time"] not in vref_list :
                                                 vref_list.append(a_tuple["Time"])
                                         else :
-                                            assertionString += " ;\n        " + properties_tuple["Time"] + "    " + convertVirtualToKGEntry(a_tuple["Time"], identifierString)
+                                            assertionString += " ;\n        " + properties_tuple["Time"] + "    " + convertImplicitToKGEntry(a_tuple["Time"], identifierString)
                                     if "Label" in a_tuple :
                                         assertionString += " ;\n        " + properties_tuple["Label"] + "    \"" + a_tuple["Label"] + "\"^^xsd:string"
                                     if "Comment" in a_tuple :
                                         assertionString += " ;\n        " + properties_tuple["Comment"] + "    \"" + a_tuple["Comment"] + "\"^^xsd:string"
                                     if "inRelationTo" in a_tuple :
-                                        if checkVirtual(a_tuple["inRelationTo"]) :
+                                        if checkImplicit(a_tuple["inRelationTo"]) :
                                             if a_tuple["inRelationTo"] not in vref_list :
                                                 vref_list.append(a_tuple["inRelationTo"])
                                             if "Relation" in a_tuple :
-                                                assertionString += " ;\n        " + a_tuple["Relation"] + "    " + convertVirtualToKGEntry(a_tuple["inRelationTo"], npubIdentifier)
+                                                assertionString += " ;\n        " + a_tuple["Relation"] + "    " + convertImplicitToKGEntry(a_tuple["inRelationTo"], npubIdentifier)
                                             elif "Role" in a_tuple :
-                                                assertionString += " ;\n        " + properties_tuple["Role"] + "    [ rdf:type    " + a_tuple["Role"] + " ;\n            " + properties_tuple["inRelationTo"] + "    " + convertVirtualToKGEntry(a_tuple["inRelationTo"],npubIdentifier) + " ]"
+                                                assertionString += " ;\n        " + properties_tuple["Role"] + "    [ rdf:type    " + a_tuple["Role"] + " ;\n            " + properties_tuple["inRelationTo"] + "    " + convertImplicitToKGEntry(a_tuple["inRelationTo"],npubIdentifier) + " ]"
                                             else :
-                                                assertionString += " ;\n        " + properties_tuple["inRelationTo"] + "    " + convertVirtualToKGEntry(a_tuple["inRelationTo"], npubIdentifier)
+                                                assertionString += " ;\n        " + properties_tuple["inRelationTo"] + "    " + convertImplicitToKGEntry(a_tuple["inRelationTo"], npubIdentifier)
                                         else:
                                             if "Relation" in a_tuple :
-                                                assertionString += " ;\n        " + a_tuple["Relation"] + "    " + convertVirtualToKGEntry(a_tuple["inRelationTo"], identifierString)
+                                                assertionString += " ;\n        " + a_tuple["Relation"] + "    " + convertImplicitToKGEntry(a_tuple["inRelationTo"], identifierString)
                                             elif "Role" in a_tuple :
-                                                assertionString += " ;\n        " + properties_tuple["Role"] + "    [ rdf:type    " + a_tuple["Role"] + " ;\n            " + properties_tuple["inRelationTo"] + "    " + convertVirtualToKGEntry(a_tuple["inRelationTo"],identifierString) + " ]"
+                                                assertionString += " ;\n        " + properties_tuple["Role"] + "    [ rdf:type    " + a_tuple["Role"] + " ;\n            " + properties_tuple["inRelationTo"] + "    " + convertImplicitToKGEntry(a_tuple["inRelationTo"],identifierString) + " ]"
                                             else :
-                                                assertionString += " ;\n        " + properties_tuple["inRelationTo"] + "    " + convertVirtualToKGEntry(a_tuple["inRelationTo"], identifierString)                       
+                                                assertionString += " ;\n        " + properties_tuple["inRelationTo"] + "    " + convertImplicitToKGEntry(a_tuple["inRelationTo"], identifierString)                       
                                 except Exception as e:
                                     print "Error writing initial assertion elements: "
                                     if hasattr(e, 'message'):
@@ -850,9 +853,9 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                                             if ',' in tuple_row['Resource'] :
                                                                 classTerms = parseString(tuple_row['Resource'],',')
                                                                 for classTerm in classTerms :
-                                                                    assertionString += " ;\n        rdf:type    " + convertVirtualToKGEntry(codeMapper(classTerm))
+                                                                    assertionString += " ;\n        rdf:type    " + convertImplicitToKGEntry(codeMapper(classTerm))
                                                             else :
-                                                                assertionString += " ;\n        rdf:type    " + convertVirtualToKGEntry(codeMapper(tuple_row['Resource']))
+                                                                assertionString += " ;\n        rdf:type    " + convertImplicitToKGEntry(codeMapper(tuple_row['Resource']))
                                                         if ("Label" in tuple_row) and (tuple_row['Label'] is not "") :
                                                             assertionString += " ;\n        " + properties_tuple["Label"] + "    \"" + tuple_row['Label'] + "\"^^xsd:string"
                                         #print str(row[col_headers.index(a_tuple["Column"])])
@@ -876,42 +879,42 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                         if ',' in a_tuple["wasDerivedFrom"] :
                                             derivedFromTerms = parseString(a_tuple["wasDerivedFrom"],',')
                                             for derivedFromTerm in derivedFromTerms :
-                                                if checkVirtual(derivedFromTerm) :
-                                                    provenanceString += " ;\n        " + properties_tuple["wasDerivedFrom"] + "    " + convertVirtualToKGEntry(derivedFromTerm, npubIdentifier)
+                                                if checkImplicit(derivedFromTerm) :
+                                                    provenanceString += " ;\n        " + properties_tuple["wasDerivedFrom"] + "    " + convertImplicitToKGEntry(derivedFromTerm, npubIdentifier)
                                                     if derivedFromTerm not in vref_list :
                                                         vref_list.append(derivedFromTerm)
                                                 else :
-                                                    provenanceString += " ;\n        " + properties_tuple["wasDerivedFrom"] + "    " + convertVirtualToKGEntry(derivedFromTerm, identifierString)
+                                                    provenanceString += " ;\n        " + properties_tuple["wasDerivedFrom"] + "    " + convertImplicitToKGEntry(derivedFromTerm, identifierString)
                                         else :
-                                            provenanceString += " ;\n        " + properties_tuple["wasDerivedFrom"] + "    " + convertVirtualToKGEntry(a_tuple["wasDerivedFrom"], identifierString)
-                                        if checkVirtual(a_tuple["wasDerivedFrom"]) :
+                                            provenanceString += " ;\n        " + properties_tuple["wasDerivedFrom"] + "    " + convertImplicitToKGEntry(a_tuple["wasDerivedFrom"], identifierString)
+                                        if checkImplicit(a_tuple["wasDerivedFrom"]) :
                                             if a_tuple["wasDerivedFrom"] not in vref_list :
                                                 vref_list.append(a_tuple["wasDerivedFrom"])
                                     if "wasGeneratedBy" in a_tuple :
                                         if ',' in a_tuple["wasGeneratedBy"] :
                                             generatedByTerms = parseString(a_tuple["wasGeneratedBy"],',')
                                             for generatedByTerm in generatedByTerms :
-                                                if checkVirtual(generatedByTerm) :
-                                                    provenanceString += " ;\n        " + properties_tuple["wasGeneratedBy"] + "    " + convertVirtualToKGEntry(generatedByTerm, npubIdentifier)
+                                                if checkImplicit(generatedByTerm) :
+                                                    provenanceString += " ;\n        " + properties_tuple["wasGeneratedBy"] + "    " + convertImplicitToKGEntry(generatedByTerm, npubIdentifier)
                                                     if generatedByTerm not in vref_list :
                                                         vref_list.append(generatedByTerm)
                                                 else:
-                                                    provenanceString += " ;\n        " + properties_tuple["wasGeneratedBy"] + "    " + convertVirtualToKGEntry(generatedByTerm, identifierString)
+                                                    provenanceString += " ;\n        " + properties_tuple["wasGeneratedBy"] + "    " + convertImplicitToKGEntry(generatedByTerm, identifierString)
                                         else :
-                                            provenanceString += " ;\n        " + properties_tuple["wasGeneratedBy"] + "    " + convertVirtualToKGEntry(a_tuple["wasGeneratedBy"], identifierString)
-                                        if checkVirtual(a_tuple["wasGeneratedBy"]) :
+                                            provenanceString += " ;\n        " + properties_tuple["wasGeneratedBy"] + "    " + convertImplicitToKGEntry(a_tuple["wasGeneratedBy"], identifierString)
+                                        if checkImplicit(a_tuple["wasGeneratedBy"]) :
                                             if a_tuple["wasGeneratedBy"] not in vref_list :
                                                 vref_list.append(a_tuple["wasGeneratedBy"])
     #                                if "inRelationTo" in a_tuple :
-    #                                    if checkVirtual(a_tuple["inRelationTo"]) :
+    #                                    if checkImplicit(a_tuple["inRelationTo"]) :
     #                                        if a_tuple["inRelationTo"] not in vref_list :
     #                                            vref_list.append(a_tuple["inRelationTo"])
     #                                    if "Relation" in a_tuple :
-    #                                        provenanceString += " ;\n        " + a_tuple["Relation"] + "    " + convertVirtualToKGEntry(a_tuple["inRelationTo"], identifierString)
+    #                                        provenanceString += " ;\n        " + a_tuple["Relation"] + "    " + convertImplicitToKGEntry(a_tuple["inRelationTo"], identifierString)
     #                                    elif "Role" in a_tuple :
-    #                                        provenanceString += " ;\n        sio:hasRole [ rdf:type    " + a_tuple["Role"] + " ;\n            sio:inRelationTo " + convertVirtualToKGEntry(a_tuple["inRelationTo"]) + " ]"
+    #                                        provenanceString += " ;\n        sio:hasRole [ rdf:type    " + a_tuple["Role"] + " ;\n            sio:inRelationTo " + convertImplicitToKGEntry(a_tuple["inRelationTo"]) + " ]"
     #                                    else :
-    #                                        provenanceString += " ;\n        sio:inRelationTo    " + convertVirtualToKGEntry(a_tuple["inRelationTo"], identifierString)
+    #                                        provenanceString += " ;\n        sio:inRelationTo    " + convertImplicitToKGEntry(a_tuple["inRelationTo"], identifierString)
                                     provenanceString += " .\n"
                                     publicationInfoString += "\n    " + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "-" + identifierString
                                     publicationInfoString += "\n        prov:generatedAtTime \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime "
@@ -924,7 +927,7 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                 print "Unable to process tuple" + a_tuple.__str__() + ": " + str(e)
                     try: 
                         for vref in vref_list : 
-                            [assertionString,provenanceString,publicationInfoString,vref_list] = writeVirtualEntry(assertionString,provenanceString,publicationInfoString, virtual_entry_tuples, timeline_tuple, vref_list, vref, npubIdentifier)
+                            [assertionString,provenanceString,publicationInfoString,vref_list] = writeImplicitEntry(assertionString,provenanceString,publicationInfoString, implicit_entry_tuples, timeline_tuple, vref_list, vref, npubIdentifier)
                     except Exception as e:
                         print "Warning: Something went writing vref entries: " + str(e)
                 except Exception as e:
@@ -988,16 +991,16 @@ def main():
     [dm_fn, cb_fn, cmap_fn, timeline_fn] = processInfosheet(output_file, dm_fn, cb_fn, cmap_fn, timeline_fn)
 
     global explicit_entry_list
-    global virtual_entry_list
-    [explicit_entry_list,virtual_entry_list] = processDictionaryMapping(dm_fn)
+    global implicit_entry_list
+    [explicit_entry_list,implicit_entry_list] = processDictionaryMapping(dm_fn)
 
     cb_tuple = processCodebook(cb_fn)
     timeline_tuple = processTimeline(timeline_fn)
 
-    explicit_entry_tuples = writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_file)
-    virtual_entry_tuples = writeVirtualEntryTuples(virtual_entry_list, timeline_tuple, output_file, query_file, swrl_file)
+    explicit_entry_tuples = writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_file, dm_fn)
+    implicit_entry_tuples = writeImplicitEntryTuples(implicit_entry_list, timeline_tuple, output_file, query_file, swrl_file, dm_fn)
 
-    processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_tuple, explicit_entry_tuples, virtual_entry_tuples)
+    processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_tuple, explicit_entry_tuples, implicit_entry_tuples)
 
     output_file.close()
     query_file.close()
@@ -1037,7 +1040,7 @@ properties_tuple = processProperties()
 [unit_code_list,unit_uri_list,unit_label_list] = processCodeMappings(cmap_fn) #must be global at the moment for code mapper to work..
 
 explicit_entry_list = []
-virtual_entry_list = []
+implicit_entry_list = []
 
 if __name__ == "__main__":
     main()
