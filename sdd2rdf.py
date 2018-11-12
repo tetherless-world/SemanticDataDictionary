@@ -301,8 +301,12 @@ def writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_
     output_file.write(" ;\n        np:hasProvenance " + kb + "provenance-explicit_entry-" + datasetIdentifier)
     output_file.write(" ;\n        np:hasPublicationInfo " + kb + "pubInfo-explicit_entry-" + datasetIdentifier)
     output_file.write(" .\n}\n\n")
+    col_headers=list(pd.read_csv(dm_fn).columns.values)
+    #print col_headers
     for item in explicit_entry_list :
         explicit_entry_tuple = {}
+        if "Template" in col_headers and pd.notnull(item.Template) :
+            explicit_entry_tuple["Template"]=item.Template
         term = item.Column.replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-")
         assertionString += "\n    " + kb + term + "    rdf:type    owl:Class"
         selectString += "?" + term.lower() + " "
@@ -314,10 +318,10 @@ def writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_
         [explicit_entry_tuple, assertionString, whereString, swrlString] = writeClassUnit(item, term_expl, explicit_entry_tuple, assertionString, whereString, swrlString)
         [explicit_entry_tuple, assertionString, whereString, swrlString] = writeClassTime(item, term_expl, explicit_entry_tuple, assertionString, whereString, swrlString)
         [explicit_entry_tuple, assertionString, whereString, swrlString] = writeClassRelation(item, term_expl, explicit_entry_tuple, assertionString, whereString, swrlString)
-        if (pd.notnull(item.Label)) :
+        if "Label" in col_headers and (pd.notnull(item.Label)) :
             assertionString += " ;\n        " + properties_tuple["Label"] + "    \"" + item.Label + "\"^^xsd:string" 
             explicit_entry_tuple["Label"]=item.Label
-        if (pd.notnull(item.Comment)) :
+        if "Comment" in col_headers and (pd.notnull(item.Comment)) :
             assertionString += " ;\n        " + properties_tuple["Comment"] + "    \"" + item.Comment + "\"^^xsd:string"
             explicit_entry_tuple["Comment"]=item.Comment
         assertionString += " .\n" 
@@ -328,7 +332,7 @@ def writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_
         [explicit_entry_tuple, provenanceString, whereString, swrlString] = writeClassWasDerivedFrom(item, term_expl, explicit_entry_tuple, provenanceString, whereString, swrlString)
         provenanceString += " .\n"
         whereString += " ;\n    sio:hasValue ?" + term.lower() + " .\n\n"
-        if ("hasPosition" in item and pd.notnull(item.hasPosition)) :
+        if "hasPosition" in col_headers and pd.notnull(item.hasPosition) :
             publicationInfoString += "\n    " + kb + term + "    hasco:hasPosition    \"" + str(item.hasPosition) + "\"^^xsd:integer ."
             explicit_entry_tuple["hasPosition"]=item.hasPosition
         explicit_entry_tuples.append(explicit_entry_tuple)
@@ -806,7 +810,16 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                             identifierString = hashlib.md5(str(row[col_headers.index(a_tuple["Column"])+1])+typeString).hexdigest()
                             try :
                                 try :
-                                    assertionString += "\n    " + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "-" + identifierString + "    rdf:type    " + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-")
+                                    if "Template" in a_tuple :
+                                        template_term = a_tuple["Template"]
+                                        while "{" in template_term and "}" in template_term:
+                                            open_index = template_term.find("{")
+                                            close_index = template_term.find("}")
+                                            key = template_term[open_index+1:close_index]
+                                            template_term = template_term[:open_index] + str(row[col_headers.index(key)+1]) + template_term[close_index+1:]
+                                        assertionString += "\n    " + kb + template_term + "    rdf:type    " + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-")
+                                    else :
+                                        assertionString += "\n    " + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "-" + identifierString + "    rdf:type    " + kb + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-")
                                     if "Attribute" in a_tuple :
                                         if ',' in a_tuple["Attribute"] :
                                             attributes = parseString(a_tuple["Attribute"],',')
