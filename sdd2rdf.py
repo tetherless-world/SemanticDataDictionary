@@ -297,7 +297,7 @@ def writeImplicitEntryTuples(implicit_entry_list, timeline_tuple, output_file, q
     output_file.write("<" +  prefixes[kb] + "pubInfo-implicit_entry-" + datasetIdentifier + "> {\n    <" +  prefixes[kb] + "nanoPub-implicit_entry-" + datasetIdentifier + ">    <" +  prov.generatedAtTime + ">    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n}\n\n")
     whereString += "}"
     #print whereString
-    query_file.write(whereString.replace('-','_'))
+    query_file.write(whereString)
     swrl_file.write(swrlString[:-2])
     return implicit_entry_tuples
 
@@ -306,7 +306,7 @@ def writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_
     assertionString = ''
     provenanceString = ''
     publicationInfoString = ''
-    selectString = "SELECT "
+    selectString = "SELECT DISTINCT "
     whereString = "WHERE {\n"
     swrlString = ""
     datasetIdentifier = hashlib.md5(dm_fn).hexdigest()
@@ -361,7 +361,7 @@ def writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_
     #print selectString
     #print whereString
     query_file.write(selectString)
-    query_file.write(whereString.replace('-','_'))
+    query_file.write(whereString)
     swrl_file.write(swrlString)
     return explicit_entry_tuples
 
@@ -414,9 +414,19 @@ def writeImplicitEntry(assertionString, provenanceString,publicationInfoString, 
                             assertionString += " ;\n        <" + rdf.type + ">    " + v_tuple["Attribute"]
                     # Need to get the right ID uri if we put this in.. Commenting out identifier for now
                     #if "Subject" in v_tuple :
-                    #    assertionString += " ;\n        sio:hasIdentifier <" + prefixes[kb] + v_tuple["Subject"] + "-" + v_id + ">"
+                    #    assertionString += " ;\n        sio:hasIdentifier <" + prefixes[kb] + v_tuple["Subject"] + "-" + v_id + ">" #should be actual ID
                     if "Label" in v_tuple :
                         assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + v_tuple["Label"] + "\"^^xsd:string"
+                    if "Time" in v_tuple :
+                        if checkImplicit(v_tuple["Time"]) :
+                            for vr_tuple in implicit_entry_tuples :
+                                if (vr_tuple["Column"] == v_tuple["Time"]) :
+                                    timeID = hashlib.md5(str(vr_tuple) + str(index)).hexdigest()
+                            assertionString += " ;\n        <" + properties_tuple["Time"] + ">    " + convertImplicitToKGEntry(v_tuple["Time"], timeID)
+                            if v_tuple["Time"] not in vref_list :
+                                vref_list.append(v_tuple["Time"])
+                        else :
+                            assertionString += " ;\n        <" + properties_tuple["Time"] + ">    " + convertImplicitToKGEntry(v_tuple["Time"], v_id) #should be actual ID
                     if "inRelationTo" in v_tuple :
                         relationToID = None
                         for vr_tuple in implicit_entry_tuples :
@@ -650,8 +660,8 @@ def processPrefixes(output_file,query_file):
         for prefix in prefixes :
             #print prefix.find(">")
             output_file.write("@prefix " + prefix + ": <" + prefixes[prefix] + "> .\n")
-            query_file.write(prefix[1:prefix.find(">")+1])
-            query_file.write("\n")
+            query_file.write("prefix " + prefix + ": <" + prefixes[prefix] + "> \n")
+        query_file.write("\n")
         output_file.write("\n")
     except Exception as e :
         print "Warning: Something went wrong when trying to read the prefixes file: " + str(e)
@@ -841,17 +851,18 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                 typeString += str(a_tuple["wasDerivedFrom"])
                             identifierString = hashlib.md5(str(row[col_headers.index(a_tuple["Column"])+1])+typeString).hexdigest()
                             try :
+                                if "Template" in a_tuple :
+                                    template_term = a_tuple["Template"]
+                                    while "{" in template_term and "}" in template_term:
+                                        open_index = template_term.find("{")
+                                        close_index = template_term.find("}")
+                                        key = template_term[open_index+1:close_index]
+                                        template_term = template_term[:open_index] + str(row[col_headers.index(key)+1]) + template_term[close_index+1:]
+                                    termURI = "<" + prefixes[kb] + template_term + ">"
+                                else :
+                                    termURI = "<" + prefixes[kb] + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "-" + identifierString + ">"
                                 try :
-                                    if "Template" in a_tuple :
-                                        template_term = a_tuple["Template"]
-                                        while "{" in template_term and "}" in template_term:
-                                            open_index = template_term.find("{")
-                                            close_index = template_term.find("}")
-                                            key = template_term[open_index+1:close_index]
-                                            template_term = template_term[:open_index] + str(row[col_headers.index(key)+1]) + template_term[close_index+1:]
-                                        assertionString += "\n    <" + prefixes[kb] + template_term + ">    <" + rdf.type + ">    <" + prefixes[kb] + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + ">"
-                                    else :
-                                        assertionString += "\n    <" + prefixes[kb] + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "-" + identifierString + ">    <" + rdf.type + ">    <" + prefixes[kb] + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + ">"
+                                    assertionString += "\n    " + termURI + "\n        <" + rdf.type + ">    <" + prefixes[kb] + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + ">"
                                     if "Attribute" in a_tuple :
                                         if ',' in a_tuple["Attribute"] :
                                             attributes = parseString(a_tuple["Attribute"],',')
@@ -957,7 +968,7 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                 except Exception as e:
                                     print "Error writing data value to assertion string:", row[col_headers.index(a_tuple["Column"])+1], ": " + str(e)
                                 try :
-                                    provenanceString += "\n    <" + prefixes[kb] + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "-" + identifierString + ">    <" +  prov.generatedAtTime + ">    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime"
+                                    provenanceString += "\n    " + termURI + "\n        <" +  prov.generatedAtTime + ">    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime"
                                     if "wasDerivedFrom" in a_tuple : 
                                         v_id = assignVID(implicit_entry_tuples,timeline_tuple,a_tuple,"wasDerivedFrom", npubIdentifier)
                                         if ',' in a_tuple["wasDerivedFrom"] :
@@ -970,11 +981,12 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                                         vref_list.append(derivedFromTerm)
                                                 else :
                                                     provenanceString += " ;\n        <" + properties_tuple["wasDerivedFrom"] + ">    " + convertImplicitToKGEntry(derivedFromTerm, identifierString)
-                                        else :
-                                            provenanceString += " ;\n        <" + properties_tuple["wasDerivedFrom"] + ">    " + convertImplicitToKGEntry(a_tuple["wasDerivedFrom"], identifierString)
-                                        if checkImplicit(a_tuple["wasDerivedFrom"]) :
+                                        elif checkImplicit(a_tuple["wasDerivedFrom"]) :
                                             if a_tuple["wasDerivedFrom"] not in vref_list :
                                                 vref_list.append(a_tuple["wasDerivedFrom"])
+                                            provenanceString += " ;\n        <" + properties_tuple["wasDerivedFrom"] + ">    " + convertImplicitToKGEntry(a_tuple["wasDerivedFrom"], v_id)
+                                        else :
+                                            provenanceString += " ;\n        <" + properties_tuple["wasDerivedFrom"] + ">    " + convertImplicitToKGEntry(a_tuple["wasDerivedFrom"], identifierString)
                                     if "wasGeneratedBy" in a_tuple :
                                         v_id = assignVID(implicit_entry_tuples,timeline_tuple,a_tuple,"wasGeneratedBy", npubIdentifier)
                                         if ',' in a_tuple["wasGeneratedBy"] :
@@ -987,14 +999,15 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                                         vref_list.append(generatedByTerm)
                                                 else:
                                                     provenanceString += " ;\n        <" + properties_tuple["wasGeneratedBy"] + ">    " + convertImplicitToKGEntry(generatedByTerm, identifierString)
-                                        else :
-                                            provenanceString += " ;\n        <" + properties_tuple["wasGeneratedBy"] + ">    " + convertImplicitToKGEntry(a_tuple["wasGeneratedBy"], identifierString)
-                                        if checkImplicit(a_tuple["wasGeneratedBy"]) :
+                                        elif checkImplicit(a_tuple["wasGeneratedBy"]) :
                                             if a_tuple["wasGeneratedBy"] not in vref_list :
                                                 vref_list.append(a_tuple["wasGeneratedBy"])
+                                            provenanceString += " ;\n        <" + properties_tuple["wasGeneratedBy"] + ">    " + convertImplicitToKGEntry(a_tuple["wasGeneratedBy"], v_id)
+                                        else :
+                                            provenanceString += " ;\n        <" + properties_tuple["wasGeneratedBy"] + ">    " + convertImplicitToKGEntry(a_tuple["wasGeneratedBy"], identifierString)
+                                        
                                     provenanceString += " .\n"
-                                    publicationInfoString += "\n    <" + prefixes[kb] + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "-" + identifierString + ">"
-                                    publicationInfoString += "\n        <" +  prov.generatedAtTime + ">    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime"
+                                    publicationInfoString += "\n    " + termURI + "\n        <" +  prov.generatedAtTime + ">    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime"
                                     if "hasPosition" in a_tuple :
                                         publicationInfoString += " ;\n        hasco:hasPosition    \"" + str(a_tuple["hasPosition"]) + "\"^^xsd:integer"
                                     publicationInfoString += " .\n"
