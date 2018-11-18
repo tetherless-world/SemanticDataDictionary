@@ -146,9 +146,32 @@ def extractExplicitTerm(col_headers,row,term) : # need to write this function
         if isSchemaVar(key) :
             for entry in explicit_entry_list :
                 if entry.Column == key :
-                    return extractTemplate(col_headers,row,entry.Template)
-        else :
-            term = term[:open_index] + str(row[col_headers.index(key)+1]) + term[close_index+1:]
+                    if pd.notnull(entry.Template) :
+                        term = extractTemplate(col_headers,row,entry.Template)
+                    else :
+                        typeString = ""
+                        if pd.notnull(entry.Attribute) :
+                            typeString += str(entry.Attribute)
+                        if pd.notnull(entry.Entity) :
+                            typeString += str(entry.Entity)
+                        if pd.notnull(entry.Label) :
+                            typeString += str(entry.Label)
+                        if pd.notnull(entry.Unit) :
+                            typeString += str(entry.Unit)
+                        if pd.notnull(entry.Time) :
+                            typeString += str(entry.Time)
+                        if pd.notnull(entry.inRelationTo) :
+                            typeString += str(entry.inRelationTo)
+                        if pd.notnull(entry.wasGeneratedBy) :
+                            typeString += str(entry.wasGeneratedBy)
+                        if pd.notnull(entry.wasDerivedFrom) :
+                            typeString += str(entry.wasDerivedFrom)
+                        identifierKey = hashlib.md5(str(row[col_headers.index(key)+1])+typeString).hexdigest()
+                        term = entry.Column + "-" + identifierKey
+                        #return extractTemplate(col_headers,row,entry.Template)
+        else : # What does it mean for a template reference to not be a schema variable?
+            print "Warning: Template reference " + term + " is not be a schema variable"
+            term = term[:open_index] + str(row[col_headers.index(key)+1]) + term[close_index+1:] # Needs updating probably, at least checking
     return term
 
 
@@ -422,6 +445,7 @@ def writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_
         selectString += "?" + term.lower() + " "
         whereString += "  ?" + term.lower() + "_E <" + rdf.type + "> "
         term_expl = "?" + term.lower() + "_E"
+        #print item.Column
         explicit_entry_tuple["Column"]=item.Column
         [explicit_entry_tuple, assertionString, whereString, swrlString] = writeClassAttributeOrEntity(item, term_expl, explicit_entry_tuple, assertionString, whereString, swrlString)
         [explicit_entry_tuple, assertionString, whereString, swrlString] = writeClassAttributeOf(item, term_expl, explicit_entry_tuple, assertionString, whereString, swrlString)
@@ -896,7 +920,9 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
 
                     vref_list = []
                     for a_tuple in explicit_entry_tuples :
-                        #print a_tuple
+                        #print a_tuple["Column"]
+                        #print col_headers
+                        #print "\n"
                         if (a_tuple["Column"] in col_headers ) :                     
                             typeString = ""
                             if "Attribute" in a_tuple :
@@ -923,6 +949,8 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                 else :
                                     termURI = "<" + prefixes[kb] + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "-" + identifierString + ">"
                                 try :
+                                    #print termURI
+                                    #print "\n\n"
                                     assertionString += "\n    " + termURI + "\n        <" + rdf.type + ">    <" + prefixes[kb] + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + ">"
                                     if "Attribute" in a_tuple :
                                         if ',' in a_tuple["Attribute"] :
