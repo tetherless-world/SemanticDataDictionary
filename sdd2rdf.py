@@ -1,4 +1,4 @@
-import urllib2
+#import urllib2
 import csv
 import sys
 import re
@@ -11,8 +11,11 @@ import os
 import rdflib
 import logging
 logging.getLogger().disabled = True
+if sys.version_info[0] == 3:
+    from importlib import reload
 reload(sys)
-sys.setdefaultencoding('utf8')
+if sys.version_info[0] == 2:
+    sys.setdefaultencoding('utf8')
 
 whyis = rdflib.Namespace('http://vocab.rpi.edu/whyis/')
 np = rdflib.Namespace("http://www.nanopub.org/nschema#")
@@ -72,7 +75,7 @@ def checkImplicit(input_word) :
         else :
             return False
     except Exception as e:
-        print "Something went wrong in checkImplicit()" + str(e)
+        print("Something went wrong in checkImplicit()" + str(e))
         sys.exit(1)
 
 def isfloat(term):
@@ -101,13 +104,13 @@ def assignVID(implicit_entry_tuples,timeline_tuple,a_tuple,column, npubIdentifie
     v_id = npubIdentifier
     for v_tuple in implicit_entry_tuples : # referenced in implicit list
         if v_tuple["Column"] == a_tuple[column]:
-            v_id = hashlib.md5(str(v_tuple) + str(npubIdentifier)).hexdigest()
+            v_id = hashlib.md5((str(v_tuple) + str(npubIdentifier)).encode("utf-8")).hexdigest()
     if v_id == None : # maybe it's referenced in the timeline
         for t_tuple in timeline_tuple:
             if t_tuple["Column"] == a_tuple[column]:
-                v_id = hashlib.md5(str(t_tuple) + str(npubIdentifier)).hexdigest()
+                v_id = hashlib.md5((str(t_tuple) + str(npubIdentifier)).encode("utf-8")).hexdigest()
     if v_id == npubIdentifier : # if it's not in implicit list or timeline
-        print "Warning, " + column + " ID assigned to nanopub ID"
+        print("Warning, " + column + " ID assigned to nanopub ID")
     return v_id
 
 '''def processPrefixes(output_file,query_file):
@@ -118,7 +121,7 @@ def assignVID(implicit_entry_tuples,timeline_tuple,a_tuple,column, npubIdentifie
     prefix_file = open(prefix_fn,"r")
     prefixes = prefix_file.readlines()
     for prefix in prefixes :
-        #print prefix.find(">")
+        #print(prefix.find(">"))
         output_file.write(prefix)
         query_file.write(prefix[1:prefix.find(">")+1])
         query_file.write("\n")
@@ -166,11 +169,11 @@ def extractExplicitTerm(col_headers,row,term) : # need to write this function
                             typeString += str(entry.wasGeneratedBy)
                         if pd.notnull(entry.wasDerivedFrom) :
                             typeString += str(entry.wasDerivedFrom)
-                        identifierKey = hashlib.md5(str(row[col_headers.index(key)+1])+typeString).hexdigest()
+                        identifierKey = hashlib.md5((str(row[col_headers.index(key)+1])+typeString).encode("utf-8")).hexdigest()
                         term = entry.Column + "-" + identifierKey
                         #return extractTemplate(col_headers,row,entry.Template)
         else : # What does it mean for a template reference to not be a schema variable?
-            print "Warning: Template reference " + term + " is not be a schema variable"
+            print("Warning: Template reference " + term + " is not be a schema variable")
             term = term[:open_index] + str(row[col_headers.index(key)+1]) + term[close_index+1:] # Needs updating probably, at least checking
     return term
 
@@ -209,7 +212,7 @@ def writeClassAttributeOrEntity(item, term, input_tuple, assertionString, whereS
             swrlString += codeMapper(item.Attribute) + "(" + term + ") ^ "
         input_tuple["Attribute"]=codeMapper(item.Attribute)
     else :
-        print "Warning: Entry not assigned an Entity or Attribute value, or was assigned both."
+        print("Warning: Entry not assigned an Entity or Attribute value, or was assigned both.")
         input_tuple["Attribute"]=codeMapper("sio:Attribute")
         assertionString += " ;\n        <" + rdfs.subClassOf + ">    sio:Attribute"
         whereString += "sio:Attribute "
@@ -351,7 +354,7 @@ def writeImplicitEntryTuples(implicit_entry_list, timeline_tuple, output_file, q
     provenanceString = ''
     whereString = '\n'
     swrlString = ''
-    datasetIdentifier = hashlib.md5(dm_fn).hexdigest()
+    datasetIdentifier = hashlib.md5(dm_fn.encode('utf-8')).hexdigest()
     output_file.write("<" +  prefixes[kb] + "head-implicit_entry-" + datasetIdentifier + "> { ")
     output_file.write("\n    <" +  prefixes[kb] + "nanoPub-implicit_entry-" + datasetIdentifier + ">    <" + rdf.type + ">    <" +  np.Nanopublication + ">")
     output_file.write(" ;\n        <" +  np.hasAssertion + ">    <" +  prefixes[kb] + "assertion-implicit_entry-" + datasetIdentifier + ">")
@@ -414,7 +417,7 @@ def writeImplicitEntryTuples(implicit_entry_list, timeline_tuple, output_file, q
     output_file.write(provenanceString + "\n}\n\n")
     output_file.write("<" +  prefixes[kb] + "pubInfo-implicit_entry-" + datasetIdentifier + "> {\n    <" +  prefixes[kb] + "nanoPub-implicit_entry-" + datasetIdentifier + ">    <" +  prov.generatedAtTime + ">    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n}\n\n")
     whereString += "}"
-    #print whereString
+    #print(whereString)
     query_file.write(whereString)
     swrl_file.write(swrlString[:-2])
     return implicit_entry_tuples
@@ -427,7 +430,7 @@ def writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_
     selectString = "SELECT DISTINCT "
     whereString = "WHERE {\n"
     swrlString = ""
-    datasetIdentifier = hashlib.md5(dm_fn).hexdigest()
+    datasetIdentifier = hashlib.md5(dm_fn.encode('utf-8')).hexdigest()
     output_file.write("<" +  prefixes[kb] + "head-explicit_entry-" + datasetIdentifier + "> { ")
     output_file.write("\n    <" +  prefixes[kb] + "nanoPub-explicit_entry-" + datasetIdentifier + ">    <" + rdf.type + ">    <" +  np.Nanopublication + ">")
     output_file.write(" ;\n        <" +  np.hasAssertion + ">    <" +  prefixes[kb] + "assertion-explicit_entry-" + datasetIdentifier + ">")
@@ -435,7 +438,7 @@ def writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_
     output_file.write(" ;\n        <" +  np.hasPublicationInfo + ">    <" +  prefixes[kb] + "pubInfo-explicit_entry-" + datasetIdentifier + ">")
     output_file.write(" .\n}\n\n")
     col_headers=list(pd.read_csv(dm_fn).columns.values)
-    #print col_headers
+    #print(col_headers)
     for item in explicit_entry_list :
         explicit_entry_tuple = {}
         if "Template" in col_headers and pd.notnull(item.Template) :
@@ -445,7 +448,7 @@ def writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_
         selectString += "?" + term.lower() + " "
         whereString += "  ?" + term.lower() + "_E <" + rdf.type + "> "
         term_expl = "?" + term.lower() + "_E"
-        #print item.Column
+        #print(item.Column
         explicit_entry_tuple["Column"]=item.Column
         [explicit_entry_tuple, assertionString, whereString, swrlString] = writeClassAttributeOrEntity(item, term_expl, explicit_entry_tuple, assertionString, whereString, swrlString)
         [explicit_entry_tuple, assertionString, whereString, swrlString] = writeClassAttributeOf(item, term_expl, explicit_entry_tuple, assertionString, whereString, swrlString)
@@ -477,8 +480,8 @@ def writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_
     output_file.write(provenanceString + "\n}\n\n")
     output_file.write("<" +  prefixes[kb] + "pubInfo-explicit_entry-" + datasetIdentifier + "> {\n    <" +  prefixes[kb] + "nanoPub-explicit_entry-" + datasetIdentifier + ">    <" +  prov.generatedAtTime + ">    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .")
     output_file.write(publicationInfoString + "\n}\n\n")
-    #print selectString
-    #print whereString
+    #print(selectString)
+    #print(whereString)
     query_file.write(selectString)
     query_file.write(whereString)
     swrl_file.write(swrlString)
@@ -488,7 +491,7 @@ def writeImplicitEntry(assertionString, provenanceString,publicationInfoString, 
     try :
         if timeline_tuple != {} :
             if v_column in timeline_tuple :
-                v_id = hashlib.md5(str(timeline_tuple[v_column]) + str(index)).hexdigest()
+                v_id = hashlib.md5((str(timeline_tuple[v_column]) + str(index)).encode("utf-8")).hexdigest()
                 assertionString += "\n    " + convertImplicitToKGEntry(v_column, v_id) + "    <" + rdf.type + ">    " + convertImplicitToKGEntry(v_column)
                 for timeEntry in timeline_tuple[v_column] :
                     if 'Type' in timeEntry :
@@ -513,7 +516,7 @@ def writeImplicitEntry(assertionString, provenanceString,publicationInfoString, 
                 if "Study" in v_tuple :
                     continue
                 else :
-                    v_id = hashlib.md5(str(v_tuple) + str(index)).hexdigest()
+                    v_id = hashlib.md5((str(v_tuple) + str(index)).encode("utf-8")).hexdigest()
                     assertionString += "\n    <" + prefixes[kb] + v_tuple["Column"][2:] + "-" + v_id + ">    <" + rdf.type + ">    <" + prefixes[kb] + v_tuple["Column"][2:] + ">"
                     if "Entity" in v_tuple :
                         if ',' in v_tuple["Entity"] :
@@ -538,7 +541,7 @@ def writeImplicitEntry(assertionString, provenanceString,publicationInfoString, 
                         if checkImplicit(v_tuple["Time"]) :
                             for vr_tuple in implicit_entry_tuples :
                                 if (vr_tuple["Column"] == v_tuple["Time"]) :
-                                    timeID = hashlib.md5(str(vr_tuple) + str(index)).hexdigest()
+                                    timeID = hashlib.md5((str(vr_tuple) + str(index)).encode("utf-8")).hexdigest()
                             assertionString += " ;\n        <" + properties_tuple["Time"] + ">    " + convertImplicitToKGEntry(v_tuple["Time"], timeID)
                             if v_tuple["Time"] not in vref_list :
                                 vref_list.append(v_tuple["Time"])
@@ -548,7 +551,7 @@ def writeImplicitEntry(assertionString, provenanceString,publicationInfoString, 
                         relationToID = None
                         for vr_tuple in implicit_entry_tuples :
                             if (vr_tuple["Column"] == v_tuple["inRelationTo"]) :
-                                relationToID = hashlib.md5(str(vr_tuple) + str(index)).hexdigest()
+                                relationToID = hashlib.md5((str(vr_tuple) + str(index)).encode("utf-8")).hexdigest()
                         if ("Role" in v_tuple) and ("Relation" not in v_tuple) :
                             #assertionString += " ;\n        <" + properties_tuple["Role"] + ">    [ <" + rdf.type + ">    " + v_tuple["Role"] + " ;\n            <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(v_tuple["inRelationTo"], index) + " ]"
                             #assertionString += " ;\n        <" + properties_tuple["Role"] + ">    [ <" + rdf.type + ">    " + v_tuple["Role"] + " ;\n            <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(v_tuple["inRelationTo"], v_id) + " ]"
@@ -593,7 +596,7 @@ def writeImplicitEntry(assertionString, provenanceString,publicationInfoString, 
                     provenanceString += " .\n"
         return [assertionString,provenanceString,publicationInfoString,vref_list]
     except Exception as e :
-        print "Warning: Unable to create implicit entry: " + str(e)
+        print("Warning: Unable to create implicit entry: " + str(e))
 
 def processInfosheet(output_file, dm_fn, cb_fn, cmap_fn, timeline_fn):
     infosheet_tuple = {}
@@ -602,7 +605,7 @@ def processInfosheet(output_file, dm_fn, cb_fn, cmap_fn, timeline_fn):
         try :
             infosheet_file = pd.read_csv(infosheet_fn, dtype=object)
         except Exception as e :
-            print "Warning: Dataset metadata will not be written to the output file.\nThe specified Infosheet file does not exist or is unreadable: " + str(e)
+            print("Warning: Dataset metadata will not be written to the output file.\nThe specified Infosheet file does not exist or is unreadable: " + str(e))
             return [dm_fn, cb_fn, cmap_fn, timeline_fn]
         for row in infosheet_file.itertuples() :
             if(pd.notnull(row.Value)):
@@ -616,7 +619,7 @@ def processInfosheet(output_file, dm_fn, cb_fn, cmap_fn, timeline_fn):
             cmap_fn = infosheet_tuple["Code Mapping"]
         if "Timeline" in infosheet_tuple : 
             timeline_fn = infosheet_tuple["Timeline"]
-        datasetIdentifier = hashlib.md5(dm_fn).hexdigest()
+        datasetIdentifier = hashlib.md5(dm_fn.encode('utf-8')).hexdigest()
         output_file.write("<" +  prefixes[kb] + "head-dataset_metadata-" + datasetIdentifier + "> { ")
         output_file.write("\n    <" +  prefixes[kb] + "nanoPub-dataset_metadata-" + datasetIdentifier + ">    <" + rdf.type + ">    <" +  np.Nanopublication + ">")
         output_file.write(" ;\n        <" +  np.hasAssertion + ">    <" +  prefixes[kb] + "assertion-dataset_metadata-" + datasetIdentifier + ">")
@@ -628,7 +631,7 @@ def processInfosheet(output_file, dm_fn, cb_fn, cmap_fn, timeline_fn):
         if "Type" in infosheet_tuple :
             assertionString += "    <" + rdf.type + ">    " + [infosheet_tuple["Type"],"<" + infosheet_tuple["Type"] + ">"][isURI(infosheet_tuple["Type"])]
         else :
-            print "Error: The Infosheet file is missing the required Type value declaration"
+            print("Error: The Infosheet file is missing the required Type value declaration")
             sys.exit(1)
         if "Title" in infosheet_tuple :
             assertionString += " ;\n        <http://purl.org/dc/terms/title>    \"" + infosheet_tuple["Title"] + "\"^^xsd:string"
@@ -747,13 +750,13 @@ def processPrefixes(output_file,query_file):
         for row in prefix_file.itertuples() :
             prefixes[row.prefix] = row.url
         for prefix in prefixes :
-            #print prefix.find(">")
+            #print(prefix.find(">"))
             output_file.write("@prefix " + prefix + ": <" + prefixes[prefix] + "> .\n")
             query_file.write("prefix " + prefix + ": <" + prefixes[prefix] + "> \n")
         query_file.write("\n")
         output_file.write("\n")
     except Exception as e :
-        print "Warning: Something went wrong when trying to read the prefixes file: " + str(e)
+        print("Warning: Something went wrong when trying to read the prefixes file: " + str(e))
     return prefixes
     
 def processCodeMappings(cmap_fn):
@@ -772,7 +775,7 @@ def processCodeMappings(cmap_fn):
                 if pd.notnull(code_row.label):
                     unit_label_list.append(code_row.label)
         except Exception as e :
-            print "Warning: Something went wrong when trying to read the Code Mappings file: " + str(e)
+            print("Warning: Something went wrong when trying to read the Code Mappings file: " + str(e))
     return [unit_code_list,unit_uri_list,unit_label_list]
 
 def processProperties():
@@ -782,7 +785,7 @@ def processProperties():
         try :
             properties_file = pd.read_csv(properties_fn, dtype=object)
         except Exception as e :
-            print "Warning: The specified Properties file does not exist or is unreadable: " + str(e)
+            print("Warning: The specified Properties file does not exist or is unreadable: " + str(e))
             return properties_tuple
         for row in properties_file.itertuples() :
             if(pd.notnull(row.Property)):
@@ -795,7 +798,7 @@ def processTimeline(timeline_fn):
         try :
             timeline_file = pd.read_csv(timeline_fn, dtype=object)
         except Exception as e :
-            print "Error: The specified Timeline file does not exist: " + str(e)
+            print("Error: The specified Timeline file does not exist: " + str(e))
             sys.exit(1)
         try :
             inner_tuple_list = []
@@ -819,28 +822,28 @@ def processTimeline(timeline_fn):
                 timeline_tuple[row.Name]=inner_tuple_list
                 row_num += 1
         except Exception as e :
-            print "Warning: Unable to process Timeline file: " + str(e)
+            print("Warning: Unable to process Timeline file: " + str(e))
     return timeline_tuple
 
 def processDictionaryMapping(dm_fn):
     try :
         dm_file = pd.read_csv(dm_fn, dtype=object)
-    except Exception, e:
-        print "Current directory: " + os.getcwd() + "/ - " + str(os.path.isfile(dm_fn)) 
-        print "Error: The processing DM file \"" + dm_fn + "\": " + str(e)
+    except Exception as e:
+        print("Current directory: " + os.getcwd() + "/ - " + str(os.path.isfile(dm_fn)) )
+        print("Error: The processing DM file \"" + dm_fn + "\": " + str(e))
         sys.exit(1)
     try: 
         # Set implicit and explicit entries
         for row in dm_file.itertuples() :
             if (pd.isnull(row.Column)) :
-                print "Error: The DM must have a column named 'Column'"
+                print("Error: The DM must have a column named 'Column'")
                 sys.exit(1)
             if row.Column.startswith("??") :
                 implicit_entry_list.append(row)
             else :
                 explicit_entry_list.append(row)
     except Exception as e :
-        print "Something went wrong when trying to read the DM: " + str(e)
+        print("Something went wrong when trying to read the DM: " + str(e))
         sys.exit(1)
     return [explicit_entry_list,implicit_entry_list]
 
@@ -849,8 +852,8 @@ def processCodebook(cb_fn):
     if cb_fn is not None :
         try :
             cb_file = pd.read_csv(cb_fn, dtype=object)
-        except Exception, e:
-            print "Error: The processing Codebook file: " + str(e)
+        except Exception as e:
+            print("Error: The processing Codebook file: " + str(e))
             sys.exit(1)
         try :
             inner_tuple_list = []
@@ -870,7 +873,7 @@ def processCodebook(cb_fn):
                 cb_tuple[row.Column]=inner_tuple_list
                 row_num += 1
         except Exception as e :
-            print "Warning: Unable to process Codebook file: " + str(e)
+            print("Warning: Unable to process Codebook file: " + str(e))
     return cb_tuple
 
 def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_tuple, explicit_entry_tuples, implicit_entry_tuples):
@@ -878,7 +881,7 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
         try :
             data_file = pd.read_csv(data_fn, dtype=object)
         except Exception as e :
-            print "Error: The specified Data file does not exist: " + str(e)
+            print("Error: The specified Data file does not exist: " + str(e))
             sys.exit(1)
         try :
             # ensure that there is a column annotated as the sio:Identifier or hasco:originalID in the data file:
@@ -890,17 +893,17 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                     if "Attribute" in a_tuple :
                         if ((a_tuple["Attribute"] == "hasco:originalID") or (a_tuple["Attribute"] == "sio:Identifier")) :
                             if(a_tuple["Column"] in col_headers) :
-                                #print a_tuple["Column"]
+                                #print(a_tuple["Column"])
                                 #id_index = col_headers.index(a_tuple["Column"])# + 1
-                                #print id_index
+                                #print(id_index)
                                 for v_tuple in implicit_entry_tuples :
                                     if "isAttributeOf" in a_tuple :
                                         if (a_tuple["isAttributeOf"] == v_tuple["Column"]) :
                                             v_tuple["Subject"]=a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-")
             except Exception as e :
-                print "Error processing column headers: " + str(e)
+                print("Error processing column headers: " + str(e))
             for row in data_file.itertuples() :
-                #print row
+                #print(row)
                 assertionString = ''
                 provenanceString = ''
                 publicationInfoString = ''           
@@ -908,7 +911,7 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                 for term in row[1:] :
                     if term is not None:
                         id_string+=str(term)
-                npubIdentifier = hashlib.md5(id_string).hexdigest()
+                npubIdentifier = hashlib.md5(id_string.encode("utf-8")).hexdigest()
                 try:
                     output_file.write("<" +  prefixes[kb] + "head-" + npubIdentifier + "> {")
                     output_file.write("\n    <" +  prefixes[kb] + "nanoPub-" + npubIdentifier + ">")
@@ -920,9 +923,9 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
 
                     vref_list = []
                     for a_tuple in explicit_entry_tuples :
-                        #print a_tuple["Column"]
-                        #print col_headers
-                        #print "\n"
+                        #print(a_tuple["Column"])
+                        #print(col_headers)
+                        #print("\n")
                         if (a_tuple["Column"] in col_headers ) :                     
                             typeString = ""
                             if "Attribute" in a_tuple :
@@ -941,7 +944,7 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                 typeString += str(a_tuple["wasGeneratedBy"])
                             if "wasDerivedFrom" in a_tuple :
                                 typeString += str(a_tuple["wasDerivedFrom"])
-                            identifierString = hashlib.md5(str(row[col_headers.index(a_tuple["Column"])+1])+typeString).hexdigest()
+                            identifierString = hashlib.md5((str(row[col_headers.index(a_tuple["Column"])+1])+typeString).encode("utf-8")).hexdigest()
                             try :
                                 if "Template" in a_tuple :
                                     template_term = extractTemplate(col_headers,row,a_tuple["Template"])
@@ -949,8 +952,8 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                 else :
                                     termURI = "<" + prefixes[kb] + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "-" + identifierString + ">"
                                 try :
-                                    #print termURI
-                                    #print "\n\n"
+                                    #print(termURI)
+                                    #print("\n\n")
                                     assertionString += "\n    " + termURI + "\n        <" + rdf.type + ">    <" + prefixes[kb] + a_tuple["Column"].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + ">"
                                     if "Attribute" in a_tuple :
                                         if ',' in a_tuple["Attribute"] :
@@ -1027,21 +1030,21 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                             else :
                                                 assertionString += " ;\n        <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(a_tuple["inRelationTo"], identifierString)                       
                                 except Exception as e:
-                                    print "Error writing initial assertion elements: "
+                                    print("Error writing initial assertion elements: ")
                                     if hasattr(e, 'message'):
                                         print(e.message)
                                     else:
                                         print(e)
                                 try :
                                     if row[col_headers.index(a_tuple["Column"])+1] != "" :
-                                        #print row[col_headers.index(a_tuple["Column"])]
+                                        #print(row[col_headers.index(a_tuple["Column"])])
                                         if cb_tuple != {} :
                                             if a_tuple["Column"] in cb_tuple :
-                                                #print a_tuple["Column"]
+                                                #print(a_tuple["Column"])
                                                 for tuple_row in cb_tuple[a_tuple["Column"]] :
-                                                    #print tuple_row
+                                                    #print(tuple_row)
                                                     if ("Code" in tuple_row) and (str(tuple_row['Code']) == str(row[col_headers.index(a_tuple["Column"])+1]) ):
-                                                        #print tuple_row['Code']
+                                                        #print(tuple_row['Code'])
                                                         if ("Class" in tuple_row) and (tuple_row['Class'] is not "") :
                                                             if ',' in tuple_row['Class'] :
                                                                 classTerms = parseString(tuple_row['Class'],',')
@@ -1058,7 +1061,7 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                                                 assertionString += " ;\n        <" + rdf.type + ">    " + convertImplicitToKGEntry(codeMapper(tuple_row['Resource']))
                                                         if ("Label" in tuple_row) and (tuple_row['Label'] is not "") :
                                                             assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + tuple_row['Label'] + "\"^^xsd:string"
-                                        #print str(row[col_headers.index(a_tuple["Column"])])
+                                        #print(str(row[col_headers.index(a_tuple["Column"])]))
                                         try :
                                             if str(row[col_headers.index(a_tuple["Column"])+1]) == "nan" :
                                                 pass
@@ -1069,10 +1072,10 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                             else :
                                                 assertionString += " ;\n        <" + sio.hasValue + ">    \"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:string"
                                         except Exception as e :
-                                            print "Warning: unable to write value to assertion string:", row[col_headers.index(a_tuple["Column"])+1] + ": " + str(e)
+                                            print("Warning: unable to write value to assertion string:", row[col_headers.index(a_tuple["Column"])+1] + ": " + str(e))
                                     assertionString += " .\n"
                                 except Exception as e:
-                                    print "Error writing data value to assertion string:", row[col_headers.index(a_tuple["Column"])+1], ": " + str(e)
+                                    print("Error writing data value to assertion string:", row[col_headers.index(a_tuple["Column"])+1], ": " + str(e))
                                 try :
                                     provenanceString += "\n    " + termURI + "\n        <" +  prov.generatedAtTime + ">    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime"
                                     if "wasDerivedFrom" in a_tuple : 
@@ -1120,16 +1123,16 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                         publicationInfoString += " ;\n        hasco:hasPosition    \"" + str(a_tuple["hasPosition"]) + "\"^^xsd:integer"
                                     publicationInfoString += " .\n"
                                 except Exception as e:
-                                    print "Error writing provenance or publication info: " + str(e)
+                                    print("Error writing provenance or publication info: " + str(e))
                             except Exception as e:
-                                print "Unable to process tuple" + a_tuple.__str__() + ": " + str(e)
+                                print("Unable to process tuple" + a_tuple.__str__() + ": " + str(e))
                     try: 
                         for vref in vref_list : 
                             [assertionString,provenanceString,publicationInfoString,vref_list] = writeImplicitEntry(assertionString,provenanceString,publicationInfoString,explicit_entry_tuples, implicit_entry_tuples, timeline_tuple, vref_list, vref, npubIdentifier)
                     except Exception as e:
-                        print "Warning: Something went writing vref entries: " + str(e)
+                        print("Warning: Something went writing vref entries: " + str(e))
                 except Exception as e:
-                    print "Error: Something went wrong when processing explicit tuples: " + str(e)
+                    print("Error: Something went wrong when processing explicit tuples: " + str(e))
                     sys.exit(1)
                 output_file.write("<" +  prefixes[kb] + "assertion-" + npubIdentifier + "> {")
                 output_file.write(assertionString + "\n}\n\n")
@@ -1140,13 +1143,13 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                 publicationInfoString = "\n    <" +  prefixes[kb] + "nanoPub-" + npubIdentifier + ">    <" +  prov.generatedAtTime + ">    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + publicationInfoString
                 output_file.write(publicationInfoString + "\n}\n\n")
         except Exception as e :
-            print "Warning: Unable to process Data file: " + str(e)
+            print("Warning: Unable to process Data file: " + str(e))
 
 def main():
     if 'dictionary' in config['Source Files'] :
         dm_fn = config['Source Files']['dictionary']
     else :
-        print "Error: Dictionary Mapping file is not specified:" + str(e)
+        print("Error: Dictionary Mapping file is not specified:" + str(e))
         sys.exit(1)
 
     if 'codebook' in config['Source Files'] :
@@ -1210,7 +1213,7 @@ prefixes = {}
 
 # Need to implement input flags rather than ordering
 if (len(sys.argv) < 2) :
-    print "Usage: python sdd2rdf.py <configuration_file>"
+    print("Usage: python sdd2rdf.py <configuration_file>")
     sys.exit(1)
 
 #file setup and configuration
@@ -1218,7 +1221,7 @@ config = configparser.ConfigParser()
 try:
     config.read(sys.argv[1])
 except Exception as e :
-    print "Error: Unable to open configuration file:" + str(e)
+    print("Error: Unable to open configuration file:" + str(e))
     sys.exit(1)
 
 #unspecified parameters in the config file should set the corresponding read string to ""
