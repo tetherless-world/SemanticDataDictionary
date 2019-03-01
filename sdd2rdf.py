@@ -1070,7 +1070,7 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                             elif isfloat(str(row[col_headers.index(a_tuple["Column"])+1])) :
                                                 assertionString += " ;\n        <" + sio.hasValue + ">    \"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:float"
                                             else :
-                                                assertionString += " ;\n        <" + sio.hasValue + ">    \"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:string"
+                                                assertionString += " ;\n        <" + sio.hasValue + ">    \"" + str(row[col_headers.index(a_tuple["Column"])+1]).replace("\"","'") + "\"^^xsd:string"
                                         except Exception as e :
                                             print("Warning: unable to write value to assertion string:", row[col_headers.index(a_tuple["Column"])+1] + ": " + str(e))
                                     assertionString += " .\n"
