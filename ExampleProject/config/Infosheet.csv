@@ -1,0 +1,29 @@
+Attribute,Value
+Type,http://purl.org/dc/dcmitype/Dataset
+Title,An Example Project
+Alternative Title,Example
+Comment,"This is an example knowledge graph fragment created using the SDD approach."
+Description,"Annotated data from an example project was used to demonstrate the SDD functionality"
+Date Created,2019-03-03
+Creators,
+Contributors,
+Publisher,
+Date of Issue,2019-03-03
+Link,
+Identifier,example-project-1.0
+Keywords,
+License,MIT Licence
+Rights,Rights Reserved
+Language,English
+Version,1.0
+Version Of,
+Previous Version,
+Standards,
+Source,
+File Format,csv
+Documentation,
+Dictionary Mapping,
+Codebook,
+Code Mapping,
+Timeline,
+Imports,

@@ -1,0 +1,18 @@
+[Prefixes]
+# Specify a file with the prefixes for existing ontologies used in your translation
+prefixes = ExampleProject/config/prefixes.csv
+# Specify the base uri to be associated with all triples minted by the script
+base_uri = example-kb
+
+[Source Files]
+dictionary = ExampleProject/input/DM/exampleDM.csv
+codebook = ExampleProject/input/CB/exampleCB.csv
+data_file = Synthea/input/Data/exampleData.csv
+code_mappings = ExampleProject/config/code_mappings.csv
+infosheet = ExampleProject/config/Infosheet.csv
+properties = ExampleProject/config/Properties.csv
+
+[Output Files]
+out_file = ExampleProject/output/trig/example-kg.trig
+query_file = ExampleProject/output/sparql/exampleQuery
+swrl_file = ExampleProject/output/swrl/exampleSWRL

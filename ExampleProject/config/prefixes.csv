@@ -1,0 +1,11 @@
+prefix,url
+np,http://www.nanopub.org/nschema#
+owl,http://www.w3.org/2002/07/owl#
+rdf,http://www.w3.org/1999/02/22-rdf-syntax-ns#
+rdfs,http://www.w3.org/2000/01/rdf-schema#
+prov,http://www.w3.org/ns/prov#
+xsd,http://www.w3.org/2001/XMLSchema#
+uo,http://purl.obolibrary.org/obo/UO_
+sio,http://semanticscience.org/resource/
+stato,http://purl.obolibrary.org/obo/STATO_
+example-kb,http://example.com/kb/example#
