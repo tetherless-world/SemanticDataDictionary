@@ -307,6 +307,11 @@ def writeClassRelation(item, term, input_tuple, assertionString, whereString, sw
             else :
                 whereString += " ;\n    <" + properties_tuple["inRelationTo"] + ">    " + [item.inRelationTo + " ",item.inRelationTo[1:] + "_V "][checkImplicit(item.inRelationTo)] 
                 swrlString += properties_tuple["inRelationTo"] + "(" + term + " , " + [item.inRelationTo,item.inRelationTo[1:] + "_V"][checkImplicit(item.inRelationTo)] + ") ^ "
+    elif (pd.notnull(item.Role)) : # if there is a role, but no in relation to
+        input_tuple["Role"]=item.Role
+        assertionString += " ;\n        <" + properties_tuple["Role"] + ">    [ <" + rdf.type + ">    " + item.Role + " ]"
+        whereString += " ;\n    <" + properties_tuple["Role"] + ">    [ <" + rdf.type + "> " + item.Role + " ]"
+        swrlString += ""  # add appropriate swrl term
     return [input_tuple, assertionString, whereString, swrlString]
 
 def writeClassWasDerivedFrom(item, term, input_tuple, provenanceString, whereString, swrlString) :
@@ -564,6 +569,8 @@ def writeImplicitEntry(assertionString, provenanceString,publicationInfoString, 
                             #assertionString += " ;\n        <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(v_tuple["inRelationTo"],index)
                             #assertionString += " ;\n        <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(v_tuple["inRelationTo"],v_id)
                             assertionString += " ;\n        <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(v_tuple["inRelationTo"],relationToID)
+                    elif "Role" in v_tuple :
+                        assertionString += " ;\n        <" + properties_tuple["Role"] + ">    [ <" + rdf.type + ">    " + v_tuple["Role"] + " ]"
                     assertionString += " .\n"
                     provenanceString += "\n    <" + prefixes[kb] + v_tuple["Column"][2:] + "-" + v_id + ">    <" +  prov.generatedAtTime + ">    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime"
                     if "wasGeneratedBy" in v_tuple : 
