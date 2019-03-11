@@ -1,0 +1,4 @@
+Column,Label,Comment,Definition,Attribute,attributeOf,Unit,Format,Time,Entity,Role,Relation,inRelationTo,wasDerivedFrom,wasGeneratedBy,Template
+id,Identifier,ID for subject,Identifier for the human subject,sio:Identifier,??subject,,,,,,,,,,
+id,Identifier,ID for subject,Identifier for the human subject,sio:Identifier,??subject,,,,,,,,,,
+??subject,Subject,Subject implicit entity,A subject is encoded as a human with a subject role,,,,,,sio:Human,sio:SubjectRole,,,,,subject-{id}
