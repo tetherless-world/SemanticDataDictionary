@@ -1,0 +1,25 @@
+prefix owl: <http://www.w3.org/2002/07/owl#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix prov: <http://www.w3.org/ns/prov#> 
+prefix example-kb: <http://example.com/kb/example#> 
+prefix stato: <http://purl.obolibrary.org/obo/STATO_> 
+prefix uo: <http://purl.obolibrary.org/obo/UO_> 
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+prefix np: <http://www.nanopub.org/nschema#> 
+prefix sio: <http://semanticscience.org/resource/> 
+
+SELECT DISTINCT ?id ?id WHERE {
+  ?id_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:Identifier  ;
+    <sio:isAttributeOf>    ?subject_V  ;
+    <http://semanticscience.org/resource/hasValue> ?id .
+
+  ?id_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:Identifier  ;
+    <sio:isAttributeOf>    ?subject_V  ;
+    <http://semanticscience.org/resource/hasValue> ?id .
+
+
+  ?subject_V <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:Human  ;
+    <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:SubjectRole].
+
+}

@@ -1,0 +1,170 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix example-kb: <http://example.com/kb/example#> .
+@prefix stato: <http://purl.obolibrary.org/obo/STATO_> .
+@prefix uo: <http://purl.obolibrary.org/obo/UO_> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix sio: <http://semanticscience.org/resource/> .
+
+<http://example.com/kb/example#head-dataset_metadata-398a8396537a5225efcf4da4ddfd162c> { 
+    <http://example.com/kb/example#nanoPub-dataset_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://www.nanopub.org/nschema#Nanopublication> ;
+        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-dataset_metadata-398a8396537a5225efcf4da4ddfd162c> ;
+        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-dataset_metadata-398a8396537a5225efcf4da4ddfd162c> ;
+        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-dataset_metadata-398a8396537a5225efcf4da4ddfd162c> .
+}
+
+<http://example.com/kb/example#assertion-dataset_metadata-398a8396537a5225efcf4da4ddfd162c> {
+    <http://example.com/kb/example#dataset-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://purl.org/dc/dcmitype/Dataset> ;
+        <http://purl.org/dc/terms/title>    "An Example Project"^^xsd:string ;
+        <http://purl.org/dc/terms/alternative>    "Example"^^xsd:string ;
+        <http://www.w3.org/2000/01/rdf-schema#comment>    "This is an example knowledge graph fragment created using the SDD approach."^^xsd:string ;
+        <http://purl.org/dc/terms/description>    "Annotated data from an example project was used to demonstrate the SDD functionality"^^xsd:string ;
+        <http://semanticscience.org/resource/hasIdentifier>    
+            [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://semanticscience.org/resource/Identifier> ; 
+            <http://semanticscience.org/resource/hasValue>    "example-project-1.0"^^xsd:string ] ;
+        <http://purl.org/dc/terms/license>    "MIT Licence"^^xsd:string ;
+        <http://purl.org/dc/terms/rights>    "Rights Reserved"^^xsd:string ;
+        <http://purl.org/dc/terms/language>    "English"^^xsd:string ;
+        <http://purl.org/dc/terms/format>    "csv"^^xsd:string .
+
+}
+
+<http://example.com/kb/example#provenance-dataset_metadata-398a8396537a5225efcf4da4ddfd162c> {
+    <http://example.com/kb/example#assertion-dataset_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-11T18:10:48Z"^^xsd:dateTime .
+    <http://example.com/kb/example#dataset-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-11T18:10:48Z"^^xsd:dateTime ;
+        <http://purl.org/dc/terms/created>    "2019-03-03"^^xsd:date ;
+        <http://purl.org/dc/terms/issued>    "2019-03-03"^^xsd:date ;
+        <http://purl.org/pav/version>    "1.0"^^xsd:string ;
+        <http://www.w3.org/2002/07/owl/versionInfo>    "1.0"^^xsd:string .
+
+}
+
+<http://example.com/kb/example#pubInfo-dataset_metadata-398a8396537a5225efcf4da4ddfd162c> {
+    <http://example.com/kb/example#nanoPub-dataset_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-11T18:10:48Z"^^xsd:dateTime .
+
+}
+
+<http://example.com/kb/example#head-explicit_entry-398a8396537a5225efcf4da4ddfd162c> { 
+    <http://example.com/kb/example#nanoPub-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://www.nanopub.org/nschema#Nanopublication> ;
+        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-explicit_entry-398a8396537a5225efcf4da4ddfd162c> ;
+        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-explicit_entry-398a8396537a5225efcf4da4ddfd162c> ;
+        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-explicit_entry-398a8396537a5225efcf4da4ddfd162c> .
+}
+
+<http://example.com/kb/example#assertion-explicit_entry-398a8396537a5225efcf4da4ddfd162c> {
+    <http://example.com/kb/example#id>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    owl:Class ;
+        <http://www.w3.org/2000/01/rdf-schema#subClassOf>    sio:Identifier ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject> ;
+        <rdfs:label>    "Identifier"^^xsd:string ;
+        <rdfs:comment>    "ID for subject"^^xsd:string .
+
+    <http://example.com/kb/example#id>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    owl:Class ;
+        <http://www.w3.org/2000/01/rdf-schema#subClassOf>    sio:Identifier ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject> ;
+        <rdfs:label>    "Identifier"^^xsd:string ;
+        <rdfs:comment>    "ID for subject"^^xsd:string .
+
+}
+
+<http://example.com/kb/example#provenance-explicit_entry-398a8396537a5225efcf4da4ddfd162c> {
+    <http://example.com/kb/example#assertion-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-11T18:10:48Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#id>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-11T18:10:48Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#id>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-11T18:10:48Z"^^xsd:dateTime .
+
+}
+
+<http://example.com/kb/example#pubInfo-explicit_entry-398a8396537a5225efcf4da4ddfd162c> {
+    <http://example.com/kb/example#nanoPub-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-11T18:10:48Z"^^xsd:dateTime .
+}
+
+<http://example.com/kb/example#head-implicit_entry-398a8396537a5225efcf4da4ddfd162c> { 
+    <http://example.com/kb/example#nanoPub-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://www.nanopub.org/nschema#Nanopublication> ;
+        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-implicit_entry-398a8396537a5225efcf4da4ddfd162c> ;
+        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-implicit_entry-398a8396537a5225efcf4da4ddfd162c> ;
+        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-implicit_entry-398a8396537a5225efcf4da4ddfd162c> .
+}
+
+<http://example.com/kb/example#assertion-implicit_entry-398a8396537a5225efcf4da4ddfd162c> {
+    <http://example.com/kb/example#subject>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    owl:Class ;
+        <rdfs:label>    "Subject"^^xsd:string ;
+        <rdfs:comment>    "Subject implicit entity"^^xsd:string ;
+        <http://www.w3.org/2000/01/rdf-schema#subClassOf>    sio:Human ;
+        <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:SubjectRole ] .
+
+}
+
+<http://example.com/kb/example#provenance-implicit_entry-398a8396537a5225efcf4da4ddfd162c> {
+    <http://example.com/kb/example#assertion-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-11T18:10:48Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#subject>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-11T18:10:48Z"^^xsd:dateTime .
+
+}
+
+<http://example.com/kb/example#pubInfo-implicit_entry-398a8396537a5225efcf4da4ddfd162c> {
+    <http://example.com/kb/example#nanoPub-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-11T18:10:48Z"^^xsd:dateTime .
+}
+
+<http://example.com/kb/example#head-c4ca4238a0b923820dcc509a6f75849b> {
+    <http://example.com/kb/example#nanoPub-c4ca4238a0b923820dcc509a6f75849b>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://www.nanopub.org/nschema#Nanopublication> ;
+        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-c4ca4238a0b923820dcc509a6f75849b> ;
+        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-c4ca4238a0b923820dcc509a6f75849b> ;
+        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-c4ca4238a0b923820dcc509a6f75849b> .
+}
+
+<http://example.com/kb/example#assertion-c4ca4238a0b923820dcc509a6f75849b> {
+    <http://example.com/kb/example#id-fe82bc0cefa0850f4b921825d4f761de>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#id> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Identifier ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-7b25059ced3e172a5acc8389bf31b2b8> ;
+        <rdfs:label>    "Identifier"^^xsd:string ;
+        <rdfs:comment>    "ID for subject"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "1"^^xsd:integer .
+
+    <http://example.com/kb/example#id-fe82bc0cefa0850f4b921825d4f761de>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#id> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Identifier ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-7b25059ced3e172a5acc8389bf31b2b8> ;
+        <rdfs:label>    "Identifier"^^xsd:string ;
+        <rdfs:comment>    "ID for subject"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "1"^^xsd:integer .
+
+    <http://example.com/kb/example#subject-7b25059ced3e172a5acc8389bf31b2b8>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#subject> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Human ;
+        <rdfs:label>    "Subject"^^xsd:string ;
+        <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:SubjectRole ] .
+
+}
+
+<http://example.com/kb/example#provenance-c4ca4238a0b923820dcc509a6f75849b> {
+    <http://example.com/kb/example#assertion-c4ca4238a0b923820dcc509a6f75849b>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-11T18:10:48Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#id-fe82bc0cefa0850f4b921825d4f761de>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-11T18:10:48Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#id-fe82bc0cefa0850f4b921825d4f761de>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-11T18:10:48Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#subject-7b25059ced3e172a5acc8389bf31b2b8>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-11T18:10:48Z"^^xsd:dateTime .
+
+}
+
+<http://example.com/kb/example#pubInfo-c4ca4238a0b923820dcc509a6f75849b> {
+    <http://example.com/kb/example#nanoPub-c4ca4238a0b923820dcc509a6f75849b>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-11T18:10:48Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#id-fe82bc0cefa0850f4b921825d4f761de>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-11T18:10:48Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#id-fe82bc0cefa0850f4b921825d4f761de>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-11T18:10:48Z"^^xsd:dateTime .
+
+}
+
