@@ -89,5 +89,5 @@ ENV/
 .ropeproject
 
 # sdd2owl input directory
-input/
+#input/
 output/

@@ -7,7 +7,8 @@ base_uri = example-kb
 [Source Files]
 dictionary = ExampleProject/input/DM/exampleDM.csv
 codebook = ExampleProject/input/CB/exampleCB.csv
-data_file = Synthea/input/Data/exampleData.csv
+timeline = ExampleProject/input/TL/exampleTL.csv
+data_file = ExampleProject/input/Data/exampleData.csv
 code_mappings = ExampleProject/config/code_mappings.csv
 infosheet = ExampleProject/config/Infosheet.csv
 properties = ExampleProject/config/Properties.csv
