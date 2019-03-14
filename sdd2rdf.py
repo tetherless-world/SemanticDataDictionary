@@ -1056,9 +1056,9 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                                             if ',' in tuple_row['Class'] :
                                                                 classTerms = parseString(tuple_row['Class'],',')
                                                                 for classTerm in classTerms :
-                                                                    assertionString += " ;\n        <" + rdf.type + ">    " + classTerm
+                                                                    assertionString += " ;\n        <" + rdf.type + ">    " + convertImplicitToKGEntry(codeMapper(classTerm))
                                                             else :
-                                                                assertionString += " ;\n        <" + rdf.type + ">    " + tuple_row['Class']
+                                                                assertionString += " ;\n        <" + rdf.type + ">    "+ convertImplicitToKGEntry(codeMapper(tuple_row['Class']))
                                                         if ("Resource" in tuple_row) and (tuple_row['Resource'] is not "") :
                                                             if ',' in tuple_row['Resource'] :
                                                                 classTerms = parseString(tuple_row['Resource'],',')
