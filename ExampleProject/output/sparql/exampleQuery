@@ -9,17 +9,13 @@ prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix np: <http://www.nanopub.org/nschema#> 
 prefix sio: <http://semanticscience.org/resource/> 
 
-SELECT DISTINCT ?id ?id WHERE {
-  ?id_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:Identifier  ;
-    <sio:isAttributeOf>    ?subject_V  ;
-    <http://semanticscience.org/resource/hasValue> ?id .
-
+SELECT DISTINCT ?id WHERE {
   ?id_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:Identifier  ;
     <sio:isAttributeOf>    ?subject_V  ;
     <http://semanticscience.org/resource/hasValue> ?id .
 
 
   ?subject_V <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:Human  ;
-    <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:SubjectRole].
+    <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:SubjectRole ].
 
 }
