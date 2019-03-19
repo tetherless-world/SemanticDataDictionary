@@ -113,6 +113,19 @@ def assignVID(implicit_entry_tuples,timeline_tuple,a_tuple,column, npubIdentifie
         print("Warning, " + column + " ID assigned to nanopub ID")
     return v_id
 
+def assignTerm(col_headers, column, implicit_entry_tuples, a_tuple, row, v_id) :
+    termURI = None
+    for v_tuple in implicit_entry_tuples : # referenced in implicit list
+        if v_tuple["Column"] == a_tuple[column]:
+            if "Template" in v_tuple :
+                template_term = extractTemplate(col_headers,row,v_tuple["Template"])
+                termURI = "<" + prefixes[kb] + template_term + ">"
+    if termURI is None :
+        termURI = convertImplicitToKGEntry(a_tuple["isAttributeOf"],v_id)
+    return termURI
+
+
+
 '''def processPrefixes(output_file,query_file):
     if 'prefixes' in config['Prefixes']:
         prefix_fn = config['Prefixes']['prefixes']
@@ -978,16 +991,8 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                     if "isAttributeOf" in a_tuple :
                                         if checkImplicit(a_tuple["isAttributeOf"]) :
                                             v_id = assignVID(implicit_entry_tuples,timeline_tuple,a_tuple,"isAttributeOf", npubIdentifier)
-                                            termURI = None
-                                            for v_tuple in implicit_entry_tuples : # referenced in implicit list
-                                                if v_tuple["Column"] == a_tuple["isAttributeOf"]:
-                                                    if "Template" in v_tuple :
-                                                        template_term = extractTemplate(col_headers,row,v_tuple["Template"])
-                                                        termURI = "<" + prefixes[kb] + template_term + ">"
-                                            if termURI is not None :
-                                                assertionString += " ;\n        <" + properties_tuple["attributeOf"] + ">    " + termURI
-                                            else :
-                                                assertionString += " ;\n        <" + properties_tuple["attributeOf"] + ">    " + convertImplicitToKGEntry(a_tuple["isAttributeOf"],v_id)
+                                            termURI = assignTerm(col_headers, "isAttributeOf", implicit_entry_tuples, a_tuple, row, v_id)
+                                            assertionString += " ;\n        <" + properties_tuple["attributeOf"] + ">    " + termURI
                                             if a_tuple["isAttributeOf"] not in vref_list :
                                                 vref_list.append(a_tuple["isAttributeOf"])
                                         elif checkTemplate(a_tuple["isAttributeOf"]):
