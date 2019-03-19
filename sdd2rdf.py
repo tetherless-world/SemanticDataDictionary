@@ -104,10 +104,7 @@ def assignVID(implicit_entry_tuples,timeline_tuple,a_tuple,column, npubIdentifie
     v_id = npubIdentifier
     for v_tuple in implicit_entry_tuples : # referenced in implicit list
         if v_tuple["Column"] == a_tuple[column]:
-            if "Template" in v_tuple :
-                v_id = "Template" # temp solution
-            else :
-                v_id = hashlib.md5((str(v_tuple) + str(npubIdentifier)).encode("utf-8")).hexdigest()
+            v_id = hashlib.md5((str(v_tuple) + str(npubIdentifier)).encode("utf-8")).hexdigest()
     if v_id == None : # maybe it's referenced in the timeline
         for t_tuple in timeline_tuple:
             if t_tuple["Column"] == a_tuple[column]:
@@ -981,12 +978,13 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                     if "isAttributeOf" in a_tuple :
                                         if checkImplicit(a_tuple["isAttributeOf"]) :
                                             v_id = assignVID(implicit_entry_tuples,timeline_tuple,a_tuple,"isAttributeOf", npubIdentifier)
-                                            # Temp solution
-                                            if (v_id == "Template") :
-                                                for v_tuple in implicit_entry_tuples : # referenced in implicit list
-                                                    if v_tuple["Column"] == a_tuple["isAttributeOf"] and "Template" in v_tuple :
+                                            termURI = None
+                                            for v_tuple in implicit_entry_tuples : # referenced in implicit list
+                                                if v_tuple["Column"] == a_tuple["isAttributeOf"]:
+                                                    if "Template" in v_tuple :
                                                         template_term = extractTemplate(col_headers,row,v_tuple["Template"])
                                                         termURI = "<" + prefixes[kb] + template_term + ">"
+                                            if termURI is not None :
                                                 assertionString += " ;\n        <" + properties_tuple["attributeOf"] + ">    " + termURI
                                             else :
                                                 assertionString += " ;\n        <" + properties_tuple["attributeOf"] + ">    " + convertImplicitToKGEntry(a_tuple["isAttributeOf"],v_id)
