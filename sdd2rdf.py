@@ -569,16 +569,11 @@ def writeImplicitEntry(assertionString, provenanceString,publicationInfoString, 
                             if (vr_tuple["Column"] == v_tuple["inRelationTo"]) :
                                 relationToID = hashlib.md5((str(vr_tuple) + str(index)).encode("utf-8")).hexdigest()
                         if ("Role" in v_tuple) and ("Relation" not in v_tuple) :
-                            #assertionString += " ;\n        <" + properties_tuple["Role"] + ">    [ <" + rdf.type + ">    " + v_tuple["Role"] + " ;\n            <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(v_tuple["inRelationTo"], index) + " ]"
-                            #assertionString += " ;\n        <" + properties_tuple["Role"] + ">    [ <" + rdf.type + ">    " + v_tuple["Role"] + " ;\n            <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(v_tuple["inRelationTo"], v_id) + " ]"
                             assertionString += " ;\n        <" + properties_tuple["Role"] + ">    [ <" + rdf.type + ">    " + v_tuple["Role"] + " ;\n            <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(v_tuple["inRelationTo"], relationToID) + " ]"
                         elif ("Role" not in v_tuple) and ("Relation" in v_tuple) :
-                            #assertionString += " ;\n        " + v_tuple["Relation"] + " " + convertImplicitToKGEntry(v_tuple["inRelationTo"],index)
                             assertionString += " ;\n        " + v_tuple["Relation"] + " " + convertImplicitToKGEntry(v_tuple["inRelationTo"],v_id)
                             assertionString += " ;\n        " + v_tuple["Relation"] + " " + convertImplicitToKGEntry(v_tuple["inRelationTo"],relationToID)
                         elif ("Role" not in v_tuple) and ("Relation" not in v_tuple) :
-                            #assertionString += " ;\n        <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(v_tuple["inRelationTo"],index)
-                            #assertionString += " ;\n        <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(v_tuple["inRelationTo"],v_id)
                             assertionString += " ;\n        <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(v_tuple["inRelationTo"],relationToID)
                     elif "Role" in v_tuple :
                         assertionString += " ;\n        <" + properties_tuple["Role"] + ">    [ <" + rdf.type + ">    " + v_tuple["Role"] + " ]"
@@ -588,12 +583,10 @@ def writeImplicitEntry(assertionString, provenanceString,publicationInfoString, 
                         if ',' in v_tuple["wasGeneratedBy"] :
                             generatedByTerms = parseString(v_tuple["wasGeneratedBy"],',')
                             for generatedByTerm in generatedByTerms :
-                                #provenanceString += " ;\n        <" + properties_tuple["wasGeneratedBy"] + ">    " + convertImplicitToKGEntry(generatedByTerm,index)
                                 provenanceString += " ;\n        <" + properties_tuple["wasGeneratedBy"] + ">    " + convertImplicitToKGEntry(generatedByTerm,v_id)
                                 if checkImplicit(generatedByTerm) and generatedByTerm not in vref_list :
                                     vref_list.append(generatedByTerm)
                         else :
-                            #provenanceString += " ;\n        <" + properties_tuple["wasGeneratedBy"] + ">    " + convertImplicitToKGEntry(v_tuple["wasGeneratedBy"],index)
                             provenanceString += " ;\n        <" + properties_tuple["wasGeneratedBy"] + ">    " + convertImplicitToKGEntry(v_tuple["wasGeneratedBy"],v_id)
                             if checkImplicit(v_tuple["wasGeneratedBy"]) and v_tuple["wasGeneratedBy"] not in vref_list :
                                 vref_list.append(v_tuple["wasGeneratedBy"]);
@@ -601,12 +594,10 @@ def writeImplicitEntry(assertionString, provenanceString,publicationInfoString, 
                         if ',' in v_tuple["wasDerivedFrom"] :
                             derivedFromTerms = parseString(v_tuple["wasDerivedFrom"],',')
                             for derivedFromTerm in derivedFromTerms :
-                                #provenanceString += " ;\n        <" + properties_tuple["wasDerivedFrom"] + ">    " + convertImplicitToKGEntry(derivedFromTerm,index)
                                 provenanceString += " ;\n        <" + properties_tuple["wasDerivedFrom"] + ">    " + convertImplicitToKGEntry(derivedFromTerm,v_id)
                                 if checkImplicit(derivedFromTerm) and derivedFromTerm not in vref_list :
                                     vref_list.append(derivedFromTerm);
                         else :
-                            #provenanceString += " ;\n        <" + properties_tuple["wasDerivedFrom"] + ">    " + convertImplicitToKGEntry(v_tuple["wasDerivedFrom"],index)
                             provenanceString += " ;\n        <" + properties_tuple["wasDerivedFrom"] + ">    " + convertImplicitToKGEntry(v_tuple["wasDerivedFrom"],v_id)
                             if checkImplicit(v_tuple["wasDerivedFrom"]) and v_tuple["wasDerivedFrom"] not in vref_list :
                                 vref_list.append(v_tuple["wasDerivedFrom"]);
@@ -1144,10 +1135,8 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                             provenanceString += " ;\n        <" + properties_tuple["wasGeneratedBy"] + ">    " + convertImplicitToKGEntry(a_tuple["wasGeneratedBy"], identifierString)
                                         
                                     provenanceString += " .\n"
-                                    #publicationInfoString += "\n    " + termURI + "\n        <" +  prov.generatedAtTime + ">    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime"
                                     if "hasPosition" in a_tuple :
-                                        publicationInfoString += " ;\n        hasco:hasPosition    \"" + str(a_tuple["hasPosition"]) + "\"^^xsd:integer ."
-                                    #publicationInfoString += " .\n"
+                                        publicationInfoString += "\n    " + termURI + "\n        hasco:hasPosition    \"" + str(a_tuple["hasPosition"]) + "\"^^xsd:integer ."
                                 except Exception as e:
                                     print("Error writing provenance or publication info: " + str(e))
                             except Exception as e:
