@@ -991,8 +991,8 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                     if "isAttributeOf" in a_tuple :
                                         if checkImplicit(a_tuple["isAttributeOf"]) :
                                             v_id = assignVID(implicit_entry_tuples,timeline_tuple,a_tuple,"isAttributeOf", npubIdentifier)
-                                            termURI = assignTerm(col_headers, "isAttributeOf", implicit_entry_tuples, a_tuple, row, v_id)
-                                            assertionString += " ;\n        <" + properties_tuple["attributeOf"] + ">    " + termURI
+                                            vTermURI = assignTerm(col_headers, "isAttributeOf", implicit_entry_tuples, a_tuple, row, v_id)
+                                            assertionString += " ;\n        <" + properties_tuple["attributeOf"] + ">    " + vTermURI
                                             if a_tuple["isAttributeOf"] not in vref_list :
                                                 vref_list.append(a_tuple["isAttributeOf"])
                                         elif checkTemplate(a_tuple["isAttributeOf"]):
@@ -1002,8 +1002,8 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                     if "Unit" in a_tuple :
                                         if checkImplicit(a_tuple["Unit"]) :
                                             v_id = assignVID(implicit_entry_tuples,timeline_tuple,a_tuple,"Unit", npubIdentifier)
-                                            termURI = assignTerm(col_headers, "Unit", implicit_entry_tuples, a_tuple, row, v_id)
-                                            assertionString += " ;\n        <" + properties_tuple["Unit"] + ">    " + termURI
+                                            vTermURI = assignTerm(col_headers, "Unit", implicit_entry_tuples, a_tuple, row, v_id)
+                                            assertionString += " ;\n        <" + properties_tuple["Unit"] + ">    " + vTermURI
                                             if a_tuple["Unit"] not in vref_list :
                                                 vref_list.append(a_tuple["Unit"])
                                         elif checkTemplate(a_tuple["Unit"]):
@@ -1013,8 +1013,8 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                     if "Time" in a_tuple :
                                         if checkImplicit(a_tuple["Time"]) :
                                             v_id = assignVID(implicit_entry_tuples,timeline_tuple,a_tuple,"Time", npubIdentifier)
-                                            termURI = assignTerm(col_headers, "Time", implicit_entry_tuples, a_tuple, row, v_id)
-                                            assertionString += " ;\n        <" + properties_tuple["Time"] + ">    " + termURI
+                                            vTermURI = assignTerm(col_headers, "Time", implicit_entry_tuples, a_tuple, row, v_id)
+                                            assertionString += " ;\n        <" + properties_tuple["Time"] + ">    " + vTermURI
                                             if a_tuple["Time"] not in vref_list :
                                                 vref_list.append(a_tuple["Time"])
                                         elif checkTemplate(a_tuple["Time"]):
@@ -1028,15 +1028,15 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                     if "inRelationTo" in a_tuple :
                                         if checkImplicit(a_tuple["inRelationTo"]) :   
                                             v_id = assignVID(implicit_entry_tuples,timeline_tuple,a_tuple,"inRelationTo", npubIdentifier)
-                                            termURI = assignTerm(col_headers, "inRelationTo", implicit_entry_tuples, a_tuple, row, v_id)
+                                            vTermURI = assignTerm(col_headers, "inRelationTo", implicit_entry_tuples, a_tuple, row, v_id)
                                             if a_tuple["inRelationTo"] not in vref_list :
                                                 vref_list.append(a_tuple["inRelationTo"])
                                             if "Relation" in a_tuple :
-                                                assertionString += " ;\n        " + a_tuple["Relation"] + "    " + termURI
+                                                assertionString += " ;\n        " + a_tuple["Relation"] + "    " + vTermURI
                                             elif "Role" in a_tuple :
-                                                assertionString += " ;\n        <" + properties_tuple["Role"] + ">    [ <" + rdf.type + ">    " + a_tuple["Role"] + " ;\n            <" + properties_tuple["inRelationTo"] + ">    " + termURI + " ]"
+                                                assertionString += " ;\n        <" + properties_tuple["Role"] + ">    [ <" + rdf.type + ">    " + a_tuple["Role"] + " ;\n            <" + properties_tuple["inRelationTo"] + ">    " + vTermURI + " ]"
                                             else :
-                                                assertionString += " ;\n        <" + properties_tuple["inRelationTo"] + ">    " + termURI
+                                                assertionString += " ;\n        <" + properties_tuple["inRelationTo"] + ">    " + vTermURI
                                         elif checkTemplate(a_tuple["inRelationTo"]):
                                             if "Relation" in a_tuple :
                                                 assertionString += " ;\n        " + a_tuple["Relation"] + "    <" + prefixes[kb] + str(extractExplicitTerm(col_headers,row,a_tuple["inRelationTo"])) + ">"
@@ -1113,8 +1113,8 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                                 else :
                                                     provenanceString += " ;\n        <" + properties_tuple["wasDerivedFrom"] + ">    " + convertImplicitToKGEntry(derivedFromTerm, identifierString)
                                         elif checkImplicit(a_tuple["wasDerivedFrom"]) :
-                                            termURI = assignTerm(col_headers, "wasDerivedFrom", implicit_entry_tuples, a_tuple, row, v_id)
-                                            provenanceString += " ;\n        <" + properties_tuple["wasDerivedFrom"] + ">    " + termURI
+                                            vTermURI = assignTerm(col_headers, "wasDerivedFrom", implicit_entry_tuples, a_tuple, row, v_id)
+                                            provenanceString += " ;\n        <" + properties_tuple["wasDerivedFrom"] + ">    " + vTermURI
                                             if a_tuple["wasDerivedFrom"] not in vref_list :
                                                 vref_list.append(a_tuple["wasDerivedFrom"])
                                         elif checkTemplate(a_tuple["wasDerivedFrom"]):
@@ -1133,8 +1133,8 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                                 else:
                                                     provenanceString += " ;\n        <" + properties_tuple["wasGeneratedBy"] + ">    " + convertImplicitToKGEntry(generatedByTerm, identifierString)
                                         elif checkImplicit(a_tuple["wasGeneratedBy"]) :
-                                            termURI = assignTerm(col_headers, "wasGeneratedBy", implicit_entry_tuples, a_tuple, row, v_id)
-                                            provenanceString += " ;\n        <" + properties_tuple["wasGeneratedBy"] + ">    " + termURI
+                                            vTermURI = assignTerm(col_headers, "wasGeneratedBy", implicit_entry_tuples, a_tuple, row, v_id)
+                                            provenanceString += " ;\n        <" + properties_tuple["wasGeneratedBy"] + ">    " + vTermURI
                                             if a_tuple["wasGeneratedBy"] not in vref_list :
                                                 vref_list.append(a_tuple["wasGeneratedBy"])
                                         elif checkTemplate(a_tuple["wasGeneratedBy"]):
