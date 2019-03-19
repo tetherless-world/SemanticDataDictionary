@@ -798,7 +798,7 @@ def processCodeMappings(cmap_fn):
     return [unit_code_list,unit_uri_list,unit_label_list]
 
 def processProperties():
-    properties_tuple = {'Comment': rdfs.comment, 'attributeOf': sio.isAttributeOf, 'Attribute': rdf.type, 'wasDerivedFrom': prov.wasDerivedFrom, 'Label': rdfs.label, 'inRelationTo': sio.inRelationTo, 'Role': sio.hasRole, 'Time': sio.existsAt, 'Entity': rdf.type, 'Unit': sio.hasUnit, 'wasGeneratedBy': prov.wasGeneratedBy}
+    properties_tuple = {'Comment': rdfs.comment, 'attributeOf': sio.isAttributeOf, 'Attribute': rdf.type, 'Definition' : skos.definition, 'Value' : sio.hasValue, 'wasDerivedFrom': prov.wasDerivedFrom, 'Label': rdfs.label, 'inRelationTo': sio.inRelationTo, 'Role': sio.hasRole, 'Time': sio.existsAt, 'Entity': rdf.type, 'Unit': sio.hasUnit, 'wasGeneratedBy': prov.wasGeneratedBy}
     if 'properties' in config['Source Files'] :
         properties_fn = config['Source Files']['properties']
         try :
@@ -886,8 +886,12 @@ def processCodebook(cb_fn):
                     inner_tuple["Label"]=row.Label
                 if(pd.notnull(row.Class)) :
                     inner_tuple["Class"]=row.Class
-                if ("Resource" in row and pd.notnull(row.Resource)) :
+                if (pd.notnull(row.Resource)) : # "Resource" in row and 
                     inner_tuple["Resource"]=row.Resource
+                if (pd.notnull(row.Comment)) : #"Comment" in row and 
+                    inner_tuple["Comment"]=row.Comment
+                if (pd.notnull(row.Definition)) : #"Definition" in row and 
+                    inner_tuple["Definition"]=row.Definition
                 inner_tuple_list.append(inner_tuple)
                 cb_tuple[row.Column]=inner_tuple_list
                 row_num += 1
@@ -1084,6 +1088,10 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                                                 assertionString += " ;\n        <" + rdf.type + ">    " + convertImplicitToKGEntry(codeMapper(tuple_row['Resource']))
                                                         if ("Label" in tuple_row) and (tuple_row['Label'] is not "") :
                                                             assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + tuple_row['Label'] + "\"^^xsd:string"
+                                                        if ("Comment" in tuple_row) and (tuple_row['Comment'] is not "") :
+                                                            assertionString += " ;\n        <" + properties_tuple["Comment"] + ">    \"" + tuple_row['Comment'] + "\"^^xsd:string"
+                                                        if ("Definition" in tuple_row) and (tuple_row['Definition'] is not "") :
+                                                            assertionString += " ;\n        <" + properties_tuple["Definition"] + ">    \"" + tuple_row['Definition'] + "\"^^xsd:string"
                                         #print(str(row[col_headers.index(a_tuple["Column"])]))
                                         try :
                                             if str(row[col_headers.index(a_tuple["Column"])+1]) == "nan" :

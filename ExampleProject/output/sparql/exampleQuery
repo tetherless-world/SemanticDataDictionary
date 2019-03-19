@@ -9,7 +9,7 @@ prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix np: <http://www.nanopub.org/nschema#> 
 prefix sio: <http://semanticscience.org/resource/> 
 
-SELECT DISTINCT ?id ?wt ?age WHERE {
+SELECT DISTINCT ?id ?wt ?age ?sex WHERE {
   ?id_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:Identifier  ;
     <sio:isAttributeOf>    ?subject_V  ;
     <http://semanticscience.org/resource/hasValue> ?id .
@@ -23,6 +23,10 @@ SELECT DISTINCT ?id ?wt ?age WHERE {
     <sio:isAttributeOf>    ?subject_V  ;
     <sio:hasUnit>    obo:UO_0000036 ;
     <http://semanticscience.org/resource/hasValue> ?age .
+
+  ?sex_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:BiologicalSex  ;
+    <sio:isAttributeOf>    ?subject_V  ;
+    <http://semanticscience.org/resource/hasValue> ?sex .
 
 
   ?subject_V <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:Human  ;

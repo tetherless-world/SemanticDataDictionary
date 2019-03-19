@@ -1,1 +1,3 @@
 Column,Code,Class,Resource,Label,Comment,Definition
+sex,1,sio:Male,,Male,Male Sex,A male is a biological sex of an individual with male sexual organs. [def-source: SIO]
+sex,2,sio:Female,,Female,Female Sex,A female is a biological sex of an individual with female sexual organs. [def-source: SIO]

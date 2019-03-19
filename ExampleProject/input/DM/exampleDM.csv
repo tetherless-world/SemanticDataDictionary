@@ -2,4 +2,5 @@ Column,Label,Comment,Definition,Attribute,attributeOf,Unit,Format,Time,Entity,Ro
 id,Identifier,ID for subject,Identifier for the human subject,sio:Identifier,??subject,,,,,,,,,,id-{id}
 wt,Weight,Weight in kg,Weight of the subject in kilograms,chear:Weight,??subject,kg,,,,,,,,,weight-{id}
 age,Age,Age in years,Age of the subject in years,sio:Age,??subject,yr,,,,,,,,,age-{id}
+sex,Sex,Gender of the subject,The biological sex of the subject,sio:BiologicalSex,??subject,,,,,,,,,,sex-{id}
 ??subject,Subject,Subject implicit entity,A subject is encoded as a human with a subject role,,,,,,sio:Human,sio:SubjectRole,,,,,subject-{id}
