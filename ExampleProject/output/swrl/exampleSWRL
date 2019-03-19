@@ -1,1 +1,1 @@
-sio:Identifier(?id_E) ^ sio:isAttributeOf(?id_E , ?subject_V) ^ sio:Human(?subject_V) 
+sio:Identifier(?id_E) ^ sio:isAttributeOf(?id_E , ?subject_V) ^ chear:Weight(?wt_E) ^ sio:isAttributeOf(?wt_E , ?subject_V) ^ sio:hasUnit(?wt_E , obo:UO_0000009) ^ sio:Age(?age_E) ^ sio:isAttributeOf(?age_E , ?subject_V) ^ sio:hasUnit(?age_E , obo:UO_0000036) ^ sio:Human(?subject_V) 

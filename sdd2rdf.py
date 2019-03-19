@@ -624,7 +624,7 @@ def processInfosheet(output_file, dm_fn, cb_fn, cmap_fn, timeline_fn):
         try :
             infosheet_file = pd.read_csv(infosheet_fn, dtype=object)
         except Exception as e :
-            print("Warning: Dataset metadata will not be written to the output file.\nThe specified Infosheet file does not exist or is unreadable: " + str(e))
+            print("Warning: Collection metadata will not be written to the output file.\nThe specified Infosheet file does not exist or is unreadable: " + str(e))
             return [dm_fn, cb_fn, cmap_fn, timeline_fn]
         for row in infosheet_file.itertuples() :
             if(pd.notnull(row.Value)):
@@ -639,11 +639,11 @@ def processInfosheet(output_file, dm_fn, cb_fn, cmap_fn, timeline_fn):
         if "Timeline" in infosheet_tuple : 
             timeline_fn = infosheet_tuple["Timeline"]
         datasetIdentifier = hashlib.md5(dm_fn.encode('utf-8')).hexdigest()
-        output_file.write("<" +  prefixes[kb] + "head-dataset_metadata-" + datasetIdentifier + "> { ")
-        output_file.write("\n    <" +  prefixes[kb] + "nanoPub-dataset_metadata-" + datasetIdentifier + ">    <" + rdf.type + ">    <" +  np.Nanopublication + ">")
-        output_file.write(" ;\n        <" +  np.hasAssertion + ">    <" +  prefixes[kb] + "assertion-dataset_metadata-" + datasetIdentifier + ">")
-        output_file.write(" ;\n        <" +  np.hasProvenance + ">    <" +  prefixes[kb] + "provenance-dataset_metadata-" + datasetIdentifier + ">")
-        output_file.write(" ;\n        <" +  np.hasPublicationInfo + ">    <" +  prefixes[kb] + "pubInfo-dataset_metadata-" + datasetIdentifier + ">")
+        output_file.write("<" +  prefixes[kb] + "head-collection_metadata-" + datasetIdentifier + "> { ")
+        output_file.write("\n    <" +  prefixes[kb] + "nanoPub-collection_metadata-" + datasetIdentifier + ">    <" + rdf.type + ">    <" +  np.Nanopublication + ">")
+        output_file.write(" ;\n        <" +  np.hasAssertion + ">    <" +  prefixes[kb] + "assertion-collection_metadata-" + datasetIdentifier + ">")
+        output_file.write(" ;\n        <" +  np.hasProvenance + ">    <" +  prefixes[kb] + "provenance-collection_metadata-" + datasetIdentifier + ">")
+        output_file.write(" ;\n        <" +  np.hasPublicationInfo + ">    <" +  prefixes[kb] + "pubInfo-collection_metadata-" + datasetIdentifier + ">")
         output_file.write(" .\n}\n\n")
         assertionString = "<" +  prefixes[kb] + "collection-" + datasetIdentifier + ">"
         provenanceString = "    <" +  prefixes[kb] + "collection-" + datasetIdentifier + ">    <http://www.w3.org/ns/prov#generatedAtTime>    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime"
@@ -751,10 +751,10 @@ def processInfosheet(output_file, dm_fn, cb_fn, cmap_fn, timeline_fn):
                 assertionString += " ;\n        <http://www.w3.org/2002/07/owl#imports>    " + [infosheet_tuple["Imports"],"<" + infosheet_tuple["Imports"] + ">"][isURI(infosheet_tuple["Imports"])]
         assertionString += " .\n"
         provenanceString += " .\n"
-        output_file.write("<" +  prefixes[kb] + "assertion-dataset_metadata-" + datasetIdentifier + "> {\n    " + assertionString + "\n}\n\n")
-        output_file.write("<" +  prefixes[kb] + "provenance-dataset_metadata-" + datasetIdentifier + "> {\n    <" +  prefixes[kb] + "assertion-dataset_metadata-" + datasetIdentifier + ">    <http://www.w3.org/ns/prov#generatedAtTime>    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString + "\n}\n\n")
-        output_file.write("<" +  prefixes[kb] + "pubInfo-dataset_metadata-" + datasetIdentifier + "> {")
-        publicationInfoString = "\n    <" +  prefixes[kb] + "nanoPub-dataset_metadata-" + datasetIdentifier + ">    <http://www.w3.org/ns/prov#generatedAtTime>    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n"
+        output_file.write("<" +  prefixes[kb] + "assertion-collection_metadata-" + datasetIdentifier + "> {\n    " + assertionString + "\n}\n\n")
+        output_file.write("<" +  prefixes[kb] + "provenance-collection_metadata-" + datasetIdentifier + "> {\n    <" +  prefixes[kb] + "assertion-dataset_metadata-" + datasetIdentifier + ">    <http://www.w3.org/ns/prov#generatedAtTime>    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n" + provenanceString + "\n}\n\n")
+        output_file.write("<" +  prefixes[kb] + "pubInfo-collection_metadata-" + datasetIdentifier + "> {")
+        publicationInfoString = "\n    <" +  prefixes[kb] + "nanoPub-collection_metadata-" + datasetIdentifier + ">    <http://www.w3.org/ns/prov#generatedAtTime>    \"" + "{:4d}-{:02d}-{:02d}".format(datetime.utcnow().year,datetime.utcnow().month,datetime.utcnow().day) + "T" + "{:02d}:{:02d}:{:02d}".format(datetime.utcnow().hour,datetime.utcnow().minute,datetime.utcnow().second) + "Z\"^^xsd:dateTime .\n"
         output_file.write(publicationInfoString + "\n}\n\n")
     return [dm_fn, cb_fn, cmap_fn, timeline_fn]
 
