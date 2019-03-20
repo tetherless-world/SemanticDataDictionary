@@ -5,8 +5,10 @@ prefix example-kb: <http://example.com/kb/example#>
 prefix stato: <http://purl.obolibrary.org/obo/STATO_> 
 prefix uo: <http://purl.obolibrary.org/obo/UO_> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix chear: <http://hadatac.org/ont/chear#> 
 prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
 prefix np: <http://www.nanopub.org/nschema#> 
+prefix obo: <http://purl.obolibrary.org/obo/> 
 prefix sio: <http://semanticscience.org/resource/> 
 
 SELECT DISTINCT ?id ?wt1 ?wt2 ?age ?sex ?race ?edu ?smoke WHERE {
