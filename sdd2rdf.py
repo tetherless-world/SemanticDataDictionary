@@ -650,8 +650,9 @@ def processInfosheet(output_file, dm_fn, cb_fn, cmap_fn, timeline_fn):
         if "Type" in infosheet_tuple :
             assertionString += "    <" + rdf.type + ">    " + [infosheet_tuple["Type"],"<" + infosheet_tuple["Type"] + ">"][isURI(infosheet_tuple["Type"])]
         else :
-            print("Error: The Infosheet file is missing the required Type value declaration")
-            sys.exit(1)
+            assertionString += "    <" + rdf.type + ">    <http://purl.org/dc/dcmitype/Collection>"
+            #print("Warning: The Infosheet file is missing the Type value declaration")
+            #sys.exit(1)
         if "Title" in infosheet_tuple :
             assertionString += " ;\n        <http://purl.org/dc/terms/title>    \"" + infosheet_tuple["Title"] + "\"^^xsd:string"
         if "Alternative Title" in infosheet_tuple : 
