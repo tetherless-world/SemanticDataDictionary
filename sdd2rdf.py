@@ -108,6 +108,7 @@ def assignVID(implicit_entry_tuples,timeline_tuple,a_tuple,column, npubIdentifie
     if v_id == None : # maybe it's referenced in the timeline
         for t_tuple in timeline_tuple:
             if t_tuple["Column"] == a_tuple[column]:
+                print("Got here")
                 v_id = hashlib.md5((str(t_tuple) + str(npubIdentifier)).encode("utf-8")).hexdigest()
     if v_id == npubIdentifier : # if it's not in implicit list or timeline
         print("Warning, " + column + " ID assigned to nanopub ID")
@@ -1017,11 +1018,22 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                             assertionString += " ;\n        <" + properties_tuple["Unit"] + ">    " + a_tuple["Unit"]
                                     if "Time" in a_tuple :
                                         if checkImplicit(a_tuple["Time"]) :
-                                            v_id = assignVID(implicit_entry_tuples,timeline_tuple,a_tuple,"Time", npubIdentifier)
-                                            vTermURI = assignTerm(col_headers, "Time", implicit_entry_tuples, a_tuple, row, v_id)
-                                            assertionString += " ;\n        <" + properties_tuple["Time"] + ">    " + vTermURI
-                                            if a_tuple["Time"] not in vref_list :
-                                                vref_list.append(a_tuple["Time"])
+                                            foundBool = False
+                                            for v_tuple in implicit_entry_tuples : # referenced in implicit list
+                                                if v_tuple["Column"] == a_tuple["Time"]:
+                                                    foundBool = True
+                                            if(foundBool) :
+                                                v_id = assignVID(implicit_entry_tuples,timeline_tuple,a_tuple,"Time", npubIdentifier)
+                                                vTermURI = assignTerm(col_headers, "Time", implicit_entry_tuples, a_tuple, row, v_id)
+                                                assertionString += " ;\n        <" + properties_tuple["Time"] + ">    " + vTermURI
+                                            else : # Check timeline
+                                                for t_tuple in timeline_tuple :
+                                                    if t_tuple == a_tuple["Time"] :
+                                                        vTermURI = convertImplicitToKGEntry(t_tuple)
+                                                        assertionString += " ;\n        <" + properties_tuple["Time"] + ">    " + vTermURI
+                                                    #if t_tuple["Column"] == a_tuple["Time"]:
+                                            #if a_tuple["Time"] not in vref_list :
+                                            #    vref_list.append(a_tuple["Time"])
                                         elif checkTemplate(a_tuple["Time"]):
                                             assertionString += " ;\n        <" + properties_tuple["Time"] + ">    <" + prefixes[kb] + str(extractExplicitTerm(col_headers,row,a_tuple["Time"])) + ">"
                                         else :

@@ -33,8 +33,8 @@
 }
 
 <http://example.com/kb/example#provenance-collection_metadata-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#assertion-dataset_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
-    <http://example.com/kb/example#collection-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime ;
+    <http://example.com/kb/example#assertion-dataset_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
+    <http://example.com/kb/example#collection-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime ;
         <http://purl.org/dc/terms/created>    "2019-03-03"^^xsd:date ;
         <http://purl.org/dc/terms/issued>    "2019-03-03"^^xsd:date ;
         <http://purl.org/pav/version>    "1.0"^^xsd:string ;
@@ -43,7 +43,7 @@
 }
 
 <http://example.com/kb/example#pubInfo-collection_metadata-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#nanoPub-collection_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-collection_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
 }
 
@@ -61,12 +61,21 @@
         <rdfs:label>    "Identifier"^^xsd:string ;
         <rdfs:comment>    "ID for subject"^^xsd:string .
 
-    <http://example.com/kb/example#wt>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    owl:Class ;
+    <http://example.com/kb/example#wt1>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    owl:Class ;
         <http://www.w3.org/2000/01/rdf-schema#subClassOf>    chear:Weight ;
         <sio:isAttributeOf>    <http://example.com/kb/example#subject> ;
         <sio:hasUnit>    obo:UO_0000009 ;
-        <rdfs:label>    "Weight"^^xsd:string ;
-        <rdfs:comment>    "Weight in kg"^^xsd:string .
+        <sio:existsAt>    <http://example.com/kb/example#visit1> ;
+        <rdfs:label>    "Weight 1"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg at visit 1"^^xsd:string .
+
+    <http://example.com/kb/example#wt2>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    owl:Class ;
+        <http://www.w3.org/2000/01/rdf-schema#subClassOf>    chear:Weight ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject> ;
+        <sio:hasUnit>    obo:UO_0000009 ;
+        <sio:existsAt>    <http://example.com/kb/example#visit2> ;
+        <rdfs:label>    "Weight 2"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg at visit 2"^^xsd:string .
 
     <http://example.com/kb/example#age>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    owl:Class ;
         <http://www.w3.org/2000/01/rdf-schema#subClassOf>    sio:Age ;
@@ -102,33 +111,36 @@
 }
 
 <http://example.com/kb/example#provenance-explicit_entry-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#assertion-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#wt>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#wt1>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#wt2>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-explicit_entry-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#nanoPub-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 }
 
 <http://example.com/kb/example#head-implicit_entry-398a8396537a5225efcf4da4ddfd162c> { 
@@ -145,29 +157,47 @@
         <http://www.w3.org/2000/01/rdf-schema#subClassOf>    sio:Human ;
         <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:SubjectRole ] .
 
+    <http://example.com/kb/example#visit1>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    owl:Class  ;
+        rdf:subClassOf    chear:Visit ;
+        <rdfs:label>    "Visit 1"^^xsd:string ;
+        sio:hasStartTime [ <http://semanticscience.org/resource/hasValue> 1 ] ;
+        sio:hasEndTime [ <http://semanticscience.org/resource/hasValue> 2 ] ;
+        <sio:hasUnit>    sio:Week .
+
+    <http://example.com/kb/example#visit2>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    owl:Class  ;
+        rdf:subClassOf    chear:Visit ;
+        <rdfs:label>    "Visit 2"^^xsd:string ;
+        sio:hasStartTime [ <http://semanticscience.org/resource/hasValue> 3 ] ;
+        sio:hasEndTime [ <http://semanticscience.org/resource/hasValue> 4 ] ;
+        <sio:hasUnit>    sio:Week .
+
 }
 
 <http://example.com/kb/example#provenance-implicit_entry-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#assertion-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#subject>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#visit1>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#visit2>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-implicit_entry-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#nanoPub-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 }
 
-<http://example.com/kb/example#head-f607a5e8a911ff4daee004ffdf52ef1c> {
-    <http://example.com/kb/example#nanoPub-f607a5e8a911ff4daee004ffdf52ef1c>
+<http://example.com/kb/example#head-04bca535b8580b8a8090285761507559> {
+    <http://example.com/kb/example#nanoPub-04bca535b8580b8a8090285761507559>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://www.nanopub.org/nschema#Nanopublication> ;
-        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-f607a5e8a911ff4daee004ffdf52ef1c> ;
-        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-f607a5e8a911ff4daee004ffdf52ef1c> ;
-        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-f607a5e8a911ff4daee004ffdf52ef1c> .
+        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-04bca535b8580b8a8090285761507559> ;
+        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-04bca535b8580b8a8090285761507559> ;
+        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-04bca535b8580b8a8090285761507559> .
 }
 
-<http://example.com/kb/example#assertion-f607a5e8a911ff4daee004ffdf52ef1c> {
+<http://example.com/kb/example#assertion-04bca535b8580b8a8090285761507559> {
     <http://example.com/kb/example#id-1>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#id> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Identifier ;
@@ -176,14 +206,25 @@
         <rdfs:comment>    "ID for subject"^^xsd:string ;
         <http://semanticscience.org/resource/hasValue>    "1"^^xsd:integer .
 
-    <http://example.com/kb/example#weight-1>
-        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt> ;
+    <http://example.com/kb/example#wt1-1>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt1> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Weight ;
         <sio:isAttributeOf>    <http://example.com/kb/example#subject-1> ;
         <sio:hasUnit>    obo:UO_0000009 ;
-        <rdfs:label>    "Weight"^^xsd:string ;
-        <rdfs:comment>    "Weight in kg"^^xsd:string ;
+        <sio:existsAt>    <http://example.com/kb/example#visit1> ;
+        <rdfs:label>    "Weight 1"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg at visit 1"^^xsd:string ;
         <http://semanticscience.org/resource/hasValue>    "80.37"^^xsd:float .
+
+    <http://example.com/kb/example#wt2-1>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt2> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Weight ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-1> ;
+        <sio:hasUnit>    obo:UO_0000009 ;
+        <sio:existsAt>    <http://example.com/kb/example#visit2> ;
+        <rdfs:label>    "Weight 2"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg at visit 2"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "74.17"^^xsd:float .
 
     <http://example.com/kb/example#age-1>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#age> ;
@@ -241,48 +282,51 @@
 
 }
 
-<http://example.com/kb/example#provenance-f607a5e8a911ff4daee004ffdf52ef1c> {
-    <http://example.com/kb/example#assertion-f607a5e8a911ff4daee004ffdf52ef1c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+<http://example.com/kb/example#provenance-04bca535b8580b8a8090285761507559> {
+    <http://example.com/kb/example#assertion-04bca535b8580b8a8090285761507559>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#weight-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#wt1-1>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#wt2-1>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-1>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
-
-}
-
-<http://example.com/kb/example#pubInfo-f607a5e8a911ff4daee004ffdf52ef1c> {
-    <http://example.com/kb/example#nanoPub-f607a5e8a911ff4daee004ffdf52ef1c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-1>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
 }
 
-<http://example.com/kb/example#head-349d7261f94552aecd1f73ae849f85b0> {
-    <http://example.com/kb/example#nanoPub-349d7261f94552aecd1f73ae849f85b0>
+<http://example.com/kb/example#pubInfo-04bca535b8580b8a8090285761507559> {
+    <http://example.com/kb/example#nanoPub-04bca535b8580b8a8090285761507559>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
+
+}
+
+<http://example.com/kb/example#head-2dd6ebdb4d1f65a71d862f366465739b> {
+    <http://example.com/kb/example#nanoPub-2dd6ebdb4d1f65a71d862f366465739b>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://www.nanopub.org/nschema#Nanopublication> ;
-        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-349d7261f94552aecd1f73ae849f85b0> ;
-        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-349d7261f94552aecd1f73ae849f85b0> ;
-        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-349d7261f94552aecd1f73ae849f85b0> .
+        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-2dd6ebdb4d1f65a71d862f366465739b> ;
+        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-2dd6ebdb4d1f65a71d862f366465739b> ;
+        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-2dd6ebdb4d1f65a71d862f366465739b> .
 }
 
-<http://example.com/kb/example#assertion-349d7261f94552aecd1f73ae849f85b0> {
+<http://example.com/kb/example#assertion-2dd6ebdb4d1f65a71d862f366465739b> {
     <http://example.com/kb/example#id-2>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#id> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Identifier ;
@@ -291,14 +335,25 @@
         <rdfs:comment>    "ID for subject"^^xsd:string ;
         <http://semanticscience.org/resource/hasValue>    "2"^^xsd:integer .
 
-    <http://example.com/kb/example#weight-2>
-        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt> ;
+    <http://example.com/kb/example#wt1-2>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt1> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Weight ;
         <sio:isAttributeOf>    <http://example.com/kb/example#subject-2> ;
         <sio:hasUnit>    obo:UO_0000009 ;
-        <rdfs:label>    "Weight"^^xsd:string ;
-        <rdfs:comment>    "Weight in kg"^^xsd:string ;
+        <sio:existsAt>    <http://example.com/kb/example#visit1> ;
+        <rdfs:label>    "Weight 1"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg at visit 1"^^xsd:string ;
         <http://semanticscience.org/resource/hasValue>    "65.8"^^xsd:float .
+
+    <http://example.com/kb/example#wt2-2>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt2> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Weight ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-2> ;
+        <sio:hasUnit>    obo:UO_0000009 ;
+        <sio:existsAt>    <http://example.com/kb/example#visit2> ;
+        <rdfs:label>    "Weight 2"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg at visit 2"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "63.2"^^xsd:float .
 
     <http://example.com/kb/example#age-2>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#age> ;
@@ -356,48 +411,51 @@
 
 }
 
-<http://example.com/kb/example#provenance-349d7261f94552aecd1f73ae849f85b0> {
-    <http://example.com/kb/example#assertion-349d7261f94552aecd1f73ae849f85b0>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+<http://example.com/kb/example#provenance-2dd6ebdb4d1f65a71d862f366465739b> {
+    <http://example.com/kb/example#assertion-2dd6ebdb4d1f65a71d862f366465739b>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#weight-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#wt1-2>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#wt2-2>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-2>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
-
-}
-
-<http://example.com/kb/example#pubInfo-349d7261f94552aecd1f73ae849f85b0> {
-    <http://example.com/kb/example#nanoPub-349d7261f94552aecd1f73ae849f85b0>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-2>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
 }
 
-<http://example.com/kb/example#head-26a703e7751599f54cd80bf3ae5c94e9> {
-    <http://example.com/kb/example#nanoPub-26a703e7751599f54cd80bf3ae5c94e9>
+<http://example.com/kb/example#pubInfo-2dd6ebdb4d1f65a71d862f366465739b> {
+    <http://example.com/kb/example#nanoPub-2dd6ebdb4d1f65a71d862f366465739b>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
+
+}
+
+<http://example.com/kb/example#head-a72da31ed7880fbe9e3487bdec4bc362> {
+    <http://example.com/kb/example#nanoPub-a72da31ed7880fbe9e3487bdec4bc362>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://www.nanopub.org/nschema#Nanopublication> ;
-        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-26a703e7751599f54cd80bf3ae5c94e9> ;
-        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-26a703e7751599f54cd80bf3ae5c94e9> ;
-        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-26a703e7751599f54cd80bf3ae5c94e9> .
+        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-a72da31ed7880fbe9e3487bdec4bc362> ;
+        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-a72da31ed7880fbe9e3487bdec4bc362> ;
+        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-a72da31ed7880fbe9e3487bdec4bc362> .
 }
 
-<http://example.com/kb/example#assertion-26a703e7751599f54cd80bf3ae5c94e9> {
+<http://example.com/kb/example#assertion-a72da31ed7880fbe9e3487bdec4bc362> {
     <http://example.com/kb/example#id-3>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#id> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Identifier ;
@@ -406,14 +464,25 @@
         <rdfs:comment>    "ID for subject"^^xsd:string ;
         <http://semanticscience.org/resource/hasValue>    "3"^^xsd:integer .
 
-    <http://example.com/kb/example#weight-3>
-        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt> ;
+    <http://example.com/kb/example#wt1-3>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt1> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Weight ;
         <sio:isAttributeOf>    <http://example.com/kb/example#subject-3> ;
         <sio:hasUnit>    obo:UO_0000009 ;
-        <rdfs:label>    "Weight"^^xsd:string ;
-        <rdfs:comment>    "Weight in kg"^^xsd:string ;
+        <sio:existsAt>    <http://example.com/kb/example#visit1> ;
+        <rdfs:label>    "Weight 1"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg at visit 1"^^xsd:string ;
         <http://semanticscience.org/resource/hasValue>    "74.24"^^xsd:float .
+
+    <http://example.com/kb/example#wt2-3>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt2> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Weight ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-3> ;
+        <sio:hasUnit>    obo:UO_0000009 ;
+        <sio:existsAt>    <http://example.com/kb/example#visit2> ;
+        <rdfs:label>    "Weight 2"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg at visit 2"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "70.21"^^xsd:float .
 
     <http://example.com/kb/example#age-3>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#age> ;
@@ -471,48 +540,51 @@
 
 }
 
-<http://example.com/kb/example#provenance-26a703e7751599f54cd80bf3ae5c94e9> {
-    <http://example.com/kb/example#assertion-26a703e7751599f54cd80bf3ae5c94e9>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+<http://example.com/kb/example#provenance-a72da31ed7880fbe9e3487bdec4bc362> {
+    <http://example.com/kb/example#assertion-a72da31ed7880fbe9e3487bdec4bc362>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#weight-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#wt1-3>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#wt2-3>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-3>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
-
-}
-
-<http://example.com/kb/example#pubInfo-26a703e7751599f54cd80bf3ae5c94e9> {
-    <http://example.com/kb/example#nanoPub-26a703e7751599f54cd80bf3ae5c94e9>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-3>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
 }
 
-<http://example.com/kb/example#head-6ed34cf5e0ee6ecbc505a0574f388910> {
-    <http://example.com/kb/example#nanoPub-6ed34cf5e0ee6ecbc505a0574f388910>
+<http://example.com/kb/example#pubInfo-a72da31ed7880fbe9e3487bdec4bc362> {
+    <http://example.com/kb/example#nanoPub-a72da31ed7880fbe9e3487bdec4bc362>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
+
+}
+
+<http://example.com/kb/example#head-b772bf9afb557a16a3ec61fb37a6c53a> {
+    <http://example.com/kb/example#nanoPub-b772bf9afb557a16a3ec61fb37a6c53a>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://www.nanopub.org/nschema#Nanopublication> ;
-        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-6ed34cf5e0ee6ecbc505a0574f388910> ;
-        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-6ed34cf5e0ee6ecbc505a0574f388910> ;
-        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-6ed34cf5e0ee6ecbc505a0574f388910> .
+        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-b772bf9afb557a16a3ec61fb37a6c53a> ;
+        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-b772bf9afb557a16a3ec61fb37a6c53a> ;
+        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-b772bf9afb557a16a3ec61fb37a6c53a> .
 }
 
-<http://example.com/kb/example#assertion-6ed34cf5e0ee6ecbc505a0574f388910> {
+<http://example.com/kb/example#assertion-b772bf9afb557a16a3ec61fb37a6c53a> {
     <http://example.com/kb/example#id-4>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#id> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Identifier ;
@@ -521,14 +593,25 @@
         <rdfs:comment>    "ID for subject"^^xsd:string ;
         <http://semanticscience.org/resource/hasValue>    "4"^^xsd:integer .
 
-    <http://example.com/kb/example#weight-4>
-        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt> ;
+    <http://example.com/kb/example#wt1-4>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt1> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Weight ;
         <sio:isAttributeOf>    <http://example.com/kb/example#subject-4> ;
         <sio:hasUnit>    obo:UO_0000009 ;
-        <rdfs:label>    "Weight"^^xsd:string ;
-        <rdfs:comment>    "Weight in kg"^^xsd:string ;
+        <sio:existsAt>    <http://example.com/kb/example#visit1> ;
+        <rdfs:label>    "Weight 1"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg at visit 1"^^xsd:string ;
         <http://semanticscience.org/resource/hasValue>    "64.9"^^xsd:float .
+
+    <http://example.com/kb/example#wt2-4>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt2> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Weight ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-4> ;
+        <sio:hasUnit>    obo:UO_0000009 ;
+        <sio:existsAt>    <http://example.com/kb/example#visit2> ;
+        <rdfs:label>    "Weight 2"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg at visit 2"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "62.12"^^xsd:float .
 
     <http://example.com/kb/example#age-4>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#age> ;
@@ -586,48 +669,51 @@
 
 }
 
-<http://example.com/kb/example#provenance-6ed34cf5e0ee6ecbc505a0574f388910> {
-    <http://example.com/kb/example#assertion-6ed34cf5e0ee6ecbc505a0574f388910>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+<http://example.com/kb/example#provenance-b772bf9afb557a16a3ec61fb37a6c53a> {
+    <http://example.com/kb/example#assertion-b772bf9afb557a16a3ec61fb37a6c53a>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#weight-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#wt1-4>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#wt2-4>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-4>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
-
-}
-
-<http://example.com/kb/example#pubInfo-6ed34cf5e0ee6ecbc505a0574f388910> {
-    <http://example.com/kb/example#nanoPub-6ed34cf5e0ee6ecbc505a0574f388910>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-4>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
 }
 
-<http://example.com/kb/example#head-3f6756d1fdfc009e14471bef2bad7cb0> {
-    <http://example.com/kb/example#nanoPub-3f6756d1fdfc009e14471bef2bad7cb0>
+<http://example.com/kb/example#pubInfo-b772bf9afb557a16a3ec61fb37a6c53a> {
+    <http://example.com/kb/example#nanoPub-b772bf9afb557a16a3ec61fb37a6c53a>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
+
+}
+
+<http://example.com/kb/example#head-f0fa3b0bd5971b8f1fa23a935f016e9d> {
+    <http://example.com/kb/example#nanoPub-f0fa3b0bd5971b8f1fa23a935f016e9d>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://www.nanopub.org/nschema#Nanopublication> ;
-        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-3f6756d1fdfc009e14471bef2bad7cb0> ;
-        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-3f6756d1fdfc009e14471bef2bad7cb0> ;
-        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-3f6756d1fdfc009e14471bef2bad7cb0> .
+        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-f0fa3b0bd5971b8f1fa23a935f016e9d> ;
+        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-f0fa3b0bd5971b8f1fa23a935f016e9d> ;
+        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-f0fa3b0bd5971b8f1fa23a935f016e9d> .
 }
 
-<http://example.com/kb/example#assertion-3f6756d1fdfc009e14471bef2bad7cb0> {
+<http://example.com/kb/example#assertion-f0fa3b0bd5971b8f1fa23a935f016e9d> {
     <http://example.com/kb/example#id-5>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#id> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Identifier ;
@@ -636,14 +722,25 @@
         <rdfs:comment>    "ID for subject"^^xsd:string ;
         <http://semanticscience.org/resource/hasValue>    "5"^^xsd:integer .
 
-    <http://example.com/kb/example#weight-5>
-        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt> ;
+    <http://example.com/kb/example#wt1-5>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt1> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Weight ;
         <sio:isAttributeOf>    <http://example.com/kb/example#subject-5> ;
         <sio:hasUnit>    obo:UO_0000009 ;
-        <rdfs:label>    "Weight"^^xsd:string ;
-        <rdfs:comment>    "Weight in kg"^^xsd:string ;
+        <sio:existsAt>    <http://example.com/kb/example#visit1> ;
+        <rdfs:label>    "Weight 1"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg at visit 1"^^xsd:string ;
         <http://semanticscience.org/resource/hasValue>    "81.2"^^xsd:float .
+
+    <http://example.com/kb/example#wt2-5>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt2> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Weight ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-5> ;
+        <sio:hasUnit>    obo:UO_0000009 ;
+        <sio:existsAt>    <http://example.com/kb/example#visit2> ;
+        <rdfs:label>    "Weight 2"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg at visit 2"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "79.12"^^xsd:float .
 
     <http://example.com/kb/example#age-5>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#age> ;
@@ -701,48 +798,51 @@
 
 }
 
-<http://example.com/kb/example#provenance-3f6756d1fdfc009e14471bef2bad7cb0> {
-    <http://example.com/kb/example#assertion-3f6756d1fdfc009e14471bef2bad7cb0>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+<http://example.com/kb/example#provenance-f0fa3b0bd5971b8f1fa23a935f016e9d> {
+    <http://example.com/kb/example#assertion-f0fa3b0bd5971b8f1fa23a935f016e9d>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#weight-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#wt1-5>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#wt2-5>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-5>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
-
-}
-
-<http://example.com/kb/example#pubInfo-3f6756d1fdfc009e14471bef2bad7cb0> {
-    <http://example.com/kb/example#nanoPub-3f6756d1fdfc009e14471bef2bad7cb0>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-5>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
 }
 
-<http://example.com/kb/example#head-6cbfd32a6ad2cb77787f55845b7eb212> {
-    <http://example.com/kb/example#nanoPub-6cbfd32a6ad2cb77787f55845b7eb212>
+<http://example.com/kb/example#pubInfo-f0fa3b0bd5971b8f1fa23a935f016e9d> {
+    <http://example.com/kb/example#nanoPub-f0fa3b0bd5971b8f1fa23a935f016e9d>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
+
+}
+
+<http://example.com/kb/example#head-cdf34af592ab2a09fe54cf6c9076cebe> {
+    <http://example.com/kb/example#nanoPub-cdf34af592ab2a09fe54cf6c9076cebe>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://www.nanopub.org/nschema#Nanopublication> ;
-        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-6cbfd32a6ad2cb77787f55845b7eb212> ;
-        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-6cbfd32a6ad2cb77787f55845b7eb212> ;
-        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-6cbfd32a6ad2cb77787f55845b7eb212> .
+        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-cdf34af592ab2a09fe54cf6c9076cebe> ;
+        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-cdf34af592ab2a09fe54cf6c9076cebe> ;
+        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-cdf34af592ab2a09fe54cf6c9076cebe> .
 }
 
-<http://example.com/kb/example#assertion-6cbfd32a6ad2cb77787f55845b7eb212> {
+<http://example.com/kb/example#assertion-cdf34af592ab2a09fe54cf6c9076cebe> {
     <http://example.com/kb/example#id-6>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#id> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Identifier ;
@@ -751,14 +851,25 @@
         <rdfs:comment>    "ID for subject"^^xsd:string ;
         <http://semanticscience.org/resource/hasValue>    "6"^^xsd:integer .
 
-    <http://example.com/kb/example#weight-6>
-        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt> ;
+    <http://example.com/kb/example#wt1-6>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt1> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Weight ;
         <sio:isAttributeOf>    <http://example.com/kb/example#subject-6> ;
         <sio:hasUnit>    obo:UO_0000009 ;
-        <rdfs:label>    "Weight"^^xsd:string ;
-        <rdfs:comment>    "Weight in kg"^^xsd:string ;
+        <sio:existsAt>    <http://example.com/kb/example#visit1> ;
+        <rdfs:label>    "Weight 1"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg at visit 1"^^xsd:string ;
         <http://semanticscience.org/resource/hasValue>    "58.7"^^xsd:float .
+
+    <http://example.com/kb/example#wt2-6>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt2> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Weight ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-6> ;
+        <sio:hasUnit>    obo:UO_0000009 ;
+        <sio:existsAt>    <http://example.com/kb/example#visit2> ;
+        <rdfs:label>    "Weight 2"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg at visit 2"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "53.17"^^xsd:float .
 
     <http://example.com/kb/example#age-6>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#age> ;
@@ -816,48 +927,51 @@
 
 }
 
-<http://example.com/kb/example#provenance-6cbfd32a6ad2cb77787f55845b7eb212> {
-    <http://example.com/kb/example#assertion-6cbfd32a6ad2cb77787f55845b7eb212>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+<http://example.com/kb/example#provenance-cdf34af592ab2a09fe54cf6c9076cebe> {
+    <http://example.com/kb/example#assertion-cdf34af592ab2a09fe54cf6c9076cebe>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#weight-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#wt1-6>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#wt2-6>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-6>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
-
-}
-
-<http://example.com/kb/example#pubInfo-6cbfd32a6ad2cb77787f55845b7eb212> {
-    <http://example.com/kb/example#nanoPub-6cbfd32a6ad2cb77787f55845b7eb212>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-6>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
 }
 
-<http://example.com/kb/example#head-432745e7e2bccb39adf689905f1727eb> {
-    <http://example.com/kb/example#nanoPub-432745e7e2bccb39adf689905f1727eb>
+<http://example.com/kb/example#pubInfo-cdf34af592ab2a09fe54cf6c9076cebe> {
+    <http://example.com/kb/example#nanoPub-cdf34af592ab2a09fe54cf6c9076cebe>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
+
+}
+
+<http://example.com/kb/example#head-ddacbb04475fa3843046213345705608> {
+    <http://example.com/kb/example#nanoPub-ddacbb04475fa3843046213345705608>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://www.nanopub.org/nschema#Nanopublication> ;
-        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-432745e7e2bccb39adf689905f1727eb> ;
-        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-432745e7e2bccb39adf689905f1727eb> ;
-        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-432745e7e2bccb39adf689905f1727eb> .
+        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-ddacbb04475fa3843046213345705608> ;
+        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-ddacbb04475fa3843046213345705608> ;
+        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-ddacbb04475fa3843046213345705608> .
 }
 
-<http://example.com/kb/example#assertion-432745e7e2bccb39adf689905f1727eb> {
+<http://example.com/kb/example#assertion-ddacbb04475fa3843046213345705608> {
     <http://example.com/kb/example#id-7>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#id> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Identifier ;
@@ -866,14 +980,25 @@
         <rdfs:comment>    "ID for subject"^^xsd:string ;
         <http://semanticscience.org/resource/hasValue>    "7"^^xsd:integer .
 
-    <http://example.com/kb/example#weight-7>
-        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt> ;
+    <http://example.com/kb/example#wt1-7>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt1> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Weight ;
         <sio:isAttributeOf>    <http://example.com/kb/example#subject-7> ;
         <sio:hasUnit>    obo:UO_0000009 ;
-        <rdfs:label>    "Weight"^^xsd:string ;
-        <rdfs:comment>    "Weight in kg"^^xsd:string ;
+        <sio:existsAt>    <http://example.com/kb/example#visit1> ;
+        <rdfs:label>    "Weight 1"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg at visit 1"^^xsd:string ;
         <http://semanticscience.org/resource/hasValue>    "61.72"^^xsd:float .
+
+    <http://example.com/kb/example#wt2-7>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt2> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Weight ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-7> ;
+        <sio:hasUnit>    obo:UO_0000009 ;
+        <sio:existsAt>    <http://example.com/kb/example#visit2> ;
+        <rdfs:label>    "Weight 2"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg at visit 2"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "60.31"^^xsd:float .
 
     <http://example.com/kb/example#age-7>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#age> ;
@@ -931,36 +1056,39 @@
 
 }
 
-<http://example.com/kb/example#provenance-432745e7e2bccb39adf689905f1727eb> {
-    <http://example.com/kb/example#assertion-432745e7e2bccb39adf689905f1727eb>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+<http://example.com/kb/example#provenance-ddacbb04475fa3843046213345705608> {
+    <http://example.com/kb/example#assertion-ddacbb04475fa3843046213345705608>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#weight-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#wt1-7>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#wt2-7>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-7>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-7>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
 }
 
-<http://example.com/kb/example#pubInfo-432745e7e2bccb39adf689905f1727eb> {
-    <http://example.com/kb/example#nanoPub-432745e7e2bccb39adf689905f1727eb>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+<http://example.com/kb/example#pubInfo-ddacbb04475fa3843046213345705608> {
+    <http://example.com/kb/example#nanoPub-ddacbb04475fa3843046213345705608>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T21:00:53Z"^^xsd:dateTime .
 
 }
 

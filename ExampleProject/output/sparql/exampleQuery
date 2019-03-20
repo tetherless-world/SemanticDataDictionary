@@ -9,15 +9,22 @@ prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix np: <http://www.nanopub.org/nschema#> 
 prefix sio: <http://semanticscience.org/resource/> 
 
-SELECT DISTINCT ?id ?wt ?age ?sex ?race ?edu ?smoke WHERE {
+SELECT DISTINCT ?id ?wt1 ?wt2 ?age ?sex ?race ?edu ?smoke WHERE {
   ?id_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:Identifier  ;
     <sio:isAttributeOf>    ?subject_V  ;
     <http://semanticscience.org/resource/hasValue> ?id .
 
-  ?wt_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> chear:Weight  ;
+  ?wt1_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> chear:Weight  ;
     <sio:isAttributeOf>    ?subject_V  ;
     <sio:hasUnit>    obo:UO_0000009 ;
-    <http://semanticscience.org/resource/hasValue> ?wt .
+    <sio:existsAt>     ?visit1_V  ;
+    <http://semanticscience.org/resource/hasValue> ?wt1 .
+
+  ?wt2_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> chear:Weight  ;
+    <sio:isAttributeOf>    ?subject_V  ;
+    <sio:hasUnit>    obo:UO_0000009 ;
+    <sio:existsAt>     ?visit2_V  ;
+    <http://semanticscience.org/resource/hasValue> ?wt2 .
 
   ?age_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:Age  ;
     <sio:isAttributeOf>    ?subject_V  ;
