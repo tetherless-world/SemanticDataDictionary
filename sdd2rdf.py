@@ -827,7 +827,7 @@ def processTimeline(timeline_fn):
                     inner_tuple_list=[]
                 inner_tuple = {}
                 inner_tuple["Type"]=row.Type
-                if(pd.notnull(row.Label)):
+                if(hasattr(row,"Label") and pd.notnull(row.Label)):
                     inner_tuple["Label"]=row.Label
                 if(pd.notnull(row.Start)) :
                     inner_tuple["Start"]=row.Start
@@ -835,7 +835,7 @@ def processTimeline(timeline_fn):
                     inner_tuple["End"]=row.End
                 if(pd.notnull(row.Unit)) :
                     inner_tuple["Unit"]=row.Unit
-                if(pd.notnull(row.inRelationTo)) :
+                if(hasattr(row,"inRelationTo") and pd.notnull(row.inRelationTo)) :
                     inner_tuple["inRelationTo"]=row.inRelationTo
                 inner_tuple_list.append(inner_tuple)
                 timeline_tuple[row.Name]=inner_tuple_list
@@ -882,15 +882,15 @@ def processCodebook(cb_fn):
                     inner_tuple_list=[]
                 inner_tuple = {}
                 inner_tuple["Code"]=row.Code
-                if(pd.notnull(row.Label)):
+                if(hasattr(row,"Label") and pd.notnull(row.Label)):
                     inner_tuple["Label"]=row.Label
-                if(pd.notnull(row.Class)) :
+                if(hasattr(row,"Class") and pd.notnull(row.Class)) :
                     inner_tuple["Class"]=row.Class
-                if (pd.notnull(row.Resource)) : # "Resource" in row and 
+                if (hasattr(row,"Resource") and pd.notnull(row.Resource)) : # "Resource" in row and 
                     inner_tuple["Resource"]=row.Resource
-                if (pd.notnull(row.Comment)) : #"Comment" in row and 
+                if (hasattr(row,"Comment") and pd.notnull(row.Comment)) : 
                     inner_tuple["Comment"]=row.Comment
-                if (pd.notnull(row.Definition)) : #"Definition" in row and 
+                if (hasattr(row,"Definition") and pd.notnull(row.Definition)) :  
                     inner_tuple["Definition"]=row.Definition
                 inner_tuple_list.append(inner_tuple)
                 cb_tuple[row.Column]=inner_tuple_list
