@@ -1,3 +1,15 @@
 Column,Code,Class,Resource,Label,Comment,Definition
-sex,1,sio:Male,,Male,Male Sex,A male is a biological sex of an individual with male sexual organs. [def-source: SIO]
-sex,2,sio:Female,,Female,Female Sex,A female is a biological sex of an individual with female sexual organs. [def-source: SIO]
+sex,1,sio:Male,,Male,,
+sex,2,sio:Female,,Female,,
+race,1,chear:White,,White,,
+race,2,chear:AfricanAmerican,,African American,,
+race,3,chear:Asian,,Asian,,
+race,4,chear:American_Indian_or_Alaska_Native,,American Indian or Alaska Native,,
+race,5,chear:UnknownRace,,Unknown Race,,
+edu,1,chear:HighSchoolOrLess,,High School Degree or Less,,
+edu,2,chear:SomeCollegeorTechnicalSchool,,Technical College or Some College,,
+edu,3,chear:HigherEducation,,Higher Education than High School,,
+edu,4,chear:CollegeGraduate,,College Graduate,,
+edu,5,chear:UnknownEducationLevel,,Unknown Education Level,,
+smoke,0,chear:NonSmoker,,non smoker,,
+smoke,1,chear:Smoker,,smoker,,

@@ -9,7 +9,7 @@ prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix np: <http://www.nanopub.org/nschema#> 
 prefix sio: <http://semanticscience.org/resource/> 
 
-SELECT DISTINCT ?id ?wt ?age ?sex WHERE {
+SELECT DISTINCT ?id ?wt ?age ?sex ?race ?edu ?smoke WHERE {
   ?id_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:Identifier  ;
     <sio:isAttributeOf>    ?subject_V  ;
     <http://semanticscience.org/resource/hasValue> ?id .
@@ -27,6 +27,18 @@ SELECT DISTINCT ?id ?wt ?age ?sex WHERE {
   ?sex_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:BiologicalSex  ;
     <sio:isAttributeOf>    ?subject_V  ;
     <http://semanticscience.org/resource/hasValue> ?sex .
+
+  ?race_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> chear:Race  ;
+    <sio:isAttributeOf>    ?subject_V  ;
+    <http://semanticscience.org/resource/hasValue> ?race .
+
+  ?edu_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> chear:EducationLevel  ;
+    <sio:isAttributeOf>    ?subject_V  ;
+    <http://semanticscience.org/resource/hasValue> ?edu .
+
+  ?smoke_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> chear:SmokingStatus  ;
+    <sio:isAttributeOf>    ?subject_V  ;
+    <http://semanticscience.org/resource/hasValue> ?smoke .
 
 
   ?subject_V <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:Human  ;

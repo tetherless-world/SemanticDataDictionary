@@ -33,8 +33,8 @@
 }
 
 <http://example.com/kb/example#provenance-collection_metadata-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#assertion-dataset_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
-    <http://example.com/kb/example#collection-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime ;
+    <http://example.com/kb/example#assertion-dataset_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+    <http://example.com/kb/example#collection-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime ;
         <http://purl.org/dc/terms/created>    "2019-03-03"^^xsd:date ;
         <http://purl.org/dc/terms/issued>    "2019-03-03"^^xsd:date ;
         <http://purl.org/pav/version>    "1.0"^^xsd:string ;
@@ -43,7 +43,7 @@
 }
 
 <http://example.com/kb/example#pubInfo-collection_metadata-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#nanoPub-collection_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-collection_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
 }
 
@@ -81,27 +81,54 @@
         <rdfs:label>    "Sex"^^xsd:string ;
         <rdfs:comment>    "Gender of the subject"^^xsd:string .
 
+    <http://example.com/kb/example#race>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    owl:Class ;
+        <http://www.w3.org/2000/01/rdf-schema#subClassOf>    chear:Race ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject> ;
+        <rdfs:label>    "Race"^^xsd:string ;
+        <rdfs:comment>    "Race category"^^xsd:string .
+
+    <http://example.com/kb/example#edu>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    owl:Class ;
+        <http://www.w3.org/2000/01/rdf-schema#subClassOf>    chear:EducationLevel ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject> ;
+        <rdfs:label>    "Education level"^^xsd:string ;
+        <rdfs:comment>    "Subject’s education level"^^xsd:string .
+
+    <http://example.com/kb/example#smoke>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    owl:Class ;
+        <http://www.w3.org/2000/01/rdf-schema#subClassOf>    chear:SmokingStatus ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject> ;
+        <rdfs:label>    "Smoking Status"^^xsd:string ;
+        <rdfs:comment>    "Smoking status"^^xsd:string .
+
 }
 
 <http://example.com/kb/example#provenance-explicit_entry-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#assertion-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#race>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#edu>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#smoke>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-explicit_entry-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#nanoPub-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 }
 
 <http://example.com/kb/example#head-implicit_entry-398a8396537a5225efcf4da4ddfd162c> { 
@@ -121,26 +148,26 @@
 }
 
 <http://example.com/kb/example#provenance-implicit_entry-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#assertion-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#subject>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-implicit_entry-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#nanoPub-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 }
 
-<http://example.com/kb/example#head-6929f6818315534d8f67ff6a35ac12ad> {
-    <http://example.com/kb/example#nanoPub-6929f6818315534d8f67ff6a35ac12ad>
+<http://example.com/kb/example#head-f607a5e8a911ff4daee004ffdf52ef1c> {
+    <http://example.com/kb/example#nanoPub-f607a5e8a911ff4daee004ffdf52ef1c>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://www.nanopub.org/nschema#Nanopublication> ;
-        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-6929f6818315534d8f67ff6a35ac12ad> ;
-        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-6929f6818315534d8f67ff6a35ac12ad> ;
-        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-6929f6818315534d8f67ff6a35ac12ad> .
+        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-f607a5e8a911ff4daee004ffdf52ef1c> ;
+        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-f607a5e8a911ff4daee004ffdf52ef1c> ;
+        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-f607a5e8a911ff4daee004ffdf52ef1c> .
 }
 
-<http://example.com/kb/example#assertion-6929f6818315534d8f67ff6a35ac12ad> {
+<http://example.com/kb/example#assertion-f607a5e8a911ff4daee004ffdf52ef1c> {
     <http://example.com/kb/example#id-1>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#id> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Identifier ;
@@ -175,9 +202,37 @@
         <rdfs:comment>    "Gender of the subject"^^xsd:string ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Male ;
         <rdfs:label>    "Male"^^xsd:string ;
-        <rdfs:comment>    "Male Sex"^^xsd:string ;
-        <skos:definition>    "A male is a biological sex of an individual with male sexual organs. [def-source: SIO]"^^xsd:string ;
         <http://semanticscience.org/resource/hasValue>    "1"^^xsd:integer .
+
+    <http://example.com/kb/example#race-1>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#race> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Race ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-1> ;
+        <rdfs:label>    "Race"^^xsd:string ;
+        <rdfs:comment>    "Race category"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:White ;
+        <rdfs:label>    "White"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "1"^^xsd:integer .
+
+    <http://example.com/kb/example#edu-1>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#edu> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:EducationLevel ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-1> ;
+        <rdfs:label>    "Education level"^^xsd:string ;
+        <rdfs:comment>    "Subject’s education level"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:CollegeGraduate ;
+        <rdfs:label>    "College Graduate"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "4"^^xsd:integer .
+
+    <http://example.com/kb/example#smoke-1>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#smoke> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:SmokingStatus ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-1> ;
+        <rdfs:label>    "Smoking Status"^^xsd:string ;
+        <rdfs:comment>    "Smoking status"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:NonSmoker ;
+        <rdfs:label>    "non smoker"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "0"^^xsd:integer .
 
     <http://example.com/kb/example#subject-1>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#subject> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Human ;
@@ -186,39 +241,48 @@
 
 }
 
-<http://example.com/kb/example#provenance-6929f6818315534d8f67ff6a35ac12ad> {
-    <http://example.com/kb/example#assertion-6929f6818315534d8f67ff6a35ac12ad>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+<http://example.com/kb/example#provenance-f607a5e8a911ff4daee004ffdf52ef1c> {
+    <http://example.com/kb/example#assertion-f607a5e8a911ff4daee004ffdf52ef1c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#weight-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-1>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+    <http://example.com/kb/example#race-1>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#edu-1>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#smoke-1>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#subject-1>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
 }
 
-<http://example.com/kb/example#pubInfo-6929f6818315534d8f67ff6a35ac12ad> {
-    <http://example.com/kb/example#nanoPub-6929f6818315534d8f67ff6a35ac12ad>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+<http://example.com/kb/example#pubInfo-f607a5e8a911ff4daee004ffdf52ef1c> {
+    <http://example.com/kb/example#nanoPub-f607a5e8a911ff4daee004ffdf52ef1c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
 }
 
-<http://example.com/kb/example#head-6a2add10e33ea835accb83721b263451> {
-    <http://example.com/kb/example#nanoPub-6a2add10e33ea835accb83721b263451>
+<http://example.com/kb/example#head-349d7261f94552aecd1f73ae849f85b0> {
+    <http://example.com/kb/example#nanoPub-349d7261f94552aecd1f73ae849f85b0>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://www.nanopub.org/nschema#Nanopublication> ;
-        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-6a2add10e33ea835accb83721b263451> ;
-        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-6a2add10e33ea835accb83721b263451> ;
-        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-6a2add10e33ea835accb83721b263451> .
+        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-349d7261f94552aecd1f73ae849f85b0> ;
+        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-349d7261f94552aecd1f73ae849f85b0> ;
+        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-349d7261f94552aecd1f73ae849f85b0> .
 }
 
-<http://example.com/kb/example#assertion-6a2add10e33ea835accb83721b263451> {
+<http://example.com/kb/example#assertion-349d7261f94552aecd1f73ae849f85b0> {
     <http://example.com/kb/example#id-2>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#id> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Identifier ;
@@ -253,9 +317,37 @@
         <rdfs:comment>    "Gender of the subject"^^xsd:string ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Female ;
         <rdfs:label>    "Female"^^xsd:string ;
-        <rdfs:comment>    "Female Sex"^^xsd:string ;
-        <skos:definition>    "A female is a biological sex of an individual with female sexual organs. [def-source: SIO]"^^xsd:string ;
         <http://semanticscience.org/resource/hasValue>    "2"^^xsd:integer .
+
+    <http://example.com/kb/example#race-2>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#race> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Race ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-2> ;
+        <rdfs:label>    "Race"^^xsd:string ;
+        <rdfs:comment>    "Race category"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Asian ;
+        <rdfs:label>    "Asian"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "3"^^xsd:integer .
+
+    <http://example.com/kb/example#edu-2>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#edu> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:EducationLevel ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-2> ;
+        <rdfs:label>    "Education level"^^xsd:string ;
+        <rdfs:comment>    "Subject’s education level"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:CollegeGraduate ;
+        <rdfs:label>    "College Graduate"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "4"^^xsd:integer .
+
+    <http://example.com/kb/example#smoke-2>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#smoke> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:SmokingStatus ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-2> ;
+        <rdfs:label>    "Smoking Status"^^xsd:string ;
+        <rdfs:comment>    "Smoking status"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Smoker ;
+        <rdfs:label>    "smoker"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "1"^^xsd:integer .
 
     <http://example.com/kb/example#subject-2>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#subject> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Human ;
@@ -264,39 +356,48 @@
 
 }
 
-<http://example.com/kb/example#provenance-6a2add10e33ea835accb83721b263451> {
-    <http://example.com/kb/example#assertion-6a2add10e33ea835accb83721b263451>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+<http://example.com/kb/example#provenance-349d7261f94552aecd1f73ae849f85b0> {
+    <http://example.com/kb/example#assertion-349d7261f94552aecd1f73ae849f85b0>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#weight-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-2>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+    <http://example.com/kb/example#race-2>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#edu-2>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#smoke-2>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#subject-2>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
 }
 
-<http://example.com/kb/example#pubInfo-6a2add10e33ea835accb83721b263451> {
-    <http://example.com/kb/example#nanoPub-6a2add10e33ea835accb83721b263451>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+<http://example.com/kb/example#pubInfo-349d7261f94552aecd1f73ae849f85b0> {
+    <http://example.com/kb/example#nanoPub-349d7261f94552aecd1f73ae849f85b0>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
 }
 
-<http://example.com/kb/example#head-0b99eee09992569c824a5847ae3fb4e1> {
-    <http://example.com/kb/example#nanoPub-0b99eee09992569c824a5847ae3fb4e1>
+<http://example.com/kb/example#head-26a703e7751599f54cd80bf3ae5c94e9> {
+    <http://example.com/kb/example#nanoPub-26a703e7751599f54cd80bf3ae5c94e9>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://www.nanopub.org/nschema#Nanopublication> ;
-        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-0b99eee09992569c824a5847ae3fb4e1> ;
-        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-0b99eee09992569c824a5847ae3fb4e1> ;
-        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-0b99eee09992569c824a5847ae3fb4e1> .
+        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-26a703e7751599f54cd80bf3ae5c94e9> ;
+        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-26a703e7751599f54cd80bf3ae5c94e9> ;
+        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-26a703e7751599f54cd80bf3ae5c94e9> .
 }
 
-<http://example.com/kb/example#assertion-0b99eee09992569c824a5847ae3fb4e1> {
+<http://example.com/kb/example#assertion-26a703e7751599f54cd80bf3ae5c94e9> {
     <http://example.com/kb/example#id-3>
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#id> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Identifier ;
@@ -331,9 +432,37 @@
         <rdfs:comment>    "Gender of the subject"^^xsd:string ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Male ;
         <rdfs:label>    "Male"^^xsd:string ;
-        <rdfs:comment>    "Male Sex"^^xsd:string ;
-        <skos:definition>    "A male is a biological sex of an individual with male sexual organs. [def-source: SIO]"^^xsd:string ;
         <http://semanticscience.org/resource/hasValue>    "1"^^xsd:integer .
+
+    <http://example.com/kb/example#race-3>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#race> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Race ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-3> ;
+        <rdfs:label>    "Race"^^xsd:string ;
+        <rdfs:comment>    "Race category"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:AfricanAmerican ;
+        <rdfs:label>    "African American"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "2"^^xsd:integer .
+
+    <http://example.com/kb/example#edu-3>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#edu> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:EducationLevel ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-3> ;
+        <rdfs:label>    "Education level"^^xsd:string ;
+        <rdfs:comment>    "Subject’s education level"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:HigherEducation ;
+        <rdfs:label>    "Higher Education than High School"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "3"^^xsd:integer .
+
+    <http://example.com/kb/example#smoke-3>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#smoke> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:SmokingStatus ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-3> ;
+        <rdfs:label>    "Smoking Status"^^xsd:string ;
+        <rdfs:comment>    "Smoking status"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:NonSmoker ;
+        <rdfs:label>    "non smoker"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "0"^^xsd:integer .
 
     <http://example.com/kb/example#subject-3>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#subject> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Human ;
@@ -342,27 +471,496 @@
 
 }
 
-<http://example.com/kb/example#provenance-0b99eee09992569c824a5847ae3fb4e1> {
-    <http://example.com/kb/example#assertion-0b99eee09992569c824a5847ae3fb4e1>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+<http://example.com/kb/example#provenance-26a703e7751599f54cd80bf3ae5c94e9> {
+    <http://example.com/kb/example#assertion-26a703e7751599f54cd80bf3ae5c94e9>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#weight-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-3>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+    <http://example.com/kb/example#race-3>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#edu-3>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#smoke-3>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#subject-3>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
 }
 
-<http://example.com/kb/example#pubInfo-0b99eee09992569c824a5847ae3fb4e1> {
-    <http://example.com/kb/example#nanoPub-0b99eee09992569c824a5847ae3fb4e1>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-19T22:07:54Z"^^xsd:dateTime .
+<http://example.com/kb/example#pubInfo-26a703e7751599f54cd80bf3ae5c94e9> {
+    <http://example.com/kb/example#nanoPub-26a703e7751599f54cd80bf3ae5c94e9>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+}
+
+<http://example.com/kb/example#head-6ed34cf5e0ee6ecbc505a0574f388910> {
+    <http://example.com/kb/example#nanoPub-6ed34cf5e0ee6ecbc505a0574f388910>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://www.nanopub.org/nschema#Nanopublication> ;
+        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-6ed34cf5e0ee6ecbc505a0574f388910> ;
+        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-6ed34cf5e0ee6ecbc505a0574f388910> ;
+        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-6ed34cf5e0ee6ecbc505a0574f388910> .
+}
+
+<http://example.com/kb/example#assertion-6ed34cf5e0ee6ecbc505a0574f388910> {
+    <http://example.com/kb/example#id-4>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#id> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Identifier ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-4> ;
+        <rdfs:label>    "Identifier"^^xsd:string ;
+        <rdfs:comment>    "ID for subject"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "4"^^xsd:integer .
+
+    <http://example.com/kb/example#weight-4>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Weight ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-4> ;
+        <sio:hasUnit>    obo:UO_0000009 ;
+        <rdfs:label>    "Weight"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "64.9"^^xsd:float .
+
+    <http://example.com/kb/example#age-4>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#age> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Age ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-4> ;
+        <sio:hasUnit>    obo:UO_0000036 ;
+        <rdfs:label>    "Age"^^xsd:string ;
+        <rdfs:comment>    "Age in years"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "28"^^xsd:integer .
+
+    <http://example.com/kb/example#sex-4>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#sex> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:BiologicalSex ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-4> ;
+        <rdfs:label>    "Sex"^^xsd:string ;
+        <rdfs:comment>    "Gender of the subject"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Female ;
+        <rdfs:label>    "Female"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "2"^^xsd:integer .
+
+    <http://example.com/kb/example#race-4>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#race> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Race ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-4> ;
+        <rdfs:label>    "Race"^^xsd:string ;
+        <rdfs:comment>    "Race category"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:American_Indian_or_Alaska_Native ;
+        <rdfs:label>    "American Indian or Alaska Native"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "4"^^xsd:integer .
+
+    <http://example.com/kb/example#edu-4>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#edu> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:EducationLevel ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-4> ;
+        <rdfs:label>    "Education level"^^xsd:string ;
+        <rdfs:comment>    "Subject’s education level"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:HigherEducation ;
+        <rdfs:label>    "Higher Education than High School"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "3"^^xsd:integer .
+
+    <http://example.com/kb/example#smoke-4>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#smoke> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:SmokingStatus ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-4> ;
+        <rdfs:label>    "Smoking Status"^^xsd:string ;
+        <rdfs:comment>    "Smoking status"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:NonSmoker ;
+        <rdfs:label>    "non smoker"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "0"^^xsd:integer .
+
+    <http://example.com/kb/example#subject-4>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#subject> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Human ;
+        <rdfs:label>    "Subject"^^xsd:string ;
+        <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:SubjectRole ] .
+
+}
+
+<http://example.com/kb/example#provenance-6ed34cf5e0ee6ecbc505a0574f388910> {
+    <http://example.com/kb/example#assertion-6ed34cf5e0ee6ecbc505a0574f388910>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#id-4>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#weight-4>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#age-4>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#sex-4>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#race-4>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#edu-4>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#smoke-4>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#subject-4>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+}
+
+<http://example.com/kb/example#pubInfo-6ed34cf5e0ee6ecbc505a0574f388910> {
+    <http://example.com/kb/example#nanoPub-6ed34cf5e0ee6ecbc505a0574f388910>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+}
+
+<http://example.com/kb/example#head-3f6756d1fdfc009e14471bef2bad7cb0> {
+    <http://example.com/kb/example#nanoPub-3f6756d1fdfc009e14471bef2bad7cb0>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://www.nanopub.org/nschema#Nanopublication> ;
+        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-3f6756d1fdfc009e14471bef2bad7cb0> ;
+        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-3f6756d1fdfc009e14471bef2bad7cb0> ;
+        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-3f6756d1fdfc009e14471bef2bad7cb0> .
+}
+
+<http://example.com/kb/example#assertion-3f6756d1fdfc009e14471bef2bad7cb0> {
+    <http://example.com/kb/example#id-5>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#id> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Identifier ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-5> ;
+        <rdfs:label>    "Identifier"^^xsd:string ;
+        <rdfs:comment>    "ID for subject"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "5"^^xsd:integer .
+
+    <http://example.com/kb/example#weight-5>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Weight ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-5> ;
+        <sio:hasUnit>    obo:UO_0000009 ;
+        <rdfs:label>    "Weight"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "81.2"^^xsd:float .
+
+    <http://example.com/kb/example#age-5>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#age> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Age ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-5> ;
+        <sio:hasUnit>    obo:UO_0000036 ;
+        <rdfs:label>    "Age"^^xsd:string ;
+        <rdfs:comment>    "Age in years"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "55"^^xsd:integer .
+
+    <http://example.com/kb/example#sex-5>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#sex> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:BiologicalSex ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-5> ;
+        <rdfs:label>    "Sex"^^xsd:string ;
+        <rdfs:comment>    "Gender of the subject"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Female ;
+        <rdfs:label>    "Female"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "2"^^xsd:integer .
+
+    <http://example.com/kb/example#race-5>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#race> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Race ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-5> ;
+        <rdfs:label>    "Race"^^xsd:string ;
+        <rdfs:comment>    "Race category"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Asian ;
+        <rdfs:label>    "Asian"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "3"^^xsd:integer .
+
+    <http://example.com/kb/example#edu-5>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#edu> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:EducationLevel ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-5> ;
+        <rdfs:label>    "Education level"^^xsd:string ;
+        <rdfs:comment>    "Subject’s education level"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:UnknownEducationLevel ;
+        <rdfs:label>    "Unknown Education Level"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "5"^^xsd:integer .
+
+    <http://example.com/kb/example#smoke-5>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#smoke> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:SmokingStatus ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-5> ;
+        <rdfs:label>    "Smoking Status"^^xsd:string ;
+        <rdfs:comment>    "Smoking status"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Smoker ;
+        <rdfs:label>    "smoker"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "1"^^xsd:integer .
+
+    <http://example.com/kb/example#subject-5>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#subject> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Human ;
+        <rdfs:label>    "Subject"^^xsd:string ;
+        <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:SubjectRole ] .
+
+}
+
+<http://example.com/kb/example#provenance-3f6756d1fdfc009e14471bef2bad7cb0> {
+    <http://example.com/kb/example#assertion-3f6756d1fdfc009e14471bef2bad7cb0>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#id-5>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#weight-5>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#age-5>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#sex-5>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#race-5>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#edu-5>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#smoke-5>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#subject-5>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+}
+
+<http://example.com/kb/example#pubInfo-3f6756d1fdfc009e14471bef2bad7cb0> {
+    <http://example.com/kb/example#nanoPub-3f6756d1fdfc009e14471bef2bad7cb0>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+}
+
+<http://example.com/kb/example#head-6cbfd32a6ad2cb77787f55845b7eb212> {
+    <http://example.com/kb/example#nanoPub-6cbfd32a6ad2cb77787f55845b7eb212>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://www.nanopub.org/nschema#Nanopublication> ;
+        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-6cbfd32a6ad2cb77787f55845b7eb212> ;
+        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-6cbfd32a6ad2cb77787f55845b7eb212> ;
+        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-6cbfd32a6ad2cb77787f55845b7eb212> .
+}
+
+<http://example.com/kb/example#assertion-6cbfd32a6ad2cb77787f55845b7eb212> {
+    <http://example.com/kb/example#id-6>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#id> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Identifier ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-6> ;
+        <rdfs:label>    "Identifier"^^xsd:string ;
+        <rdfs:comment>    "ID for subject"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "6"^^xsd:integer .
+
+    <http://example.com/kb/example#weight-6>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Weight ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-6> ;
+        <sio:hasUnit>    obo:UO_0000009 ;
+        <rdfs:label>    "Weight"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "58.7"^^xsd:float .
+
+    <http://example.com/kb/example#age-6>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#age> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Age ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-6> ;
+        <sio:hasUnit>    obo:UO_0000036 ;
+        <rdfs:label>    "Age"^^xsd:string ;
+        <rdfs:comment>    "Age in years"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "24"^^xsd:integer .
+
+    <http://example.com/kb/example#sex-6>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#sex> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:BiologicalSex ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-6> ;
+        <rdfs:label>    "Sex"^^xsd:string ;
+        <rdfs:comment>    "Gender of the subject"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Male ;
+        <rdfs:label>    "Male"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "1"^^xsd:integer .
+
+    <http://example.com/kb/example#race-6>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#race> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Race ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-6> ;
+        <rdfs:label>    "Race"^^xsd:string ;
+        <rdfs:comment>    "Race category"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:White ;
+        <rdfs:label>    "White"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "1"^^xsd:integer .
+
+    <http://example.com/kb/example#edu-6>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#edu> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:EducationLevel ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-6> ;
+        <rdfs:label>    "Education level"^^xsd:string ;
+        <rdfs:comment>    "Subject’s education level"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:SomeCollegeorTechnicalSchool ;
+        <rdfs:label>    "Technical College or Some College"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "2"^^xsd:integer .
+
+    <http://example.com/kb/example#smoke-6>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#smoke> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:SmokingStatus ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-6> ;
+        <rdfs:label>    "Smoking Status"^^xsd:string ;
+        <rdfs:comment>    "Smoking status"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:NonSmoker ;
+        <rdfs:label>    "non smoker"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "0"^^xsd:integer .
+
+    <http://example.com/kb/example#subject-6>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#subject> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Human ;
+        <rdfs:label>    "Subject"^^xsd:string ;
+        <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:SubjectRole ] .
+
+}
+
+<http://example.com/kb/example#provenance-6cbfd32a6ad2cb77787f55845b7eb212> {
+    <http://example.com/kb/example#assertion-6cbfd32a6ad2cb77787f55845b7eb212>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#id-6>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#weight-6>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#age-6>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#sex-6>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#race-6>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#edu-6>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#smoke-6>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#subject-6>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+}
+
+<http://example.com/kb/example#pubInfo-6cbfd32a6ad2cb77787f55845b7eb212> {
+    <http://example.com/kb/example#nanoPub-6cbfd32a6ad2cb77787f55845b7eb212>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+}
+
+<http://example.com/kb/example#head-432745e7e2bccb39adf689905f1727eb> {
+    <http://example.com/kb/example#nanoPub-432745e7e2bccb39adf689905f1727eb>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://www.nanopub.org/nschema#Nanopublication> ;
+        <http://www.nanopub.org/nschema#hasAssertion>    <http://example.com/kb/example#assertion-432745e7e2bccb39adf689905f1727eb> ;
+        <http://www.nanopub.org/nschema#hasProvenance>    <http://example.com/kb/example#provenance-432745e7e2bccb39adf689905f1727eb> ;
+        <http://www.nanopub.org/nschema#hasPublicationInfo>    <http://example.com/kb/example#pubInfo-432745e7e2bccb39adf689905f1727eb> .
+}
+
+<http://example.com/kb/example#assertion-432745e7e2bccb39adf689905f1727eb> {
+    <http://example.com/kb/example#id-7>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#id> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Identifier ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-7> ;
+        <rdfs:label>    "Identifier"^^xsd:string ;
+        <rdfs:comment>    "ID for subject"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "7"^^xsd:integer .
+
+    <http://example.com/kb/example#weight-7>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#wt> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Weight ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-7> ;
+        <sio:hasUnit>    obo:UO_0000009 ;
+        <rdfs:label>    "Weight"^^xsd:string ;
+        <rdfs:comment>    "Weight in kg"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "61.72"^^xsd:float .
+
+    <http://example.com/kb/example#age-7>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#age> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Age ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-7> ;
+        <sio:hasUnit>    obo:UO_0000036 ;
+        <rdfs:label>    "Age"^^xsd:string ;
+        <rdfs:comment>    "Age in years"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "18"^^xsd:integer .
+
+    <http://example.com/kb/example#sex-7>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#sex> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:BiologicalSex ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-7> ;
+        <rdfs:label>    "Sex"^^xsd:string ;
+        <rdfs:comment>    "Gender of the subject"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Male ;
+        <rdfs:label>    "Male"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "1"^^xsd:integer .
+
+    <http://example.com/kb/example#race-7>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#race> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:Race ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-7> ;
+        <rdfs:label>    "Race"^^xsd:string ;
+        <rdfs:comment>    "Race category"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:UnknownRace ;
+        <rdfs:label>    "Unknown Race"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "5"^^xsd:integer .
+
+    <http://example.com/kb/example#edu-7>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#edu> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:EducationLevel ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-7> ;
+        <rdfs:label>    "Education level"^^xsd:string ;
+        <rdfs:comment>    "Subject’s education level"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:HighSchoolOrLess ;
+        <rdfs:label>    "High School Degree or Less"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "1"^^xsd:integer .
+
+    <http://example.com/kb/example#smoke-7>
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#smoke> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:SmokingStatus ;
+        <sio:isAttributeOf>    <http://example.com/kb/example#subject-7> ;
+        <rdfs:label>    "Smoking Status"^^xsd:string ;
+        <rdfs:comment>    "Smoking status"^^xsd:string ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    chear:NonSmoker ;
+        <rdfs:label>    "non smoker"^^xsd:string ;
+        <http://semanticscience.org/resource/hasValue>    "0"^^xsd:integer .
+
+    <http://example.com/kb/example#subject-7>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#subject> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Human ;
+        <rdfs:label>    "Subject"^^xsd:string ;
+        <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:SubjectRole ] .
+
+}
+
+<http://example.com/kb/example#provenance-432745e7e2bccb39adf689905f1727eb> {
+    <http://example.com/kb/example#assertion-432745e7e2bccb39adf689905f1727eb>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#id-7>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#weight-7>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#age-7>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#sex-7>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#race-7>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#edu-7>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#smoke-7>
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+    <http://example.com/kb/example#subject-7>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
+
+}
+
+<http://example.com/kb/example#pubInfo-432745e7e2bccb39adf689905f1727eb> {
+    <http://example.com/kb/example#nanoPub-432745e7e2bccb39adf689905f1727eb>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-03-20T00:46:33Z"^^xsd:dateTime .
 
 }
 
