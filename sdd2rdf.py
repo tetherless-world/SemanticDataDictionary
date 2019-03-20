@@ -388,13 +388,13 @@ def writeImplicitEntryTuples(implicit_entry_list, timeline_tuple, output_file, q
         term_implicit = item.Column[1:] + "_V"
         whereString += "  " + term_implicit + " <" + rdf.type + "> " 
         implicit_tuple["Column"]=item.Column
-        if (pd.notnull(item.Label)) :
+        if (hasattr(item,"Label") and pd.notnull(item.Label)) :
             assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + item.Label + "\"^^xsd:string" 
             implicit_tuple["Label"]=item.Label
         else :
             assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + item.Column[2:] + "\"^^xsd:string"
             implicit_tuple["Label"]=item.Column[2:]
-        if (pd.notnull(item.Comment)) :
+        if (hasattr(item,"Comment") and pd.notnull(item.Comment)) :
             assertionString += " ;\n        <" + properties_tuple["Comment"] + ">    \"" + item.Comment + "\"^^xsd:string"
             implicit_tuple["Comment"]=item.Comment
         [implicit_tuple, assertionString, whereString, swrlString] = writeClassAttributeOrEntity(item, term_implicit, implicit_tuple, assertionString, whereString, swrlString)
@@ -808,7 +808,7 @@ def processProperties():
             print("Warning: The specified Properties file does not exist or is unreadable: " + str(e))
             return properties_tuple
         for row in properties_file.itertuples() :
-            if(pd.notnull(row.Property)):
+            if(hasattr(row,"Property") and pd.notnull(row.Property)):
                 properties_tuple[row.Column]=row.Property
     return properties_tuple
 
@@ -834,7 +834,7 @@ def processTimeline(timeline_fn):
                     inner_tuple["Start"]=row.Start
                 if(pd.notnull(row.End)) :
                     inner_tuple["End"]=row.End
-                if(pd.notnull(row.Unit)) :
+                if(hasattr(row,"Unit") and pd.notnull(row.Unit)) :
                     inner_tuple["Unit"]=row.Unit
                 if(hasattr(row,"inRelationTo") and pd.notnull(row.inRelationTo)) :
                     inner_tuple["inRelationTo"]=row.inRelationTo
