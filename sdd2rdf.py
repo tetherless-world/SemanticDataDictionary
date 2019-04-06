@@ -417,15 +417,15 @@ def writeImplicitEntryTuples(implicit_entry_list, timeline_tuple, output_file, q
             assertionString += "\n    " + convertImplicitToKGEntry(key) + "    <" + rdf.type + ">    owl:Class "
             for timeEntry in timeline_tuple[key] :
                 if 'Type' in timeEntry :
-                    assertionString += " ;\n        rdf:subClassOf    " + timeEntry['Type']
+                    assertionString += " ;\n        rdfs:subClassOf    " + timeEntry['Type']
                 if 'Label' in timeEntry :
                     assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + timeEntry['Label'] + "\"^^xsd:string"
                 if 'Start' in timeEntry and 'End' in timeEntry and timeEntry['Start'] == timeEntry['End']:
                     assertionString += " ;\n        <" + sio.hasValue + "> " + str(timeEntry['Start'])
                 if 'Start' in timeEntry :
-                    assertionString += " ;\n        sio:hasStartTime [ <" + sio.hasValue + "> " + str(timeEntry['Start']) + " ]"
+                    assertionString += " ;\n        <" + properties_tuple["Start"] + "> [ <" + sio.hasValue + "> " + str(timeEntry['Start']) + " ]"
                 if 'End' in timeEntry :
-                    assertionString += " ;\n        sio:hasEndTime [ <" + sio.hasValue + "> " + str(timeEntry['End']) + " ]"
+                    assertionString += " ;\n        <" + properties_tuple["End"] + "> [ <" + sio.hasValue + "> " + str(timeEntry['End']) + " ]"
                 if 'Unit' in timeEntry :
                     assertionString += " ;\n        <" + properties_tuple["Unit"] + ">    " + timeEntry['Unit']
                 if 'inRelationTo' in timeEntry :
@@ -523,9 +523,9 @@ def writeImplicitEntry(assertionString, provenanceString,publicationInfoString, 
                     if 'Start' in timeEntry and 'End' in timeEntry and timeEntry['Start'] == timeEntry['End']:
                         assertionString += " ;\n        <" + sio.hasValue + "> " + str(timeEntry['Start'])
                     if 'Start' in timeEntry :
-                        assertionString += " ;\n        sio:hasStartTime [ <" + sio.hasValue + "> " + str(timeEntry['Start']) + " ]"
+                        assertionString += " ;\n        <" + properties_tuple["Start"] + "> [ <" + sio.hasValue + "> " + str(timeEntry['Start']) + " ]"
                     if 'End' in timeEntry :
-                        assertionString += " ;\n        sio:hasEndTime [ <" + sio.hasValue + "> " + str(timeEntry['End']) + " ]"
+                        assertionString += " ;\n        <" + properties_tuple["End"] + "> [ <" + sio.hasValue + "> " + str(timeEntry['End']) + " ]"
                     if 'Unit' in timeEntry :
                         assertionString += " ;\n        <" + properties_tuple["Unit"] + ">    " + timeEntry['Unit']
                     if 'inRelationTo' in timeEntry :
@@ -800,7 +800,7 @@ def processCodeMappings(cmap_fn):
     return [unit_code_list,unit_uri_list,unit_label_list]
 
 def processProperties():
-    properties_tuple = {'Comment': rdfs.comment, 'attributeOf': sio.isAttributeOf, 'Attribute': rdf.type, 'Definition' : skos.definition, 'Value' : sio.hasValue, 'wasDerivedFrom': prov.wasDerivedFrom, 'Label': rdfs.label, 'inRelationTo': sio.inRelationTo, 'Role': sio.hasRole, 'Time': sio.existsAt, 'Entity': rdf.type, 'Unit': sio.hasUnit, 'wasGeneratedBy': prov.wasGeneratedBy}
+    properties_tuple = {'Comment': rdfs.comment, 'attributeOf': sio.isAttributeOf, 'Attribute': rdf.type, 'Definition' : skos.definition, 'Value' : sio.hasValue, 'wasDerivedFrom': prov.wasDerivedFrom, 'Label': rdfs.label, 'inRelationTo': sio.inRelationTo, 'Role': sio.hasRole, 'Start' : sio.hasStartTime, 'End' : sio.hasEndTime, 'Time': sio.existsAt, 'Entity': rdf.type, 'Unit': sio.hasUnit, 'wasGeneratedBy': prov.wasGeneratedBy}
     if 'properties' in config['Source Files'] :
         properties_fn = config['Source Files']['properties']
         try :
