@@ -108,7 +108,7 @@ def assignVID(implicit_entry_tuples,timeline_tuple,a_tuple,column, npubIdentifie
     if v_id == None : # maybe it's referenced in the timeline
         for t_tuple in timeline_tuple:
             if t_tuple["Column"] == a_tuple[column]:
-                print("Got here")
+                #print("Got here")
                 v_id = hashlib.md5((str(t_tuple) + str(npubIdentifier)).encode("utf-8")).hexdigest()
     if v_id == npubIdentifier : # if it's not in implicit list or timeline
         print("Warning, " + column + " ID assigned to nanopub ID")
@@ -122,7 +122,7 @@ def assignTerm(col_headers, column, implicit_entry_tuples, a_tuple, row, v_id) :
                 template_term = extractTemplate(col_headers,row,v_tuple["Template"])
                 termURI = "<" + prefixes[kb] + template_term + ">"
     if termURI is None :
-        termURI = convertImplicitToKGEntry(a_tuple["isAttributeOf"],v_id)
+        termURI = convertImplicitToKGEntry(a_tuple[column],v_id)
     return termURI
 
 
