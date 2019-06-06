@@ -818,32 +818,33 @@ def processTimeline(timeline_fn):
     if timeline_fn is not None :
         try :
             timeline_file = pd.read_csv(timeline_fn, dtype=object)
+            try :
+                inner_tuple_list = []
+                row_num=0
+                for row in timeline_file.itertuples():
+                    if (pd.notnull(row.Name) and row.Name not in timeline_tuple) :
+                        inner_tuple_list=[]
+                    inner_tuple = {}
+                    inner_tuple["Type"]=row.Type
+                    if(hasattr(row,"Label") and pd.notnull(row.Label)):
+                        inner_tuple["Label"]=row.Label
+                    if(pd.notnull(row.Start)) :
+                        inner_tuple["Start"]=row.Start
+                    if(pd.notnull(row.End)) :
+                        inner_tuple["End"]=row.End
+                    if(hasattr(row,"Unit") and pd.notnull(row.Unit)) :
+                        inner_tuple["Unit"]=row.Unit
+                    if(hasattr(row,"inRelationTo") and pd.notnull(row.inRelationTo)) :
+                        inner_tuple["inRelationTo"]=row.inRelationTo
+                    inner_tuple_list.append(inner_tuple)
+                    timeline_tuple[row.Name]=inner_tuple_list
+                    row_num += 1
+            except Exception as e :
+                print("Warning: Unable to process Timeline file: " + str(e))
+
         except Exception as e :
-            print("Error: The specified Timeline file does not exist: " + str(e))
-            sys.exit(1)
-        try :
-            inner_tuple_list = []
-            row_num=0
-            for row in timeline_file.itertuples():
-                if (pd.notnull(row.Name) and row.Name not in timeline_tuple) :
-                    inner_tuple_list=[]
-                inner_tuple = {}
-                inner_tuple["Type"]=row.Type
-                if(hasattr(row,"Label") and pd.notnull(row.Label)):
-                    inner_tuple["Label"]=row.Label
-                if(pd.notnull(row.Start)) :
-                    inner_tuple["Start"]=row.Start
-                if(pd.notnull(row.End)) :
-                    inner_tuple["End"]=row.End
-                if(hasattr(row,"Unit") and pd.notnull(row.Unit)) :
-                    inner_tuple["Unit"]=row.Unit
-                if(hasattr(row,"inRelationTo") and pd.notnull(row.inRelationTo)) :
-                    inner_tuple["inRelationTo"]=row.inRelationTo
-                inner_tuple_list.append(inner_tuple)
-                timeline_tuple[row.Name]=inner_tuple_list
-                row_num += 1
-        except Exception as e :
-            print("Warning: Unable to process Timeline file: " + str(e))
+            print("Warning: The specified Timeline file does not exist: " + str(e))
+            #sys.exit(1)
     return timeline_tuple
 
 def processDictionaryMapping(dm_fn):
