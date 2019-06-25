@@ -35,8 +35,8 @@
 }
 
 <http://example.com/kb/example#provenance-collection_metadata-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#assertion-dataset_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
-    <http://example.com/kb/example#collection-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime ;
+    <http://example.com/kb/example#assertion-dataset_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
+    <http://example.com/kb/example#collection-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime ;
         <http://purl.org/dc/terms/created>    "2019-03-03"^^xsd:date ;
         <http://purl.org/dc/terms/issued>    "2019-03-03"^^xsd:date ;
         <http://purl.org/pav/version>    "1.0"^^xsd:string ;
@@ -45,7 +45,7 @@
 }
 
 <http://example.com/kb/example#pubInfo-collection_metadata-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#nanoPub-collection_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-collection_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
 }
 
@@ -89,7 +89,7 @@
     <http://example.com/kb/example#sex>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    owl:Class ;
         <http://www.w3.org/2000/01/rdf-schema#subClassOf>    sio:BiologicalSex ;
         <sio:isAttributeOf>    <http://example.com/kb/example#subject> ;
-        <rdfs:label>    "Sex"^^xsd:string ;
+        <rdfs:label>    "Sex,Gender"^^xsd:string ;
         <rdfs:comment>    "Gender of the subject"^^xsd:string .
 
     <http://example.com/kb/example#race>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    owl:Class ;
@@ -113,36 +113,36 @@
 }
 
 <http://example.com/kb/example#provenance-explicit_entry-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#assertion-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-explicit_entry-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#nanoPub-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 }
 
 <http://example.com/kb/example#head-implicit_entry-398a8396537a5225efcf4da4ddfd162c> { 
@@ -154,7 +154,7 @@
 
 <http://example.com/kb/example#assertion-implicit_entry-398a8396537a5225efcf4da4ddfd162c> {
     <http://example.com/kb/example#subject>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    owl:Class ;
-        <rdfs:label>    "Subject"^^xsd:string ;
+        <rdfs:label>    "Subject,Patient"^^xsd:string ;
         <rdfs:comment>    "Subject implicit entity"^^xsd:string ;
         <http://www.w3.org/2000/01/rdf-schema#subClassOf>    sio:Human ;
         <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:SubjectRole ] .
@@ -176,19 +176,19 @@
 }
 
 <http://example.com/kb/example#provenance-implicit_entry-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#assertion-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#subject>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#visit1>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#visit1>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#visit2>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#visit2>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-implicit_entry-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#nanoPub-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 }
 
 <http://example.com/kb/example#head-04bca535b8580b8a8090285761507559> {
@@ -242,6 +242,7 @@
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:BiologicalSex ;
         <sio:isAttributeOf>    <http://example.com/kb/example#subject-1> ;
         <rdfs:label>    "Sex"^^xsd:string ;
+        <rdfs:label>    "Gender"^^xsd:string ;
         <rdfs:comment>    "Gender of the subject"^^xsd:string ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Male ;
         <rdfs:label>    "Male"^^xsd:string ;
@@ -280,43 +281,44 @@
     <http://example.com/kb/example#subject-1>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#subject> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Human ;
         <rdfs:label>    "Subject"^^xsd:string ;
+        <rdfs:label>    "Patient"^^xsd:string ;
         <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:SubjectRole ] .
 
 }
 
 <http://example.com/kb/example#provenance-04bca535b8580b8a8090285761507559> {
-    <http://example.com/kb/example#assertion-04bca535b8580b8a8090285761507559>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-04bca535b8580b8a8090285761507559>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt1-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt2-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-1>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-1>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-04bca535b8580b8a8090285761507559> {
-    <http://example.com/kb/example#nanoPub-04bca535b8580b8a8090285761507559>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-04bca535b8580b8a8090285761507559>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
 }
 
@@ -371,6 +373,7 @@
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:BiologicalSex ;
         <sio:isAttributeOf>    <http://example.com/kb/example#subject-2> ;
         <rdfs:label>    "Sex"^^xsd:string ;
+        <rdfs:label>    "Gender"^^xsd:string ;
         <rdfs:comment>    "Gender of the subject"^^xsd:string ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Female ;
         <rdfs:label>    "Female"^^xsd:string ;
@@ -409,43 +412,44 @@
     <http://example.com/kb/example#subject-2>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#subject> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Human ;
         <rdfs:label>    "Subject"^^xsd:string ;
+        <rdfs:label>    "Patient"^^xsd:string ;
         <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:SubjectRole ] .
 
 }
 
 <http://example.com/kb/example#provenance-2dd6ebdb4d1f65a71d862f366465739b> {
-    <http://example.com/kb/example#assertion-2dd6ebdb4d1f65a71d862f366465739b>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-2dd6ebdb4d1f65a71d862f366465739b>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt1-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt2-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-2>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-2>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-2dd6ebdb4d1f65a71d862f366465739b> {
-    <http://example.com/kb/example#nanoPub-2dd6ebdb4d1f65a71d862f366465739b>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-2dd6ebdb4d1f65a71d862f366465739b>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
 }
 
@@ -500,6 +504,7 @@
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:BiologicalSex ;
         <sio:isAttributeOf>    <http://example.com/kb/example#subject-3> ;
         <rdfs:label>    "Sex"^^xsd:string ;
+        <rdfs:label>    "Gender"^^xsd:string ;
         <rdfs:comment>    "Gender of the subject"^^xsd:string ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Male ;
         <rdfs:label>    "Male"^^xsd:string ;
@@ -538,43 +543,44 @@
     <http://example.com/kb/example#subject-3>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#subject> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Human ;
         <rdfs:label>    "Subject"^^xsd:string ;
+        <rdfs:label>    "Patient"^^xsd:string ;
         <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:SubjectRole ] .
 
 }
 
 <http://example.com/kb/example#provenance-a72da31ed7880fbe9e3487bdec4bc362> {
-    <http://example.com/kb/example#assertion-a72da31ed7880fbe9e3487bdec4bc362>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-a72da31ed7880fbe9e3487bdec4bc362>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt1-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt2-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-3>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-3>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-a72da31ed7880fbe9e3487bdec4bc362> {
-    <http://example.com/kb/example#nanoPub-a72da31ed7880fbe9e3487bdec4bc362>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-a72da31ed7880fbe9e3487bdec4bc362>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
 }
 
@@ -629,6 +635,7 @@
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:BiologicalSex ;
         <sio:isAttributeOf>    <http://example.com/kb/example#subject-4> ;
         <rdfs:label>    "Sex"^^xsd:string ;
+        <rdfs:label>    "Gender"^^xsd:string ;
         <rdfs:comment>    "Gender of the subject"^^xsd:string ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Female ;
         <rdfs:label>    "Female"^^xsd:string ;
@@ -667,43 +674,44 @@
     <http://example.com/kb/example#subject-4>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#subject> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Human ;
         <rdfs:label>    "Subject"^^xsd:string ;
+        <rdfs:label>    "Patient"^^xsd:string ;
         <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:SubjectRole ] .
 
 }
 
 <http://example.com/kb/example#provenance-b772bf9afb557a16a3ec61fb37a6c53a> {
-    <http://example.com/kb/example#assertion-b772bf9afb557a16a3ec61fb37a6c53a>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-b772bf9afb557a16a3ec61fb37a6c53a>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt1-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt2-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-4>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-4>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-b772bf9afb557a16a3ec61fb37a6c53a> {
-    <http://example.com/kb/example#nanoPub-b772bf9afb557a16a3ec61fb37a6c53a>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-b772bf9afb557a16a3ec61fb37a6c53a>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
 }
 
@@ -758,6 +766,7 @@
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:BiologicalSex ;
         <sio:isAttributeOf>    <http://example.com/kb/example#subject-5> ;
         <rdfs:label>    "Sex"^^xsd:string ;
+        <rdfs:label>    "Gender"^^xsd:string ;
         <rdfs:comment>    "Gender of the subject"^^xsd:string ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Female ;
         <rdfs:label>    "Female"^^xsd:string ;
@@ -796,43 +805,44 @@
     <http://example.com/kb/example#subject-5>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#subject> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Human ;
         <rdfs:label>    "Subject"^^xsd:string ;
+        <rdfs:label>    "Patient"^^xsd:string ;
         <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:SubjectRole ] .
 
 }
 
 <http://example.com/kb/example#provenance-f0fa3b0bd5971b8f1fa23a935f016e9d> {
-    <http://example.com/kb/example#assertion-f0fa3b0bd5971b8f1fa23a935f016e9d>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-f0fa3b0bd5971b8f1fa23a935f016e9d>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt1-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt2-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-5>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-5>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-f0fa3b0bd5971b8f1fa23a935f016e9d> {
-    <http://example.com/kb/example#nanoPub-f0fa3b0bd5971b8f1fa23a935f016e9d>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-f0fa3b0bd5971b8f1fa23a935f016e9d>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
 }
 
@@ -887,6 +897,7 @@
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:BiologicalSex ;
         <sio:isAttributeOf>    <http://example.com/kb/example#subject-6> ;
         <rdfs:label>    "Sex"^^xsd:string ;
+        <rdfs:label>    "Gender"^^xsd:string ;
         <rdfs:comment>    "Gender of the subject"^^xsd:string ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Male ;
         <rdfs:label>    "Male"^^xsd:string ;
@@ -925,43 +936,44 @@
     <http://example.com/kb/example#subject-6>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#subject> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Human ;
         <rdfs:label>    "Subject"^^xsd:string ;
+        <rdfs:label>    "Patient"^^xsd:string ;
         <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:SubjectRole ] .
 
 }
 
 <http://example.com/kb/example#provenance-cdf34af592ab2a09fe54cf6c9076cebe> {
-    <http://example.com/kb/example#assertion-cdf34af592ab2a09fe54cf6c9076cebe>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-cdf34af592ab2a09fe54cf6c9076cebe>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt1-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt2-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-6>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-6>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-cdf34af592ab2a09fe54cf6c9076cebe> {
-    <http://example.com/kb/example#nanoPub-cdf34af592ab2a09fe54cf6c9076cebe>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-cdf34af592ab2a09fe54cf6c9076cebe>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
 }
 
@@ -1016,6 +1028,7 @@
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:BiologicalSex ;
         <sio:isAttributeOf>    <http://example.com/kb/example#subject-7> ;
         <rdfs:label>    "Sex"^^xsd:string ;
+        <rdfs:label>    "Gender"^^xsd:string ;
         <rdfs:comment>    "Gender of the subject"^^xsd:string ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Male ;
         <rdfs:label>    "Male"^^xsd:string ;
@@ -1054,43 +1067,44 @@
     <http://example.com/kb/example#subject-7>    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    <http://example.com/kb/example#subject> ;
         <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:Human ;
         <rdfs:label>    "Subject"^^xsd:string ;
+        <rdfs:label>    "Patient"^^xsd:string ;
         <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    sio:SubjectRole ] .
 
 }
 
 <http://example.com/kb/example#provenance-ddacbb04475fa3843046213345705608> {
-    <http://example.com/kb/example#assertion-ddacbb04475fa3843046213345705608>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-ddacbb04475fa3843046213345705608>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt1-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt2-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-7>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-7>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-ddacbb04475fa3843046213345705608> {
-    <http://example.com/kb/example#nanoPub-ddacbb04475fa3843046213345705608>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-05T15:05:22Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-ddacbb04475fa3843046213345705608>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-06-25T00:14:15Z"^^xsd:dateTime .
 
 }
 

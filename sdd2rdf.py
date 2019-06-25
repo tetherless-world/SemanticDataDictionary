@@ -563,7 +563,12 @@ def writeImplicitEntry(assertionString, provenanceString,publicationInfoString, 
                     #if "Subject" in v_tuple :
                     #    assertionString += " ;\n        sio:hasIdentifier <" + prefixes[kb] + v_tuple["Subject"] + "-" + v_id + ">" #should be actual ID
                     if "Label" in v_tuple :
-                        assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + v_tuple["Label"] + "\"^^xsd:string"
+                        if ',' in v_tuple["Label"] :
+                            labels = parseString(v_tuple["Label"],',')
+                            for label in labels :
+                                assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + label + "\"^^xsd:string"
+                        else :
+                            assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + v_tuple["Label"] + "\"^^xsd:string"
                     if "Time" in v_tuple :
                         if checkImplicit(v_tuple["Time"]) :
                             for vr_tuple in implicit_entry_tuples :
@@ -1040,7 +1045,12 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                         else :
                                             assertionString += " ;\n        <" + properties_tuple["Time"] + ">    " + convertImplicitToKGEntry(a_tuple["Time"], identifierString)
                                     if "Label" in a_tuple :
-                                        assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + a_tuple["Label"] + "\"^^xsd:string"
+                                        if ',' in a_tuple["Label"] :
+                                            labels = parseString(a_tuple["Label"],',')
+                                            for label in labels :
+                                                assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + label + "\"^^xsd:string"
+                                        else :
+                                            assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + a_tuple["Label"] + "\"^^xsd:string"
                                     if "Comment" in a_tuple :
                                         assertionString += " ;\n        <" + properties_tuple["Comment"] + ">    \"" + a_tuple["Comment"] + "\"^^xsd:string"
                                     if "inRelationTo" in a_tuple :

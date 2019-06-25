@@ -3,8 +3,8 @@ id,Identifier,ID for subject,Identifier for the human subject,sio:Identifier,??s
 wt1,Weight 1,Weight in kg at visit 1,Weight of the subject in kilograms at visit 1,chear:Weight,??subject,kg,,??visit1,,,,,,,wt1-{id}
 wt2,Weight 2,Weight in kg at visit 2,Weight of the subject in kilograms at visit 2,chear:Weight,??subject,kg,,??visit2,,,,,,,wt2-{id}
 age,Age,Age in years,Age of the subject in years,sio:Age,??subject,yr,,,,,,,,,age-{id}
-sex,Sex,Gender of the subject,The biological sex of the subject,sio:BiologicalSex,??subject,,,,,,,,,,sex-{id}
+sex,"Sex,Gender",Gender of the subject,The biological sex of the subject,sio:BiologicalSex,??subject,,,,,,,,,,sex-{id}
 race,Race,Race category,The categorical race of the subject,chear:Race,??subject,,,,,,,,,,race-{id}
 edu,Education level,Subject’s education level,The categorial education level of the subject,chear:EducationLevel,??subject,,,,,,,,,,edu-{id}
 smoke,Smoking Status,Smoking status,Whether or not the subject admitted to smoking,chear:SmokingStatus,??subject,,,,,,,,,,smoke-{id}
-??subject,Subject,Subject implicit entity,A subject is encoded as a human with a subject role,,,,,,sio:Human,sio:SubjectRole,,,,,subject-{id}
+??subject,"Subject,Patient",Subject implicit entity,A subject is encoded as a human with a subject role,,,,,,sio:Human,sio:SubjectRole,,,,,subject-{id}
