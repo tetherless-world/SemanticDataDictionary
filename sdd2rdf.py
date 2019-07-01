@@ -1036,7 +1036,7 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                                 for t_tuple in timeline_tuple :
                                                     if t_tuple == a_tuple["Time"] :
                                                         vTermURI = convertImplicitToKGEntry(t_tuple)
-                                                        assertionString += " ;\n        <" + properties_tuple["Time"] + ">    " + vTermURI
+                                                        assertionString += " ;\n        <" + properties_tuple["Time"] + ">    [     rdf:type    " + vTermURI + "     ] "
                                                     #if t_tuple["Column"] == a_tuple["Time"]:
                                             #if a_tuple["Time"] not in vref_list :
                                             #    vref_list.append(a_tuple["Time"])
