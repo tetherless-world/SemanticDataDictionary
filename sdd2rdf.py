@@ -390,8 +390,13 @@ def writeImplicitEntryTuples(implicit_entry_list, timeline_tuple, output_file, q
         whereString += "  " + term_implicit + " <" + rdf.type + "> " 
         implicit_tuple["Column"]=item.Column
         if (hasattr(item,"Label") and pd.notnull(item.Label)) :
-            assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + item.Label + "\"^^xsd:string" 
             implicit_tuple["Label"]=item.Label
+            if ',' in item.Label :
+                labels = parseString(item.Label,',')
+                for label in labels :
+                    assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + label + "\"^^xsd:string"
+            else :
+                assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + item.Label + "\"^^xsd:string" 
         else :
             assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + item.Column[2:] + "\"^^xsd:string"
             implicit_tuple["Label"]=item.Column[2:]
@@ -477,7 +482,12 @@ def writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_
         [explicit_entry_tuple, assertionString, whereString, swrlString] = writeClassTime(item, term_expl, explicit_entry_tuple, assertionString, whereString, swrlString)
         [explicit_entry_tuple, assertionString, whereString, swrlString] = writeClassRelation(item, term_expl, explicit_entry_tuple, assertionString, whereString, swrlString)
         if "Label" in col_headers and (pd.notnull(item.Label)) :
-            assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + item.Label + "\"^^xsd:string" 
+            if ',' in item.Label :
+                labels = parseString(item.Label,',')
+                for label in labels :
+                    assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + label + "\"^^xsd:string"
+            else :
+                assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + item.Label + "\"^^xsd:string" 
             explicit_entry_tuple["Label"]=item.Label
         if "Comment" in col_headers and (pd.notnull(item.Comment)) :
             assertionString += " ;\n        <" + properties_tuple["Comment"] + ">    \"" + item.Comment + "\"^^xsd:string"
