@@ -276,11 +276,13 @@ def writeClassTime(item, term, input_tuple, assertionString, whereString, swrlSt
             open_index = item.Time.find("{")
             close_index = item.Time.find("}")
             key = item.Time[open_index+1:close_index]
-            assertionString += " ;\n        <" + properties_tuple["Time"] + ">    " + convertImplicitToKGEntry(key)
+            assertionString += " ;\n        <" + rdfs.subClassOf + ">    \n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.onProperty + ">    <" + properties_tuple["Time"] + "> ;\n                <" + owl.someValuesFrom + ">    " + convertImplicitToKGEntry(key) + " ]"
+            #assertionString += " ;\n        <" + properties_tuple["Time"] + ">    " + convertImplicitToKGEntry(key)
             whereString += " ;\n    <" + properties_tuple["Time"] + ">    ?" +  key.lower() + "_E"
             swrlString += properties_tuple["Time"] + "(" + term + " , " + [key,key[1:] + "_V"][checkImplicit(key)] + ") ^ "
         else :
-            assertionString += " ;\n        <" + properties_tuple["Time"] + ">    " + convertImplicitToKGEntry(item.Time)
+            assertionString += " ;\n        <" + rdfs.subClassOf + ">    \n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.onProperty + ">    <" + properties_tuple["Time"] + "> ;\n                <" + owl.someValuesFrom + ">    " + convertImplicitToKGEntry(item.Time) + " ]" 
+            #assertionString += " ;\n        <" + properties_tuple["Time"] + ">    " + convertImplicitToKGEntry(item.Time)
             whereString += " ;\n    <" + properties_tuple["Time"] + ">     " + [item.Time + " ",item.Time[1:] + "_V "][checkImplicit(item.Time)]
             swrlString += properties_tuple["Time"] + "(" + term + " , " + [item.Time + " ",item.Time[1:] + "_V "][checkImplicit(item.Time)] + ") ^ "
         input_tuple["Time"]=item.Time
