@@ -442,7 +442,8 @@ def writeImplicitEntryTuples(implicit_entry_list, timeline_tuple, output_file, q
                 if 'End' in timeEntry :
                     assertionString += " ;\n        <" + properties_tuple["End"] + "> [ <" + sio.hasValue + "> " + str(timeEntry['End']) + " ]"
                 if 'Unit' in timeEntry :
-                    assertionString += " ;\n        <" + properties_tuple["Unit"] + ">    " + timeEntry['Unit']
+                    assertionString += " ;\n        <" + rdfs.subClassOf + ">    \n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.hasValue + ">    " + str(codeMapper(timeEntry['Unit'])) + " ;\n                <" + owl.onProperty + ">    <" + properties_tuple["Unit"] + "> ]" 
+                    #assertionString += " ;\n        <" + properties_tuple["Unit"] + ">    " + timeEntry['Unit']
                 if 'inRelationTo' in timeEntry :
                     assertionString += " ;\n        <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(timeEntry['inRelationTo'])
                 assertionString += " .\n"
@@ -547,7 +548,8 @@ def writeImplicitEntry(assertionString, provenanceString,publicationInfoString, 
                     if 'End' in timeEntry :
                         assertionString += " ;\n        <" + properties_tuple["End"] + "> [ <" + sio.hasValue + "> " + str(timeEntry['End']) + " ]"
                     if 'Unit' in timeEntry :
-                        assertionString += " ;\n        <" + properties_tuple["Unit"] + ">    " + timeEntry['Unit']
+                        assertionString += " ;\n        <" + rdfs.subClassOf + ">    \n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.hasValue + ">    " + str(codeMapper(timeEntry['Unit'])) + " ;\n                <" + owl.onProperty + ">    <" + properties_tuple["Unit"] + "> ]" 
+                        #assertionString += " ;\n        <" + properties_tuple["Unit"] + ">    " + timeEntry['Unit']
                     if 'inRelationTo' in timeEntry :
                         assertionString += " ;\n        <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(timeEntry['inRelationTo'], v_id)
                         if checkImplicit(timeEntry['inRelationTo']) and timeEntry['inRelationTo'] not in vref_list :
