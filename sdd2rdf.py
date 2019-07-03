@@ -436,11 +436,17 @@ def writeImplicitEntryTuples(implicit_entry_list, timeline_tuple, output_file, q
                 if 'Label' in timeEntry :
                     assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + timeEntry['Label'] + "\"^^xsd:string"
                 if 'Start' in timeEntry and 'End' in timeEntry and timeEntry['Start'] == timeEntry['End']:
-                    assertionString += " ;\n        <" + sio.hasValue + "> " + str(timeEntry['Start'])
+                    assertionString += " ;\n        <" + sio.hasValue + "> " + str(timeEntry['Start']) # rewrite this as a restriction
                 if 'Start' in timeEntry :
-                    assertionString += " ;\n        <" + properties_tuple["Start"] + "> [ <" + sio.hasValue + "> " + str(timeEntry['Start']) + " ]"
+                    if 'Unit' in timeEntry :
+                        assertionString += " ;\n        <" + rdfs.subClassOf + ">\n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.allValuesFrom + ">\n                    [ <" + rdf.type + ">    <" + owl.Class + "> ;\n                        <" + owl.intersectionOf + "> ( [ <" + rdf.type + "> <" + owl.Restriction + "> ;\n                            <" + owl.hasValue + "> " + str(timeEntry['Start']) +" ;\n                            <" + owl.onProperty + "> <" + sio.hasValue + "> ] " + str(codeMapper(timeEntry['Unit'])) + " ) ] ;\n                <" + owl.onProperty + ">    <" + properties_tuple["Start"] + "> ] "
+                    else : # update restriction that gets generated if unit is not specified
+                        assertionString += " ;\n        <" + properties_tuple["Start"] + "> [ <" + sio.hasValue + "> " + str(timeEntry['Start']) + " ]"
                 if 'End' in timeEntry :
-                    assertionString += " ;\n        <" + properties_tuple["End"] + "> [ <" + sio.hasValue + "> " + str(timeEntry['End']) + " ]"
+                    if 'Unit' in timeEntry :
+                        assertionString += " ;\n        <" + rdfs.subClassOf + ">\n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.allValuesFrom + ">\n                    [ <" + rdf.type + ">    <" + owl.Class + "> ;\n                        <" + owl.intersectionOf + "> ( [ <" + rdf.type + "> <" + owl.Restriction + "> ;\n                            <" + owl.hasValue + "> " + str(timeEntry['End']) +" ;\n                            <" + owl.onProperty + "> <" + sio.hasValue + "> ] " + str(codeMapper(timeEntry['Unit'])) + " ) ] ;\n                <" + owl.onProperty + ">    <" + properties_tuple["End"] + "> ] "
+                    else : # update restriction that gets generated if unit is not specified
+                        assertionString += " ;\n        <" + properties_tuple["End"] + "> [ <" + sio.hasValue + "> " + str(timeEntry['End']) + " ]"
                 if 'Unit' in timeEntry :
                     assertionString += " ;\n        <" + rdfs.subClassOf + ">    \n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.hasValue + ">    " + str(codeMapper(timeEntry['Unit'])) + " ;\n                <" + owl.onProperty + ">    <" + properties_tuple["Unit"] + "> ]" 
                     #assertionString += " ;\n        <" + properties_tuple["Unit"] + ">    " + timeEntry['Unit']
