@@ -258,12 +258,14 @@ def writeClassUnit(item, term, input_tuple, assertionString, whereString, swrlSt
             open_index = item.Unit.find("{")
             close_index = item.Unit.find("}")
             key = item.Unit[open_index+1:close_index]
-            assertionString += " ;\n        <" + properties_tuple["Unit"] + ">    " + convertImplicitToKGEntry(key)
+            assertionString += " ;\n        <" + rdfs.subClassOf + ">    \n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.hasValue + ">    " + convertImplicitToKGEntry(key) + " ;\n                <" + owl.onProperty + ">    <" + properties_tuple["Unit"] + "> ]" 
+            #assertionString += " ;\n        <" + properties_tuple["Unit"] + ">    " + convertImplicitToKGEntry(key)
             whereString += " ;\n    <" + properties_tuple["Unit"] + ">    ?" +  key.lower() + "_E"
             swrlString += properties_tuple["Unit"] + "(" + term + " , " + [key,key[1:] + "_V"][checkImplicit(key)] + ") ^ "
             input_tuple["Unit"] = key
         else :
-            assertionString += " ;\n        <" + properties_tuple["Unit"] + ">    " + str(codeMapper(item.Unit))
+            assertionString += " ;\n        <" + rdfs.subClassOf + ">    \n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.hasValue + ">    " + str(codeMapper(item.Unit)) + " ;\n                <" + owl.onProperty + ">    <" + properties_tuple["Unit"] + "> ]" 
+            #assertionString += " ;\n        <" + properties_tuple["Unit"] + ">    " + str(codeMapper(item.Unit))
             whereString += " ;\n    <" + properties_tuple["Unit"] + ">    " + str(codeMapper(item.Unit))
             swrlString += properties_tuple["Unit"] + "(" + term + " , " + str(codeMapper(item.Unit)) + ") ^ "
             input_tuple["Unit"] = codeMapper(item.Unit)
