@@ -1,6 +1,7 @@
 prefix owl: <http://www.w3.org/2002/07/owl#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
 prefix prov: <http://www.w3.org/ns/prov#> 
+prefix hasco: <http://hadatac.org/ont/hasco#> 
 prefix example-kb: <http://example.com/kb/example#> 
 prefix stato: <http://purl.obolibrary.org/obo/STATO_> 
 prefix uo: <http://purl.obolibrary.org/obo/UO_> 
@@ -51,6 +52,9 @@ SELECT DISTINCT ?id ?wt1 ?wt2 ?age ?sex ?race ?edu ?smoke WHERE {
 
 
   ?subject_V <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:Human  ;
-    <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:SubjectRole ].
+    <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:SubjectRole ;
+      <sio:inRelationTo>    ?study_V  ].
+
+  ?study_V <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> hasco:Study .
 
 }

@@ -27,6 +27,7 @@ pv = rdflib.Namespace("http://purl.org/net/provenance/ns#")
 skos = rdflib.Namespace("http://www.w3.org/2008/05/skos#")
 rdfs = rdflib.RDFS
 rdf = rdflib.RDF
+owl = rdflib.OWL
 xsd = rdflib.XSD
 
 def parseString(input_string, delim) :
@@ -298,7 +299,8 @@ def writeClassRelation(item, term, input_tuple, assertionString, whereString, sw
             input_tuple["Relation"]=item.Relation
         # If there is a value in the Role column but not the Relation column ...
         elif (pd.isnull(item.Relation)) and (pd.notnull(item.Role)) :
-            assertionString += " ;\n        <" + properties_tuple["Role"] + ">    [ <" + rdf.type + ">    " + item.Role + " ;\n            <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(item.inRelationTo) + " ]"
+            assertionString += " ;\n        <" + rdfs.subClassOf + ">    \n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.onProperty + ">    <" + properties_tuple["Role"] + "> ;\n                <" + owl.someValuesFrom + ">    [ <" + rdf.type + ">    <" + owl.Class + "> ;\n                    <" + owl.intersectionOf + "> ( \n                        [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                        <" + owl.allValuesFrom + "> " + [item.inRelationTo,convertImplicitToKGEntry(item.inRelationTo)][checkImplicit(item.inRelationTo)] + " ;\n                        <" + owl.onProperty + "> <" + properties_tuple["inRelationTo"] + "> ] <" + item.Role + "> ) ]    ]" 
+            #assertionString += " ;\n        <" + properties_tuple["Role"] + ">    [ <" + rdf.type + ">    " + item.Role + " ;\n            <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(item.inRelationTo) + " ]"
             whereString += " ;\n    <" + properties_tuple["Role"] + ">    [ <" + rdf.type + "> " + item.Role + " ;\n      <" + properties_tuple["inRelationTo"] + ">    " + [item.inRelationTo + " ",item.inRelationTo[1:] + "_V "][checkImplicit(item.inRelationTo)] + " ]"
             swrlString += "" # add appropriate swrl term
             input_tuple["Role"]=item.Role
@@ -306,7 +308,8 @@ def writeClassRelation(item, term, input_tuple, assertionString, whereString, sw
         elif (pd.notnull(item.Relation)) and (pd.notnull(item.Role)) :
             input_tuple["Relation"]=item.Relation
             input_tuple["Role"]=item.Role
-            assertionString += " ;\n        <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(item.inRelationTo)
+            assertionString += " ;\n        <" + rdfs.subClassOf + ">    \n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.onProperty + ">    <" + properties_tuple["Role"] + "> ;\n                <" + owl.someValuesFrom + ">    [ <" + rdf.type + ">    <" + owl.Class + "> ;\n                    <" + owl.intersectionOf + "> ( \n                        [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                        <" + owl.allValuesFrom + "> " + [item.inRelationTo,convertImplicitToKGEntry(item.inRelationTo)][checkImplicit(item.inRelationTo)] + " ;\n                        <" + owl.onProperty + "> <" + item.Relation + "> ] <" + item.Role + "> ) ]    ]" 
+            #assertionString += " ;\n        <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(item.inRelationTo)
             if(isSchemaVar(item.inRelationTo)):
                 whereString += " ;\n    <" + properties_tuple["inRelationTo"] + ">    ?" + item.inRelationTo.lower() + "_E "
                 swrlString += "" # add appropriate swrl term
@@ -323,7 +326,8 @@ def writeClassRelation(item, term, input_tuple, assertionString, whereString, sw
                 swrlString += properties_tuple["inRelationTo"] + "(" + term + " , " + [item.inRelationTo,item.inRelationTo[1:] + "_V"][checkImplicit(item.inRelationTo)] + ") ^ "
     elif (pd.notnull(item.Role)) : # if there is a role, but no in relation to
         input_tuple["Role"]=item.Role
-        assertionString += " ;\n        <" + properties_tuple["Role"] + ">    [ <" + rdf.type + ">    " + item.Role + " ]"
+        assertionString += " ;\n        <" + rdfs.subClassOf + ">    \n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.onProperty + ">    <" + properties_tuple["Role"] + "> ;\n                <" + owl.someValuesFrom + ">    [ <" + rdf.type + ">    <" + item.Role + ">    ]    ]" 
+        #assertionString += " ;\n        <" + properties_tuple["Role"] + ">    [ <" + rdf.type + ">    " + item.Role + " ]"
         whereString += " ;\n    <" + properties_tuple["Role"] + ">    [ <" + rdf.type + "> " + item.Role + " ]"
         swrlString += ""  # add appropriate swrl term
     return [input_tuple, assertionString, whereString, swrlString]
