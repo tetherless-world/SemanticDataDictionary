@@ -240,11 +240,13 @@ def writeClassAttributeOf(item, term, input_tuple, assertionString, whereString,
             open_index = item.attributeOf.find("{")
             close_index = item.attributeOf.find("}")
             key = item.attributeOf[open_index+1:close_index]
-            assertionString += " ;\n        <" + properties_tuple["attributeOf"] + ">    " + convertImplicitToKGEntry(key)
+            assertionString += " ;\n        <" + rdfs.subClassOf + ">    \n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.allValuesFrom + ">    " + convertImplicitToKGEntry(key) + " ;\n                <" + owl.onProperty + ">    <" + properties_tuple["attributeOf"] + "> ]" 
+            #assertionString += " ;\n        <" + properties_tuple["attributeOf"] + ">    " + convertImplicitToKGEntry(key)
             whereString += " ;\n    <" + properties_tuple["attributeOf"] + ">    ?" +  key.lower() + "_E"
             swrlString += properties_tuple["attributeOf"] + "(" + term + " , " + [key,key[1:] + "_V"][checkImplicit(key)] + ") ^ "
         else :
-            assertionString += " ;\n        <" + properties_tuple["attributeOf"] + ">    " + convertImplicitToKGEntry(item.attributeOf)
+            assertionString += " ;\n        <" + rdfs.subClassOf + ">    \n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.allValuesFrom + ">    " + convertImplicitToKGEntry(item.attributeOf) + " ;\n                <" + owl.onProperty + ">    <" + properties_tuple["attributeOf"] + "> ]" 
+            #assertionString += " ;\n        <" + properties_tuple["attributeOf"] + ">    " + convertImplicitToKGEntry(item.attributeOf)
             whereString += " ;\n    <" + properties_tuple["attributeOf"] + ">    " +  [item.attributeOf + " ",item.attributeOf[1:] + "_V "][checkImplicit(item.attributeOf)]
             swrlString += properties_tuple["attributeOf"] + "(" + term + " , " + [item.attributeOf,item.attributeOf[1:] + "_V"][checkImplicit(item.attributeOf)] + ") ^ "
         input_tuple["isAttributeOf"]=item.attributeOf
