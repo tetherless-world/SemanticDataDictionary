@@ -323,7 +323,8 @@ def writeClassRelation(item, term, input_tuple, assertionString, whereString, sw
                 whereString += " ;\n    <" + properties_tuple["inRelationTo"] + ">    " + [item.inRelationTo + " ",item.inRelationTo[1:] + "_V "][checkImplicit(item.inRelationTo)]
                 swrlString += "" # add appropriate swrl term
         elif (pd.isnull(item.Relation)) and (pd.isnull(item.Role)) :
-            assertionString += " ;\n        <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(item.inRelationTo)
+            assertionString += " ;\n        <" + rdfs.subClassOf + ">    \n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.allValuesFrom + ">    " + convertImplicitToKGEntry(item.inRelationTo) + " ;\n                <" + owl.onProperty + ">    <" + properties_tuple["inRelationTo"] + "> ]" 
+            #assertionString += " ;\n        <" + properties_tuple["inRelationTo"] + ">    " + convertImplicitToKGEntry(item.inRelationTo)
             if(isSchemaVar(item.inRelationTo)):
                 whereString += " ;\n    <" + properties_tuple["inRelationTo"] + ">    ?" + item.inRelationTo.lower() + "_E "
                 swrlString += properties_tuple["inRelationTo"] + "(" + term + " , " + "?" + item.inRelationTo.lower() + "_E) ^ "
@@ -340,7 +341,8 @@ def writeClassRelation(item, term, input_tuple, assertionString, whereString, sw
 
 def writeClassWasDerivedFrom(item, term, input_tuple, provenanceString, whereString, swrlString) :
     if pd.notnull(item.wasDerivedFrom) :
-        provenanceString += " ;\n        <" + properties_tuple["wasDerivedFrom"] + ">    " + convertImplicitToKGEntry(item.wasDerivedFrom)
+        provenanceString += " ;\n        <" + rdfs.subClassOf + ">    \n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.someValuesFrom + ">    " + convertImplicitToKGEntry(item.wasDerivedFrom) + " ;\n                <" + owl.onProperty + ">    <" + properties_tuple["wasDerivedFrom"] + "> ]" 
+        #provenanceString += " ;\n        <" + properties_tuple["wasDerivedFrom"] + ">    " + convertImplicitToKGEntry(item.wasDerivedFrom)
         input_tuple["wasDerivedFrom"]=item.wasDerivedFrom
         if(isSchemaVar(item.wasDerivedFrom)):
             whereString += " ;\n    <" + properties_tuple["wasDerivedFrom"] + ">    ?" + item.wasDerivedFrom.lower() + "_E "
@@ -350,7 +352,8 @@ def writeClassWasDerivedFrom(item, term, input_tuple, provenanceString, whereStr
             open_index = item.wasDerivedFrom.find("{")
             close_index = item.wasDerivedFrom.find("}")
             key = item.wasDerivedFrom[open_index+1:close_index]
-            assertionString += " ;\n        <" + properties_tuple["wasDerivedFrom"] + ">    " + convertImplicitToKGEntry(key)
+            provenanceString += " ;\n        <" + rdfs.subClassOf + ">    \n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.someValuesFrom + ">    " + convertImplicitToKGEntry(key) + " ;\n                <" + owl.onProperty + ">    <" + properties_tuple["wasDerivedFrom"] + "> ]" 
+            #provenanceString += " ;\n        <" + properties_tuple["wasDerivedFrom"] + ">    " + convertImplicitToKGEntry(key)
             whereString += " ;\n    <" + properties_tuple["wasDerivedFrom"] + ">    ?" +  key.lower() + "_E"
             swrlString += properties_tuple["wasDerivedFrom"] + "(" + term + " , " + [key,key[1:] + "_V"][checkImplicit(key)] + ") ^ "
         else :
