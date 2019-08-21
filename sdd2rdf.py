@@ -439,17 +439,17 @@ def writeImplicitEntryTuples(implicit_entry_list, timeline_tuple, output_file, q
                 if 'Label' in timeEntry :
                     assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + timeEntry['Label'] + "\"^^xsd:string"
                 if 'Start' in timeEntry and 'End' in timeEntry and timeEntry['Start'] == timeEntry['End']:
-                    assertionString += " ;\n        <" + sio.hasValue + "> " + str(timeEntry['Start']) # rewrite this as a restriction
+                    assertionString += " ;\n        <" + properties_tuple["Value"] + "> " + str(timeEntry['Start']) # rewrite this as a restriction
                 if 'Start' in timeEntry :
                     if 'Unit' in timeEntry :
-                        assertionString += " ;\n        <" + rdfs.subClassOf + ">\n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.allValuesFrom + ">\n                    [ <" + rdf.type + ">    <" + owl.Class + "> ;\n                        <" + owl.intersectionOf + "> ( [ <" + rdf.type + "> <" + owl.Restriction + "> ;\n                            <" + owl.hasValue + "> " + str(timeEntry['Start']) +" ;\n                            <" + owl.onProperty + "> <" + sio.hasValue + "> ] " + str(codeMapper(timeEntry['Unit'])) + " ) ] ;\n                <" + owl.onProperty + ">    <" + properties_tuple["Start"] + "> ] "
+                        assertionString += " ;\n        <" + rdfs.subClassOf + ">\n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.allValuesFrom + ">\n                    [ <" + rdf.type + ">    <" + owl.Class + "> ;\n                        <" + owl.intersectionOf + "> ( [ <" + rdf.type + "> <" + owl.Restriction + "> ;\n                            <" + owl.hasValue + "> " + str(timeEntry['Start']) +" ;\n                            <" + owl.onProperty + "> <" + properties_tuple["Value"] + "> ] " + str(codeMapper(timeEntry['Unit'])) + " ) ] ;\n                <" + owl.onProperty + ">    <" + properties_tuple["Start"] + "> ] "
                     else : # update restriction that gets generated if unit is not specified
-                        assertionString += " ;\n        <" + properties_tuple["Start"] + "> [ <" + sio.hasValue + "> " + str(timeEntry['Start']) + " ]"
+                        assertionString += " ;\n        <" + properties_tuple["Start"] + "> [ <" + properties_tuple["Value"] + "> " + str(timeEntry['Start']) + " ]"
                 if 'End' in timeEntry :
                     if 'Unit' in timeEntry :
-                        assertionString += " ;\n        <" + rdfs.subClassOf + ">\n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.allValuesFrom + ">\n                    [ <" + rdf.type + ">    <" + owl.Class + "> ;\n                        <" + owl.intersectionOf + "> ( [ <" + rdf.type + "> <" + owl.Restriction + "> ;\n                            <" + owl.hasValue + "> " + str(timeEntry['End']) +" ;\n                            <" + owl.onProperty + "> <" + sio.hasValue + "> ] " + str(codeMapper(timeEntry['Unit'])) + " ) ] ;\n                <" + owl.onProperty + ">    <" + properties_tuple["End"] + "> ] "
+                        assertionString += " ;\n        <" + rdfs.subClassOf + ">\n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.allValuesFrom + ">\n                    [ <" + rdf.type + ">    <" + owl.Class + "> ;\n                        <" + owl.intersectionOf + "> ( [ <" + rdf.type + "> <" + owl.Restriction + "> ;\n                            <" + owl.hasValue + "> " + str(timeEntry['End']) +" ;\n                            <" + owl.onProperty + "> <" + properties_tuple["Value"] + "> ] " + str(codeMapper(timeEntry['Unit'])) + " ) ] ;\n                <" + owl.onProperty + ">    <" + properties_tuple["End"] + "> ] "
                     else : # update restriction that gets generated if unit is not specified
-                        assertionString += " ;\n        <" + properties_tuple["End"] + "> [ <" + sio.hasValue + "> " + str(timeEntry['End']) + " ]"
+                        assertionString += " ;\n        <" + properties_tuple["End"] + "> [ <" + properties_tuple["Value"] + "> " + str(timeEntry['End']) + " ]"
                 if 'Unit' in timeEntry :
                     assertionString += " ;\n        <" + rdfs.subClassOf + ">    \n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.hasValue + ">    " + str(codeMapper(timeEntry['Unit'])) + " ;\n                <" + owl.onProperty + ">    <" + properties_tuple["Unit"] + "> ]" 
                     #assertionString += " ;\n        <" + properties_tuple["Unit"] + ">    " + timeEntry['Unit']
@@ -519,7 +519,7 @@ def writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_
         [explicit_entry_tuple, provenanceString, whereString, swrlString] = writeClassWasGeneratedBy(item, term_expl, explicit_entry_tuple, provenanceString, whereString, swrlString)
         [explicit_entry_tuple, provenanceString, whereString, swrlString] = writeClassWasDerivedFrom(item, term_expl, explicit_entry_tuple, provenanceString, whereString, swrlString)
         provenanceString += " .\n"
-        whereString += " ;\n    <" + sio.hasValue + "> ?" + term.lower() + " .\n\n"
+        whereString += " ;\n    <" + properties_tuple["Value"] + "> ?" + term.lower() + " .\n\n"
         if "hasPosition" in col_headers and pd.notnull(item.hasPosition) :
             publicationInfoString += "\n    <" + prefixes[kb] + term + ">    hasco:hasPosition    \"" + str(item.hasPosition) + "\"^^xsd:integer ."
             explicit_entry_tuple["hasPosition"]=item.hasPosition
@@ -551,11 +551,11 @@ def writeImplicitEntry(assertionString, provenanceString,publicationInfoString, 
                     if 'Label' in timeEntry :
                         assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + timeEntry['Label'] + "\"^^xsd:string"
                     if 'Start' in timeEntry and 'End' in timeEntry and timeEntry['Start'] == timeEntry['End']:
-                        assertionString += " ;\n        <" + sio.hasValue + "> " + str(timeEntry['Start'])
+                        assertionString += " ;\n        <" + properties_tuple["Value"] + "> " + str(timeEntry['Start'])
                     if 'Start' in timeEntry :
-                        assertionString += " ;\n        <" + properties_tuple["Start"] + "> [ <" + sio.hasValue + "> " + str(timeEntry['Start']) + " ]"
+                        assertionString += " ;\n        <" + properties_tuple["Start"] + "> [ <" + properties_tuple["Value"] + "> " + str(timeEntry['Start']) + " ]"
                     if 'End' in timeEntry :
-                        assertionString += " ;\n        <" + properties_tuple["End"] + "> [ <" + sio.hasValue + "> " + str(timeEntry['End']) + " ]"
+                        assertionString += " ;\n        <" + properties_tuple["End"] + "> [ <" + properties_tuple["Value"] + "> " + str(timeEntry['End']) + " ]"
                     if 'Unit' in timeEntry :
                         assertionString += " ;\n        <" + rdfs.subClassOf + ">    \n            [ <" + rdf.type + ">    <" + owl.Restriction + "> ;\n                <" + owl.hasValue + ">    " + str(codeMapper(timeEntry['Unit'])) + " ;\n                <" + owl.onProperty + ">    <" + properties_tuple["Unit"] + "> ]" 
                         #assertionString += " ;\n        <" + properties_tuple["Unit"] + ">    " + timeEntry['Unit']
@@ -1021,16 +1021,16 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                         if ',' in a_tuple["Attribute"] :
                                             attributes = parseString(a_tuple["Attribute"],',')
                                             for attribute in attributes :
-                                                assertionString += " ;\n        <" + rdf.type + ">    " + attribute
+                                                assertionString += " ;\n        <" + properties_tuple["Attribute"] + ">    " + attribute
                                         else :
-                                            assertionString += " ;\n        <" + rdf.type + ">    " + a_tuple["Attribute"]
+                                            assertionString += " ;\n        <" + properties_tuple["Attribute"] + ">    " + a_tuple["Attribute"]
                                     if "Entity" in a_tuple :
                                         if ',' in a_tuple["Entity"] :
                                             entities = parseString(a_tuple["Entity"],',')
                                             for entity in entities :
-                                                assertionString += " ;\n        <" + rdf.type + ">    " + entity
+                                                assertionString += " ;\n        <" + properties_tuple["Entity"] + ">    " + entity
                                         else :
-                                            assertionString += " ;\n        <" + rdf.type + ">    " + a_tuple["Entity"]
+                                            assertionString += " ;\n        <" + properties_tuple["Entity"] + ">    " + a_tuple["Entity"]
                                     if "isAttributeOf" in a_tuple :
                                         if checkImplicit(a_tuple["isAttributeOf"]) :
                                             v_id = assignVID(implicit_entry_tuples,timeline_tuple,a_tuple,"isAttributeOf", npubIdentifier)
@@ -1152,11 +1152,11 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                             if str(row[col_headers.index(a_tuple["Column"])+1]) == "nan" :
                                                 pass
                                             elif str(row[col_headers.index(a_tuple["Column"])+1]).isdigit() :
-                                                assertionString += " ;\n        <" + sio.hasValue + ">    \"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:integer"
+                                                assertionString += " ;\n        <" + properties_tuple["Value"] + ">    \"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:integer"
                                             elif isfloat(str(row[col_headers.index(a_tuple["Column"])+1])) :
-                                                assertionString += " ;\n        <" + sio.hasValue + ">    \"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:float"
+                                                assertionString += " ;\n        <" + properties_tuple["Value"] + ">    \"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:float"
                                             else :
-                                                assertionString += " ;\n        <" + sio.hasValue + ">    \"" + str(row[col_headers.index(a_tuple["Column"])+1]).replace("\"","'") + "\"^^xsd:string"
+                                                assertionString += " ;\n        <" + properties_tuple["Value"] + ">    \"" + str(row[col_headers.index(a_tuple["Column"])+1]).replace("\"","'") + "\"^^xsd:string"
                                         except Exception as e :
                                             print("Warning: unable to write value to assertion string:", row[col_headers.index(a_tuple["Column"])+1] + ": " + str(e))
                                     assertionString += " .\n"

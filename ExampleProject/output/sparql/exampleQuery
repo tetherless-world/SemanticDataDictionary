@@ -14,46 +14,46 @@ prefix sio: <http://semanticscience.org/resource/>
 
 SELECT DISTINCT ?id ?wt1 ?wt2 ?age ?sex ?race ?edu ?smoke WHERE {
   ?id_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:Identifier  ;
-    <sio:isAttributeOf>    ?subject_V  ;
+    <http://semanticscience.org/resource/isAttributeOf>    ?subject_V  ;
     <http://semanticscience.org/resource/hasValue> ?id .
 
   ?wt1_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> chear:Weight  ;
-    <sio:isAttributeOf>    ?subject_V  ;
-    <sio:hasUnit>    obo:UO_0000009 ;
-    <sio:existsAt>     ?visit1_V  ;
+    <http://semanticscience.org/resource/isAttributeOf>    ?subject_V  ;
+    <http://semanticscience.org/resource/hasUnit>    obo:UO_0000009 ;
+    <http://semanticscience.org/resource/existsAt>     ?visit1_V  ;
     <http://semanticscience.org/resource/hasValue> ?wt1 .
 
   ?wt2_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> chear:Weight  ;
-    <sio:isAttributeOf>    ?subject_V  ;
-    <sio:hasUnit>    obo:UO_0000009 ;
-    <sio:existsAt>     ?visit2_V  ;
+    <http://semanticscience.org/resource/isAttributeOf>    ?subject_V  ;
+    <http://semanticscience.org/resource/hasUnit>    obo:UO_0000009 ;
+    <http://semanticscience.org/resource/existsAt>     ?visit2_V  ;
     <http://semanticscience.org/resource/hasValue> ?wt2 .
 
   ?age_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:Age  ;
-    <sio:isAttributeOf>    ?subject_V  ;
-    <sio:hasUnit>    obo:UO_0000036 ;
+    <http://semanticscience.org/resource/isAttributeOf>    ?subject_V  ;
+    <http://semanticscience.org/resource/hasUnit>    obo:UO_0000036 ;
     <http://semanticscience.org/resource/hasValue> ?age .
 
   ?sex_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:BiologicalSex  ;
-    <sio:isAttributeOf>    ?subject_V  ;
+    <http://semanticscience.org/resource/isAttributeOf>    ?subject_V  ;
     <http://semanticscience.org/resource/hasValue> ?sex .
 
   ?race_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> chear:Race  ;
-    <sio:isAttributeOf>    ?subject_V  ;
+    <http://semanticscience.org/resource/isAttributeOf>    ?subject_V  ;
     <http://semanticscience.org/resource/hasValue> ?race .
 
   ?edu_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> chear:EducationLevel  ;
-    <sio:isAttributeOf>    ?subject_V  ;
+    <http://semanticscience.org/resource/isAttributeOf>    ?subject_V  ;
     <http://semanticscience.org/resource/hasValue> ?edu .
 
   ?smoke_E <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> chear:SmokingStatus  ;
-    <sio:isAttributeOf>    ?subject_V  ;
+    <http://semanticscience.org/resource/isAttributeOf>    ?subject_V  ;
     <http://semanticscience.org/resource/hasValue> ?smoke .
 
 
   ?subject_V <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:Human  ;
-    <sio:hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:SubjectRole ;
-      <sio:inRelationTo>    ?study_V  ].
+    <http://semanticscience.org/resource/hasRole>    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> sio:SubjectRole ;
+      <http://semanticscience.org/resource/inRelationTo>    ?study_V  ].
 
   ?study_V <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> hasco:Study .
 
