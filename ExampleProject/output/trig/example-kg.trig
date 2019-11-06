@@ -1,4 +1,5 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2008/05/skos#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix hasco: <http://hadatac.org/ont/hasco#> .
@@ -36,8 +37,8 @@
 }
 
 <http://example.com/kb/example#provenance-collection_metadata-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#assertion-dataset_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
-    <http://example.com/kb/example#collection-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime ;
+    <http://example.com/kb/example#assertion-dataset_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
+    <http://example.com/kb/example#collection-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime ;
         <http://purl.org/dc/terms/created>    "2019-03-03"^^xsd:date ;
         <http://purl.org/dc/terms/issued>    "2019-03-03"^^xsd:date ;
         <http://purl.org/pav/version>    "1.0"^^xsd:string ;
@@ -46,7 +47,7 @@
 }
 
 <http://example.com/kb/example#pubInfo-collection_metadata-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#nanoPub-collection_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-collection_metadata-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
 }
 
@@ -154,36 +155,36 @@
 }
 
 <http://example.com/kb/example#provenance-explicit_entry-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#assertion-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-explicit_entry-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#nanoPub-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-explicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 }
 
 <http://example.com/kb/example#head-implicit_entry-398a8396537a5225efcf4da4ddfd162c> { 
@@ -264,22 +265,22 @@
 }
 
 <http://example.com/kb/example#provenance-implicit_entry-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#assertion-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#subject>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#study>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#visit1>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#visit1>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#visit2>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#visit2>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-implicit_entry-398a8396537a5225efcf4da4ddfd162c> {
-    <http://example.com/kb/example#nanoPub-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-implicit_entry-398a8396537a5225efcf4da4ddfd162c>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 }
 
 <http://example.com/kb/example#head-04bca535b8580b8a8090285761507559> {
@@ -379,38 +380,38 @@
 }
 
 <http://example.com/kb/example#provenance-04bca535b8580b8a8090285761507559> {
-    <http://example.com/kb/example#assertion-04bca535b8580b8a8090285761507559>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-04bca535b8580b8a8090285761507559>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt1-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt2-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-1>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-1>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-1>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-04bca535b8580b8a8090285761507559> {
-    <http://example.com/kb/example#nanoPub-04bca535b8580b8a8090285761507559>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-04bca535b8580b8a8090285761507559>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
 }
 
@@ -511,38 +512,38 @@
 }
 
 <http://example.com/kb/example#provenance-2dd6ebdb4d1f65a71d862f366465739b> {
-    <http://example.com/kb/example#assertion-2dd6ebdb4d1f65a71d862f366465739b>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-2dd6ebdb4d1f65a71d862f366465739b>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt1-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt2-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-2>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-2>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-2>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-2dd6ebdb4d1f65a71d862f366465739b> {
-    <http://example.com/kb/example#nanoPub-2dd6ebdb4d1f65a71d862f366465739b>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-2dd6ebdb4d1f65a71d862f366465739b>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
 }
 
@@ -643,38 +644,38 @@
 }
 
 <http://example.com/kb/example#provenance-a72da31ed7880fbe9e3487bdec4bc362> {
-    <http://example.com/kb/example#assertion-a72da31ed7880fbe9e3487bdec4bc362>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-a72da31ed7880fbe9e3487bdec4bc362>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt1-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt2-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-3>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-3>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-3>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-a72da31ed7880fbe9e3487bdec4bc362> {
-    <http://example.com/kb/example#nanoPub-a72da31ed7880fbe9e3487bdec4bc362>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-a72da31ed7880fbe9e3487bdec4bc362>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
 }
 
@@ -775,38 +776,38 @@
 }
 
 <http://example.com/kb/example#provenance-b772bf9afb557a16a3ec61fb37a6c53a> {
-    <http://example.com/kb/example#assertion-b772bf9afb557a16a3ec61fb37a6c53a>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-b772bf9afb557a16a3ec61fb37a6c53a>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt1-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt2-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-4>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-4>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-4>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-b772bf9afb557a16a3ec61fb37a6c53a> {
-    <http://example.com/kb/example#nanoPub-b772bf9afb557a16a3ec61fb37a6c53a>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-b772bf9afb557a16a3ec61fb37a6c53a>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
 }
 
@@ -907,38 +908,38 @@
 }
 
 <http://example.com/kb/example#provenance-f0fa3b0bd5971b8f1fa23a935f016e9d> {
-    <http://example.com/kb/example#assertion-f0fa3b0bd5971b8f1fa23a935f016e9d>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-f0fa3b0bd5971b8f1fa23a935f016e9d>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt1-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt2-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-5>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-5>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-5>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-f0fa3b0bd5971b8f1fa23a935f016e9d> {
-    <http://example.com/kb/example#nanoPub-f0fa3b0bd5971b8f1fa23a935f016e9d>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-f0fa3b0bd5971b8f1fa23a935f016e9d>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
 }
 
@@ -1039,38 +1040,38 @@
 }
 
 <http://example.com/kb/example#provenance-cdf34af592ab2a09fe54cf6c9076cebe> {
-    <http://example.com/kb/example#assertion-cdf34af592ab2a09fe54cf6c9076cebe>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:50Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-cdf34af592ab2a09fe54cf6c9076cebe>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt1-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt2-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-6>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:49Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-6>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:50Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-6>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-cdf34af592ab2a09fe54cf6c9076cebe> {
-    <http://example.com/kb/example#nanoPub-cdf34af592ab2a09fe54cf6c9076cebe>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:50Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-cdf34af592ab2a09fe54cf6c9076cebe>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
 }
 
@@ -1171,38 +1172,38 @@
 }
 
 <http://example.com/kb/example#provenance-ddacbb04475fa3843046213345705608> {
-    <http://example.com/kb/example#assertion-ddacbb04475fa3843046213345705608>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:50Z"^^xsd:dateTime .
+    <http://example.com/kb/example#assertion-ddacbb04475fa3843046213345705608>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#id-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:50Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt1-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:50Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#wt2-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:50Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#age-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:50Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#sex-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:50Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#race-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:50Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#edu-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:50Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
     <http://example.com/kb/example#smoke-7>
-        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:50Z"^^xsd:dateTime .
+        <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
-    <http://example.com/kb/example#subject-7>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:50Z"^^xsd:dateTime .
+    <http://example.com/kb/example#subject-7>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
 }
 
 <http://example.com/kb/example#pubInfo-ddacbb04475fa3843046213345705608> {
-    <http://example.com/kb/example#nanoPub-ddacbb04475fa3843046213345705608>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-08-21T19:02:50Z"^^xsd:dateTime .
+    <http://example.com/kb/example#nanoPub-ddacbb04475fa3843046213345705608>    <http://www.w3.org/ns/prov#generatedAtTime>    "2019-11-06T20:17:46Z"^^xsd:dateTime .
 
 }
 

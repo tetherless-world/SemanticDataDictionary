@@ -846,7 +846,14 @@ def processProperties():
             return properties_tuple
         for row in properties_file.itertuples() :
             if(hasattr(row,"Property") and pd.notnull(row.Property)):
-                properties_tuple[row.Column]=row.Property
+                if(("http://" in row.Property) or ("https://" in row.Property)) :
+                    properties_tuple[row.Column]=row.Property
+                elif(":" in row.Property) :
+                    terms = row.Property.split(":")
+                    properties_tuple[row.Column]=rdflib.term.URIRef(prefixes[terms[0]]+terms[1])
+                elif("." in row.Property) :
+                    terms = row.Property.split(".")
+                    properties_tuple[row.Column]=rdflib.term.URIRef(prefixes[terms[0]]+terms[1])
     return properties_tuple
 
 def processTimeline(timeline_fn):
@@ -1273,6 +1280,9 @@ def main():
     swrl_file = open(swrl_fn,"w")
     global prefixes
     prefixes = processPrefixes(output_file,query_file)
+
+    global properties_tuple
+    properties_tuple = processProperties()
     global cmap_fn
     [dm_fn, cb_fn, cmap_fn, timeline_fn] = processInfosheet(output_file, dm_fn, cb_fn, cmap_fn, timeline_fn)
     
@@ -1295,6 +1305,7 @@ def main():
 # Global Scope
 # Used to prevent the creation of multiple URIs for hasco:Study, will need to address this in the future
 studyRef = None
+properties_tuple = {}
 prefixes = {}
 
 # Need to implement input flags rather than ordering
@@ -1321,8 +1332,6 @@ if 'code_mappings' in config['Source Files'] :
     cmap_fn = config['Source Files']['code_mappings']
 else :
     cmap_fn = None
-
-properties_tuple = processProperties()
 
 [unit_code_list,unit_uri_list,unit_label_list] = processCodeMappings(cmap_fn) #must be global at the moment for code mapper to work..
 
