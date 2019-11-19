@@ -512,6 +512,8 @@ def writeExplicitEntryTuples(explicit_entry_list, output_file, query_file, swrl_
         if "Comment" in col_headers and (pd.notnull(item.Comment)) :
             assertionString += " ;\n        <" + properties_tuple["Comment"] + ">    \"" + item.Comment + "\"^^xsd:string"
             explicit_entry_tuple["Comment"]=item.Comment
+        if "Format" in col_headers and (pd.notnull(item.Format)) :
+            explicit_entry_tuple["Format"]=item.Format
         assertionString += " .\n" 
         
         provenanceString += "\n    <" + prefixes[kb] + term + ">"
@@ -946,6 +948,7 @@ def processCodebook(cb_fn):
     return cb_tuple
 
 def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_tuple, explicit_entry_tuples, implicit_entry_tuples):
+    xsd_datatype_list = ["anyURI", "base64Binary", "boolean", "date", "dateTime", "decimal", "double", "duration", "float", "hexBinary", "gDay", "gMonth", "gMonthDay", "gYear", "gYearMonth", "NOTATION", "QName", "string", "time" ]
     if data_fn != None :
         try :
             data_file = pd.read_csv(data_fn, dtype=object)
@@ -1158,10 +1161,21 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                         try :
                                             if str(row[col_headers.index(a_tuple["Column"])+1]) == "nan" :
                                                 pass
+                                            # Check if Format was populated in the DM row of the current data point
+                                            if ("Format" in a_tuple) and (a_tuple['Format'] is not "") :
+                                                # Check if an xsd prefix is included in the populated Format cell
+                                                if("xsd:" in a_tuple['Format']):
+                                                    assertionString += " ;\n        <" + properties_tuple["Value"] + ">    \"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^" + a_tuple['Format']
+                                                # If the Format cell is populated, but the xsd prefix isn't specified, do a string match over the set of primitive xsd types
+                                                elif a_tuple['Format'] in xsd_datatype_list :
+                                                    assertionString += " ;\n        <" + properties_tuple["Value"] + ">    \"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:" + a_tuple['Format']
+                                            # If the Format cell isn't populated, check is the data value is an integer
                                             elif str(row[col_headers.index(a_tuple["Column"])+1]).isdigit() :
                                                 assertionString += " ;\n        <" + properties_tuple["Value"] + ">    \"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:integer"
+                                            # Next check if it is a float
                                             elif isfloat(str(row[col_headers.index(a_tuple["Column"])+1])) :
                                                 assertionString += " ;\n        <" + properties_tuple["Value"] + ">    \"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^xsd:float"
+                                            # By default, assign 'xsd:string' as the datatype
                                             else :
                                                 assertionString += " ;\n        <" + properties_tuple["Value"] + ">    \"" + str(row[col_headers.index(a_tuple["Column"])+1]).replace("\"","'") + "\"^^xsd:string"
                                         except Exception as e :
