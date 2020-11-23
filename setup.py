@@ -24,10 +24,14 @@ setup(
         'future',
         'rdflib',
         'rdflib-jsonld',
+        'setlr',
+        'jinja2',
+        'slugify',
         'pandas>=0.23.0',
     ],
     entry_points = {
         'console_scripts': ['sdd2rdf=sdd2rdf:main'],
+        'console_scripts': ['sdd2setl=sdd2rdf:sdd2setl_main'],
     },
     classifiers=[
         "Development Status :: 5 - Production/Stable",

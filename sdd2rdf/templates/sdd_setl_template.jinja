@@ -1,0 +1,126 @@
+@prefix rdf:           <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:          <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:           <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:           <http://www.w3.org/2002/07/owl#> .
+@prefix skos:          <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov:          <http://www.w3.org/ns/prov#> .
+@prefix sio:           <http://semanticscience.org/resource/> .
+@prefix dcat:          <http://www.w3.org/ns/dcat#> .
+@prefix dcterms:       <http://purl.org/dc/terms/> .
+@prefix void:          <http://rdfs.org/ns/void#> .
+@prefix foaf:          <http://xmlns.com/foaf/0.1/> .
+@prefix ov:            <http://open.vocab.org/terms/> .
+@prefix setl:          <http://purl.org/twc/vocab/setl/> .
+@prefix csvw:          <http://www.w3.org/ns/csvw#> .
+@prefix pv:            <http://purl.org/net/provenance/ns#>.
+@prefix bibo:          <http://purl.org/ontology/bibo/>.
+
+@prefix :              <{{sdd_prefix}}> .
+
+:data a <{{data_type}}>, setl:Table;
+  prov:wasGeneratedBy [
+    a setl:Extract;
+    prov:used <{{data}}>;
+  ].
+
+:codebook a owl:Class, prov:SoftwareAgent, setl:PythonScript;
+    rdfs:subClassOf prov:Activity;
+    prov:value '''
+result = {{sdd.codebook | to_json}}
+'''.
+
+{{dataset}} a void:Dataset;
+  prov:wasGeneratedBy [
+    a setl:Transform, setl:JSLDT;
+    prov:used :data;
+    prov:qualifiedUsage [ a prov:Use; prov:entity :codebook; prov:hadRole [ dcterms:identifier "codebook"]];
+    setl:hasContext '''
+    {{ sdd.context | to_json }}
+    ''';
+    prov:value '''[{
+    "@id" : "_:nanopub",
+    "@graph" : {
+        "@id" : "_:nanopub",
+        "@type" : "np:Nanopublication",
+        "np:hasAssertion" : {
+            "@type" : "np:Assertion",
+            "@id" : "_:assertion",
+            "@graph" : [
+                {%for column in sdd.columns.values() %}{
+                    {% if not isempty(column['attributeOf']) -%}
+                    "attributeOf" : { "@id" : "{{sdd.columns[column['attributeOf']]['uri_template']}}" },
+                    {%- endif %}
+                    {% if not isempty(column['Unit']) -%}
+                    "Unit" : { "@id" : "{{column['Unit']}}" },
+                    {%- endif %}
+                    {% if not isempty(column['Time']) -%}
+                    "Time" : { "@id" : "{{sdd.columns[column['Time']]['uri_template']}}" },
+                    {%- endif %}
+                    {% if not isempty(column['wasDerivedFrom']) -%}
+                    "wasDerivedFrom" : { "@id" : "{{sdd.columns[column['wasDerivedFrom']]['uri_template']}}" },
+                    {%- endif %}
+                    {% if not isempty(column['wasGeneratedBy']) -%}
+                    "wasGeneratedBy" : { "@id" : "{{sdd.columns[column['wasGeneratedBy']]['uri_template']}}" },
+                    {%- endif %}
+                    {% if not isempty(column['Role']) -%}
+                    "Role" : {
+                        {% if not isempty(column['inRelationTo']) -%}
+                        "inRelationTo" : { "@id" : "{{sdd.columns[column['inRelationTo']]['uri_template']}}" },
+                        {% endif -%}
+                        "@type" : {{column['Role'] | to_json}}
+                    },
+                    {% elif not isempty(column['Relation']) and not isempty(column['inRelationTo']) %}
+                    "{{column['Relation']}}" : { "@id" : "{{sdd.columns[column['inRelationTo']]['uri_template']}}" },
+                    {% endif -%}
+                    {% if not column['Column'].startswith("??") %}
+                    "rdf:type" : [
+                        {
+                            "@for" : "class in sdd.codebook.get((column['Column'], row[{{column['Column']))}}]), [])",
+                            {% raw %}"@do" : { "@id" : "{{class}}"}{% endraw %}
+                        }
+                    ],
+                    "Value" : {
+                        {% if column.get('Format') %}"@type" : "{{column.get('Format')}}",{% endif %}
+                        "@value" : "{% raw %}{{{% endraw %}row[{{column['Column']}}]{% raw %}}}{% endraw %}"
+                    },
+                    {% endif %}
+                    {% if not isempty(column['Attribute']) %}
+                    "Attribute" : {{sdd.columns[column['Attribute']] | to_json }},
+                    {% endif -%}
+                    {% if not isempty(column['Entity']) %}
+                    "Entity" : {{sdd.columns[column['Entity']] | to_json }},
+                    {% endif -%}
+                    "@id" : "{{column['uri_template']}}"
+                }{% endfor %}
+            ]
+        },
+        "np:hasProvenance" : {
+            "@type" : "np:Provenance",
+            "@id" : "_:provenance",
+            "@graph" : [
+                {
+                    "@id" : "_:nanopub",
+                    "void:inDataset" : {"@id" : "{{dataset_uri}}"},
+                    "prov:wasDerivedFrom" : {
+                        "@type" : "csvw:Row",
+                        {% raw %}"csvw:rownum" : { "@value" "{{i}}", "@type" : "xsd:integer"}{% raw %}
+                    }
+                }
+            ]
+        },
+        "np:hasPublicationInfo" : {
+            "@type" : "np:PublicationInfo",
+            "@id" : "_:pubinfo",
+            "@graph" : [
+
+            ]
+        }
+    }
+}]'''].
+
+<metadata.ttl> a pv:File;
+    dcterms:format "text/turtle";
+    prov:wasGeneratedBy [
+      a setl:Load;
+      prov:used :metadata ;
+    ].
