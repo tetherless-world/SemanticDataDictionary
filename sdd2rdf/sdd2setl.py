@@ -9,6 +9,8 @@ from setlr import isempty
 from slugify import slugify
 
 base_context = {
+    "void" : "http://rdfs.org/ns/void#",
+    "csvw" : "http://www.w3.org/ns/csvw#",
     "sio": "http://semanticscience.org/resource/",
     "owl": "http://www.w3.org/2002/07/owl#",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
@@ -24,6 +26,9 @@ base_context = {
     "Time" : { "@id" : "sio:existsAt", "@type" : "@id"},
     "Unit" : { "@id" : "sio:hasUnit", "@type" : "@id"},
     "Value" : { "@id" : "sio:hasValue"},
+    "hasStart" : { "@id" : "sio:hasStartTime"},
+    "hasEnd" : { "@id" : "sio:hasEndTime"},
+    "TimeInterval" : {"@id" : "sio:TimeInterval"},
     "wasDerivedFrom" : { "@id" : "prov:wasDerivedFrom", "@type" : "@id"},
     "wasGeneratedBy" : { "@id" : "prov:wasGeneratedBy", "@type" : "@id"},
 }
@@ -59,10 +64,12 @@ class SemanticDataDictionary:
                                 self._split_and_map(row.Class))
                                for i, row in codebook.iterrows()
                                if not isempty(row.Class)])
-        self.resource_codebook = dict([((row.Column, row.Code),
-                                         self._split_and_map(row.Resource))
-                                        for i, row in codebook.iterrows()
-                                        if not isempty(row.Resource)])
+        self.resource_codebook = {}
+        for i, row in codebook.iterrows():
+            if not isempty(row.Resource):
+                if row.Column not in self.resource_codebook:
+                    self.resource_codebook[row.Column] = {}
+                self.resource_codebook[row.Column][row.Code] = self.codemap.get(row.Resource,row.Resource)
 
         self.context = {}
         self.context.update(base_context)
@@ -97,7 +104,7 @@ class SemanticDataDictionary:
         for col in self.columns.values():
             template = slugify(col['Column'])+'-{i}'
             template  =col.get('Template',template)
-            col['uri_template'] = template.format(i='{{i}}',**self.column_templates)
+            col['uri_template'] = template.format(i='{{name}}',**self.column_templates)
 
 
     def _get_table(self, entry=None):
@@ -123,14 +130,30 @@ class SemanticDataDictionary:
             return []
         return [self.codemap.get(x,x) for x in self._split(value)]
 
-def sdd2setl(semantic_data_dictionary, prefix, datafile, **kwargs):
+file_types = {
+    "text/csv" : "csvw:Table",
+    "csv" : "csvw:Table",
+    "excel" : "setl:Excel",
+    'application/vnd.ms-excel': "setl:Excel",
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': "setl:Excel",
+}
+
+def sdd2setl(semantic_data_dictionary, prefix, datafile,
+             format='csv', delimiter=',', sheetname=None, output=None, dataset_uri=None):
+    if dataset_uri is None:
+        dataset_uri = prefix+'dataset'
     sdd = SemanticDataDictionary(semantic_data_dictionary,prefix)
     env = Environment(loader=PackageLoader('sdd2rdf', 'templates'))
     template = env.get_template('sdd_setl_template.jinja')
     output = template.render(sdd=sdd,
                              prefix=prefix,
                              data=datafile,
+                             data_type=file_types[format],
+                             delimiter=delimiter,
+                             sheetname=sheetname,
+                             data_out = output,
                              str=str,
+                             dataset=dataset_uri,
                              isempty=isempty)
     return output
 
@@ -139,9 +162,20 @@ def sdd2setl_main():
     parser.add_argument("semantic_data_dictionary")
     parser.add_argument("prefix")
     parser.add_argument("data_file")
-    parser.add_argument("output_file")
+    parser.add_argument("setl_output")
+    parser.add_argument('-o', "--output")
+    parser.add_argument('-f', "--format",default='csv', choices=['csv','excel'])
+    parser.add_argument('-d', "--delimiter", default=',')
+    parser.add_argument('-s', '--sheetname')
+    parser.add_argument("--dataset_uri")
 
     args = parser.parse_args()
-    output = sdd2setl(args.semantic_data_dictionary, args.prefix, args.data_file)
-    with open(args.output_file, 'wb') as o:
+    output = sdd2setl(args.semantic_data_dictionary,
+                      args.prefix,
+                      args.data_file,
+                      args.format,
+                      args.delimiter,
+                      args.sheetname,
+                      args.output)
+    with open(args.setl_output, 'wb') as o:
         o.write(output.encode('utf8'))

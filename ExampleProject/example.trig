@@ -1,0 +1,590 @@
+@prefix chear: <http://hadatac.org/ont/chear#> .
+@prefix csvw: <http://www.w3.org/ns/csvw#> .
+@prefix hasco: <http://hadatac.org/ont/hasco#> .
+@prefix ns1: <http://example.com/data/nanopub/1> .
+@prefix ns2: <http://example.com/data/nanopub/0> .
+@prefix ns3: <http://example.com/data/nanopub/2> .
+@prefix ns4: <http://example.com/data/nanopub/6> .
+@prefix ns5: <http://example.com/data/nanopub/5> .
+@prefix ns6: <http://example.com/data/nanopub/4> .
+@prefix ns7: <http://example.com/data/nanopub/3> .
+@prefix obo: <http://purl.obolibrary.org/obo/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix sio: <http://semanticscience.org/resource/> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ns1:_pubinfo {
+    ns1: void:inDataset <http://example.com/data/dataset> ;
+        prov:wasDerivedFrom _:N592ac7764f1d41e0a490983d04164c8a .
+
+    <https://github.com/tetherless-world/SemanticDataDictionary/raw/master/ExampleProject/input/Data/exampleData.csv> csvw:row _:N592ac7764f1d41e0a490983d04164c8a .
+
+    _:N592ac7764f1d41e0a490983d04164c8a a csvw:Row ;
+        csvw:rownum 1 .
+}
+
+ns2: {
+    ns2: a <np:Nanopublication> ;
+        <np:hasAssertion> ns2:_assertion ;
+        <np:hasProvenance> ns2:_provenance ;
+        <np:hasPublicationInfo> ns2:_pubinfo .
+
+    ns2:_assertion a <np:Assertion> .
+
+    ns2:_provenance a <np:Provenance> .
+
+    ns2:_pubinfo a <np:PublicationInfo> .
+}
+
+ns4: {
+    ns4: a <np:Nanopublication> ;
+        <np:hasAssertion> ns4:_assertion ;
+        <np:hasProvenance> ns4:_provenance ;
+        <np:hasPublicationInfo> ns4:_pubinfo .
+
+    ns4:_assertion a <np:Assertion> .
+
+    ns4:_provenance a <np:Provenance> .
+
+    ns4:_pubinfo a <np:PublicationInfo> .
+}
+
+ns6: {
+    ns6: a <np:Nanopublication> ;
+        <np:hasAssertion> ns6:_assertion ;
+        <np:hasProvenance> ns6:_provenance ;
+        <np:hasPublicationInfo> ns6:_pubinfo .
+
+    ns6:_assertion a <np:Assertion> .
+
+    ns6:_provenance a <np:Provenance> .
+
+    ns6:_pubinfo a <np:PublicationInfo> .
+}
+
+ns2:_assertion {
+    <http://example.com/data/age-1> a sio:Age ;
+        sio:hasUnit obo:UO_0000036 ;
+        sio:hasValue "45" ;
+        sio:isAttributeOf <http://example.com/data/subject-1> .
+
+    <http://example.com/data/edu-1> a chear:EducationLevel ;
+        sio:hasValue "4" ;
+        sio:isAttributeOf <http://example.com/data/subject-1> .
+
+    <http://example.com/data/id-1> a sio:Identifier ;
+        sio:hasValue "1" ;
+        sio:isAttributeOf <http://example.com/data/subject-1> .
+
+    <http://example.com/data/race-1> a chear:Race ;
+        sio:hasValue "1" ;
+        sio:isAttributeOf <http://example.com/data/subject-1> .
+
+    <http://example.com/data/sex-1> a sio:BiologicalSex ;
+        sio:hasValue "1" ;
+        sio:isAttributeOf <http://example.com/data/subject-1> .
+
+    <http://example.com/data/smoke-1> a chear:SmokingStatus ;
+        sio:hasValue "0" ;
+        sio:isAttributeOf <http://example.com/data/subject-1> .
+
+    <http://example.com/data/wt1-1> a chear:Weight ;
+        sio:existsAt <http://example.com/data/visit1-0> ;
+        sio:hasUnit obo:UO_0000009 ;
+        sio:hasValue 80.37 ;
+        sio:isAttributeOf <http://example.com/data/subject-1> .
+
+    <http://example.com/data/wt2-1> a chear:Weight ;
+        sio:existsAt <http://example.com/data/visit2-0> ;
+        sio:hasUnit obo:UO_0000009 ;
+        sio:hasValue "74.17" ;
+        sio:isAttributeOf <http://example.com/data/subject-1> .
+
+    <http://example.com/data/study-1> a hasco:Study .
+
+    <http://example.com/data/visit1-0> a chear:Visit ;
+        sio:hasEndTime [ a sio:TimeInterval ;
+                sio:hasValue 2.0 ] ;
+        sio:hasStartTime [ a sio:TimeInterval ;
+                sio:hasValue 1.0 ] ;
+        sio:hasUnit sio:Week .
+
+    <http://example.com/data/visit2-0> a chear:Visit ;
+        sio:hasEndTime [ a sio:TimeInterval ;
+                sio:hasValue 4.0 ] ;
+        sio:hasStartTime [ a sio:TimeInterval ;
+                sio:hasValue 3.0 ] ;
+        sio:hasUnit sio:Week .
+
+    <http://example.com/data/subject-1> a sio:Human ;
+        sio:hasRole [ a sio:SubjectRole ;
+                sio:inRelationTo <http://example.com/data/study-1> ] .
+}
+
+ns3:_pubinfo {
+    ns3: void:inDataset <http://example.com/data/dataset> ;
+        prov:wasDerivedFrom _:N130f3bd957d04d77aef0565e6f189090 .
+
+    <https://github.com/tetherless-world/SemanticDataDictionary/raw/master/ExampleProject/input/Data/exampleData.csv> csvw:row _:N130f3bd957d04d77aef0565e6f189090 .
+
+    _:N130f3bd957d04d77aef0565e6f189090 a csvw:Row ;
+        csvw:rownum 2 .
+}
+
+ns1: {
+    ns1: a <np:Nanopublication> ;
+        <np:hasAssertion> ns1:_assertion ;
+        <np:hasProvenance> ns1:_provenance ;
+        <np:hasPublicationInfo> ns1:_pubinfo .
+
+    ns1:_assertion a <np:Assertion> .
+
+    ns1:_provenance a <np:Provenance> .
+
+    ns1:_pubinfo a <np:PublicationInfo> .
+}
+
+ns4:_pubinfo {
+    ns4: void:inDataset <http://example.com/data/dataset> ;
+        prov:wasDerivedFrom _:Nad3e2fcc72fc4a6d9e29017df5ab76f8 .
+
+    <https://github.com/tetherless-world/SemanticDataDictionary/raw/master/ExampleProject/input/Data/exampleData.csv> csvw:row _:Nad3e2fcc72fc4a6d9e29017df5ab76f8 .
+
+    _:Nad3e2fcc72fc4a6d9e29017df5ab76f8 a csvw:Row ;
+        csvw:rownum 6 .
+}
+
+ns1:_assertion {
+    <http://example.com/data/age-2> a sio:Age ;
+        sio:hasUnit obo:UO_0000036 ;
+        sio:hasValue "32" ;
+        sio:isAttributeOf <http://example.com/data/subject-2> .
+
+    <http://example.com/data/edu-2> a chear:EducationLevel ;
+        sio:hasValue "4" ;
+        sio:isAttributeOf <http://example.com/data/subject-2> .
+
+    <http://example.com/data/id-2> a sio:Identifier ;
+        sio:hasValue "2" ;
+        sio:isAttributeOf <http://example.com/data/subject-2> .
+
+    <http://example.com/data/race-2> a chear:Race ;
+        sio:hasValue "3" ;
+        sio:isAttributeOf <http://example.com/data/subject-2> .
+
+    <http://example.com/data/sex-2> a sio:BiologicalSex ;
+        sio:hasValue "2" ;
+        sio:isAttributeOf <http://example.com/data/subject-2> .
+
+    <http://example.com/data/smoke-2> a chear:SmokingStatus ;
+        sio:hasValue "1" ;
+        sio:isAttributeOf <http://example.com/data/subject-2> .
+
+    <http://example.com/data/wt1-2> a chear:Weight ;
+        sio:existsAt <http://example.com/data/visit1-1> ;
+        sio:hasUnit obo:UO_0000009 ;
+        sio:hasValue 65.8 ;
+        sio:isAttributeOf <http://example.com/data/subject-2> .
+
+    <http://example.com/data/wt2-2> a chear:Weight ;
+        sio:existsAt <http://example.com/data/visit2-1> ;
+        sio:hasUnit obo:UO_0000009 ;
+        sio:hasValue "63.2" ;
+        sio:isAttributeOf <http://example.com/data/subject-2> .
+
+    <http://example.com/data/study-2> a hasco:Study .
+
+    <http://example.com/data/visit1-1> a chear:Visit ;
+        sio:hasEndTime [ a sio:TimeInterval ;
+                sio:hasValue 2.0 ] ;
+        sio:hasStartTime [ a sio:TimeInterval ;
+                sio:hasValue 1.0 ] ;
+        sio:hasUnit sio:Week .
+
+    <http://example.com/data/visit2-1> a chear:Visit ;
+        sio:hasEndTime [ a sio:TimeInterval ;
+                sio:hasValue 4.0 ] ;
+        sio:hasStartTime [ a sio:TimeInterval ;
+                sio:hasValue 3.0 ] ;
+        sio:hasUnit sio:Week .
+
+    <http://example.com/data/subject-2> a sio:Human ;
+        sio:hasRole [ a sio:SubjectRole ;
+                sio:inRelationTo <http://example.com/data/study-2> ] .
+}
+
+ns3: {
+    ns3: a <np:Nanopublication> ;
+        <np:hasAssertion> ns3:_assertion ;
+        <np:hasProvenance> ns3:_provenance ;
+        <np:hasPublicationInfo> ns3:_pubinfo .
+
+    ns3:_assertion a <np:Assertion> .
+
+    ns3:_provenance a <np:Provenance> .
+
+    ns3:_pubinfo a <np:PublicationInfo> .
+}
+
+ns3:_assertion {
+    <http://example.com/data/age-3> a sio:Age ;
+        sio:hasUnit obo:UO_0000036 ;
+        sio:hasValue "65" ;
+        sio:isAttributeOf <http://example.com/data/subject-3> .
+
+    <http://example.com/data/edu-3> a chear:EducationLevel ;
+        sio:hasValue "3" ;
+        sio:isAttributeOf <http://example.com/data/subject-3> .
+
+    <http://example.com/data/id-3> a sio:Identifier ;
+        sio:hasValue "3" ;
+        sio:isAttributeOf <http://example.com/data/subject-3> .
+
+    <http://example.com/data/race-3> a chear:Race ;
+        sio:hasValue "2" ;
+        sio:isAttributeOf <http://example.com/data/subject-3> .
+
+    <http://example.com/data/sex-3> a sio:BiologicalSex ;
+        sio:hasValue "1" ;
+        sio:isAttributeOf <http://example.com/data/subject-3> .
+
+    <http://example.com/data/smoke-3> a chear:SmokingStatus ;
+        sio:hasValue "0" ;
+        sio:isAttributeOf <http://example.com/data/subject-3> .
+
+    <http://example.com/data/wt1-3> a chear:Weight ;
+        sio:existsAt <http://example.com/data/visit1-2> ;
+        sio:hasUnit obo:UO_0000009 ;
+        sio:hasValue 74.24 ;
+        sio:isAttributeOf <http://example.com/data/subject-3> .
+
+    <http://example.com/data/wt2-3> a chear:Weight ;
+        sio:existsAt <http://example.com/data/visit2-2> ;
+        sio:hasUnit obo:UO_0000009 ;
+        sio:hasValue "70.21" ;
+        sio:isAttributeOf <http://example.com/data/subject-3> .
+
+    <http://example.com/data/study-3> a hasco:Study .
+
+    <http://example.com/data/visit1-2> a chear:Visit ;
+        sio:hasEndTime [ a sio:TimeInterval ;
+                sio:hasValue 2.0 ] ;
+        sio:hasStartTime [ a sio:TimeInterval ;
+                sio:hasValue 1.0 ] ;
+        sio:hasUnit sio:Week .
+
+    <http://example.com/data/visit2-2> a chear:Visit ;
+        sio:hasEndTime [ a sio:TimeInterval ;
+                sio:hasValue 4.0 ] ;
+        sio:hasStartTime [ a sio:TimeInterval ;
+                sio:hasValue 3.0 ] ;
+        sio:hasUnit sio:Week .
+
+    <http://example.com/data/subject-3> a sio:Human ;
+        sio:hasRole [ a sio:SubjectRole ;
+                sio:inRelationTo <http://example.com/data/study-3> ] .
+}
+
+ns7: {
+    ns7: a <np:Nanopublication> ;
+        <np:hasAssertion> ns7:_assertion ;
+        <np:hasProvenance> ns7:_provenance ;
+        <np:hasPublicationInfo> ns7:_pubinfo .
+
+    ns7:_assertion a <np:Assertion> .
+
+    ns7:_provenance a <np:Provenance> .
+
+    ns7:_pubinfo a <np:PublicationInfo> .
+}
+
+ns5:_assertion {
+    <http://example.com/data/age-6> a sio:Age ;
+        sio:hasUnit obo:UO_0000036 ;
+        sio:hasValue "24" ;
+        sio:isAttributeOf <http://example.com/data/subject-6> .
+
+    <http://example.com/data/edu-6> a chear:EducationLevel ;
+        sio:hasValue "2" ;
+        sio:isAttributeOf <http://example.com/data/subject-6> .
+
+    <http://example.com/data/id-6> a sio:Identifier ;
+        sio:hasValue "6" ;
+        sio:isAttributeOf <http://example.com/data/subject-6> .
+
+    <http://example.com/data/race-6> a chear:Race ;
+        sio:hasValue "1" ;
+        sio:isAttributeOf <http://example.com/data/subject-6> .
+
+    <http://example.com/data/sex-6> a sio:BiologicalSex ;
+        sio:hasValue "1" ;
+        sio:isAttributeOf <http://example.com/data/subject-6> .
+
+    <http://example.com/data/smoke-6> a chear:SmokingStatus ;
+        sio:hasValue "0" ;
+        sio:isAttributeOf <http://example.com/data/subject-6> .
+
+    <http://example.com/data/wt1-6> a chear:Weight ;
+        sio:existsAt <http://example.com/data/visit1-5> ;
+        sio:hasUnit obo:UO_0000009 ;
+        sio:hasValue 58.7 ;
+        sio:isAttributeOf <http://example.com/data/subject-6> .
+
+    <http://example.com/data/wt2-6> a chear:Weight ;
+        sio:existsAt <http://example.com/data/visit2-5> ;
+        sio:hasUnit obo:UO_0000009 ;
+        sio:hasValue "53.17" ;
+        sio:isAttributeOf <http://example.com/data/subject-6> .
+
+    <http://example.com/data/study-6> a hasco:Study .
+
+    <http://example.com/data/visit1-5> a chear:Visit ;
+        sio:hasEndTime [ a sio:TimeInterval ;
+                sio:hasValue 2.0 ] ;
+        sio:hasStartTime [ a sio:TimeInterval ;
+                sio:hasValue 1.0 ] ;
+        sio:hasUnit sio:Week .
+
+    <http://example.com/data/visit2-5> a chear:Visit ;
+        sio:hasEndTime [ a sio:TimeInterval ;
+                sio:hasValue 4.0 ] ;
+        sio:hasStartTime [ a sio:TimeInterval ;
+                sio:hasValue 3.0 ] ;
+        sio:hasUnit sio:Week .
+
+    <http://example.com/data/subject-6> a sio:Human ;
+        sio:hasRole [ a sio:SubjectRole ;
+                sio:inRelationTo <http://example.com/data/study-6> ] .
+}
+
+ns6:_assertion {
+    <http://example.com/data/age-5> a sio:Age ;
+        sio:hasUnit obo:UO_0000036 ;
+        sio:hasValue "55" ;
+        sio:isAttributeOf <http://example.com/data/subject-5> .
+
+    <http://example.com/data/edu-5> a chear:EducationLevel ;
+        sio:hasValue "5" ;
+        sio:isAttributeOf <http://example.com/data/subject-5> .
+
+    <http://example.com/data/id-5> a sio:Identifier ;
+        sio:hasValue "5" ;
+        sio:isAttributeOf <http://example.com/data/subject-5> .
+
+    <http://example.com/data/race-5> a chear:Race ;
+        sio:hasValue "3" ;
+        sio:isAttributeOf <http://example.com/data/subject-5> .
+
+    <http://example.com/data/sex-5> a sio:BiologicalSex ;
+        sio:hasValue "2" ;
+        sio:isAttributeOf <http://example.com/data/subject-5> .
+
+    <http://example.com/data/smoke-5> a chear:SmokingStatus ;
+        sio:hasValue "1" ;
+        sio:isAttributeOf <http://example.com/data/subject-5> .
+
+    <http://example.com/data/wt1-5> a chear:Weight ;
+        sio:existsAt <http://example.com/data/visit1-4> ;
+        sio:hasUnit obo:UO_0000009 ;
+        sio:hasValue 81.2 ;
+        sio:isAttributeOf <http://example.com/data/subject-5> .
+
+    <http://example.com/data/wt2-5> a chear:Weight ;
+        sio:existsAt <http://example.com/data/visit2-4> ;
+        sio:hasUnit obo:UO_0000009 ;
+        sio:hasValue "79.12" ;
+        sio:isAttributeOf <http://example.com/data/subject-5> .
+
+    <http://example.com/data/study-5> a hasco:Study .
+
+    <http://example.com/data/visit1-4> a chear:Visit ;
+        sio:hasEndTime [ a sio:TimeInterval ;
+                sio:hasValue 2.0 ] ;
+        sio:hasStartTime [ a sio:TimeInterval ;
+                sio:hasValue 1.0 ] ;
+        sio:hasUnit sio:Week .
+
+    <http://example.com/data/visit2-4> a chear:Visit ;
+        sio:hasEndTime [ a sio:TimeInterval ;
+                sio:hasValue 4.0 ] ;
+        sio:hasStartTime [ a sio:TimeInterval ;
+                sio:hasValue 3.0 ] ;
+        sio:hasUnit sio:Week .
+
+    <http://example.com/data/subject-5> a sio:Human ;
+        sio:hasRole [ a sio:SubjectRole ;
+                sio:inRelationTo <http://example.com/data/study-5> ] .
+}
+
+ns7:_pubinfo {
+    ns7: void:inDataset <http://example.com/data/dataset> ;
+        prov:wasDerivedFrom _:N93b3f85e6240433e8df355a37023cb70 .
+
+    <https://github.com/tetherless-world/SemanticDataDictionary/raw/master/ExampleProject/input/Data/exampleData.csv> csvw:row _:N93b3f85e6240433e8df355a37023cb70 .
+
+    _:N93b3f85e6240433e8df355a37023cb70 a csvw:Row ;
+        csvw:rownum 3 .
+}
+
+ns2:_pubinfo {
+    ns2: void:inDataset <http://example.com/data/dataset> ;
+        prov:wasDerivedFrom _:N3407bd75c93b4c23b44eda13c496ad77 .
+
+    <https://github.com/tetherless-world/SemanticDataDictionary/raw/master/ExampleProject/input/Data/exampleData.csv> csvw:row _:N3407bd75c93b4c23b44eda13c496ad77 .
+
+    _:N3407bd75c93b4c23b44eda13c496ad77 a csvw:Row ;
+        csvw:rownum 0 .
+}
+
+ns6:_pubinfo {
+    ns6: void:inDataset <http://example.com/data/dataset> ;
+        prov:wasDerivedFrom _:N75e6f5d7e2924fb1ae6aa9e0173b2dc0 .
+
+    <https://github.com/tetherless-world/SemanticDataDictionary/raw/master/ExampleProject/input/Data/exampleData.csv> csvw:row _:N75e6f5d7e2924fb1ae6aa9e0173b2dc0 .
+
+    _:N75e6f5d7e2924fb1ae6aa9e0173b2dc0 a csvw:Row ;
+        csvw:rownum 4 .
+}
+
+ns7:_assertion {
+    <http://example.com/data/age-4> a sio:Age ;
+        sio:hasUnit obo:UO_0000036 ;
+        sio:hasValue "28" ;
+        sio:isAttributeOf <http://example.com/data/subject-4> .
+
+    <http://example.com/data/edu-4> a chear:EducationLevel ;
+        sio:hasValue "3" ;
+        sio:isAttributeOf <http://example.com/data/subject-4> .
+
+    <http://example.com/data/id-4> a sio:Identifier ;
+        sio:hasValue "4" ;
+        sio:isAttributeOf <http://example.com/data/subject-4> .
+
+    <http://example.com/data/race-4> a chear:Race ;
+        sio:hasValue "4" ;
+        sio:isAttributeOf <http://example.com/data/subject-4> .
+
+    <http://example.com/data/sex-4> a sio:BiologicalSex ;
+        sio:hasValue "2" ;
+        sio:isAttributeOf <http://example.com/data/subject-4> .
+
+    <http://example.com/data/smoke-4> a chear:SmokingStatus ;
+        sio:hasValue "0" ;
+        sio:isAttributeOf <http://example.com/data/subject-4> .
+
+    <http://example.com/data/wt1-4> a chear:Weight ;
+        sio:existsAt <http://example.com/data/visit1-3> ;
+        sio:hasUnit obo:UO_0000009 ;
+        sio:hasValue 64.9 ;
+        sio:isAttributeOf <http://example.com/data/subject-4> .
+
+    <http://example.com/data/wt2-4> a chear:Weight ;
+        sio:existsAt <http://example.com/data/visit2-3> ;
+        sio:hasUnit obo:UO_0000009 ;
+        sio:hasValue "62.12" ;
+        sio:isAttributeOf <http://example.com/data/subject-4> .
+
+    <http://example.com/data/study-4> a hasco:Study .
+
+    <http://example.com/data/visit1-3> a chear:Visit ;
+        sio:hasEndTime [ a sio:TimeInterval ;
+                sio:hasValue 2.0 ] ;
+        sio:hasStartTime [ a sio:TimeInterval ;
+                sio:hasValue 1.0 ] ;
+        sio:hasUnit sio:Week .
+
+    <http://example.com/data/visit2-3> a chear:Visit ;
+        sio:hasEndTime [ a sio:TimeInterval ;
+                sio:hasValue 4.0 ] ;
+        sio:hasStartTime [ a sio:TimeInterval ;
+                sio:hasValue 3.0 ] ;
+        sio:hasUnit sio:Week .
+
+    <http://example.com/data/subject-4> a sio:Human ;
+        sio:hasRole [ a sio:SubjectRole ;
+                sio:inRelationTo <http://example.com/data/study-4> ] .
+}
+
+ns5: {
+    ns5: a <np:Nanopublication> ;
+        <np:hasAssertion> ns5:_assertion ;
+        <np:hasProvenance> ns5:_provenance ;
+        <np:hasPublicationInfo> ns5:_pubinfo .
+
+    ns5:_assertion a <np:Assertion> .
+
+    ns5:_provenance a <np:Provenance> .
+
+    ns5:_pubinfo a <np:PublicationInfo> .
+}
+
+ns5:_pubinfo {
+    ns5: void:inDataset <http://example.com/data/dataset> ;
+        prov:wasDerivedFrom _:N3e430827165e4cbbaeb54455988f681e .
+
+    <https://github.com/tetherless-world/SemanticDataDictionary/raw/master/ExampleProject/input/Data/exampleData.csv> csvw:row _:N3e430827165e4cbbaeb54455988f681e .
+
+    _:N3e430827165e4cbbaeb54455988f681e a csvw:Row ;
+        csvw:rownum 5 .
+}
+
+ns4:_assertion {
+    <http://example.com/data/age-7> a sio:Age ;
+        sio:hasUnit obo:UO_0000036 ;
+        sio:hasValue "18" ;
+        sio:isAttributeOf <http://example.com/data/subject-7> .
+
+    <http://example.com/data/edu-7> a chear:EducationLevel ;
+        sio:hasValue "1" ;
+        sio:isAttributeOf <http://example.com/data/subject-7> .
+
+    <http://example.com/data/id-7> a sio:Identifier ;
+        sio:hasValue "7" ;
+        sio:isAttributeOf <http://example.com/data/subject-7> .
+
+    <http://example.com/data/race-7> a chear:Race ;
+        sio:hasValue "5" ;
+        sio:isAttributeOf <http://example.com/data/subject-7> .
+
+    <http://example.com/data/sex-7> a sio:BiologicalSex ;
+        sio:hasValue "1" ;
+        sio:isAttributeOf <http://example.com/data/subject-7> .
+
+    <http://example.com/data/smoke-7> a chear:SmokingStatus ;
+        sio:hasValue "0" ;
+        sio:isAttributeOf <http://example.com/data/subject-7> .
+
+    <http://example.com/data/wt1-7> a chear:Weight ;
+        sio:existsAt <http://example.com/data/visit1-6> ;
+        sio:hasUnit obo:UO_0000009 ;
+        sio:hasValue 61.72 ;
+        sio:isAttributeOf <http://example.com/data/subject-7> .
+
+    <http://example.com/data/wt2-7> a chear:Weight ;
+        sio:existsAt <http://example.com/data/visit2-6> ;
+        sio:hasUnit obo:UO_0000009 ;
+        sio:hasValue "60.31" ;
+        sio:isAttributeOf <http://example.com/data/subject-7> .
+
+    <http://example.com/data/study-7> a hasco:Study .
+
+    <http://example.com/data/visit1-6> a chear:Visit ;
+        sio:hasEndTime [ a sio:TimeInterval ;
+                sio:hasValue 2.0 ] ;
+        sio:hasStartTime [ a sio:TimeInterval ;
+                sio:hasValue 1.0 ] ;
+        sio:hasUnit sio:Week .
+
+    <http://example.com/data/visit2-6> a chear:Visit ;
+        sio:hasEndTime [ a sio:TimeInterval ;
+                sio:hasValue 4.0 ] ;
+        sio:hasStartTime [ a sio:TimeInterval ;
+                sio:hasValue 3.0 ] ;
+        sio:hasUnit sio:Week .
+
+    <http://example.com/data/subject-7> a sio:Human ;
+        sio:hasRole [ a sio:SubjectRole ;
+                sio:inRelationTo <http://example.com/data/study-7> ] .
+}
+

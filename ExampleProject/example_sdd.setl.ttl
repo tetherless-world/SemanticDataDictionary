@@ -1,0 +1,251 @@
+@prefix rdf:           <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:          <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:           <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:           <http://www.w3.org/2002/07/owl#> .
+@prefix skos:          <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov:          <http://www.w3.org/ns/prov#> .
+@prefix sio:           <http://semanticscience.org/resource/> .
+@prefix dcat:          <http://www.w3.org/ns/dcat#> .
+@prefix dcterms:       <http://purl.org/dc/terms/> .
+@prefix void:          <http://rdfs.org/ns/void#> .
+@prefix foaf:          <http://xmlns.com/foaf/0.1/> .
+@prefix ov:            <http://open.vocab.org/terms/> .
+@prefix setl:          <http://purl.org/twc/vocab/setl/> .
+@prefix csvw:          <http://www.w3.org/ns/csvw#> .
+@prefix pv:            <http://purl.org/net/provenance/ns#>.
+@prefix bibo:          <http://purl.org/ontology/bibo/>.
+
+@prefix :              <http://example.com/data/> .
+
+:data a csvw:Table, setl:Table;
+   csvw:delimiter ",";
+  
+  prov:wasGeneratedBy [
+    a setl:Extract;
+    prov:used <https://github.com/tetherless-world/SemanticDataDictionary/raw/master/ExampleProject/input/Data/exampleData.csv>;
+  ].
+
+:codebook a owl:Class, prov:SoftwareAgent, setl:PythonScript;
+    rdfs:subClassOf prov:Activity;
+    prov:value '''
+result = {('race', 3): ['chear:Asian'], ('smoke', 1): ['chear:Smoker'], ('sex', 1): ['sio:Male'], ('edu', 5): ['chear:UnknownEducationLevel'], ('sex', 2): ['sio:Female'], ('smoke', 0): ['chear:NonSmoker'], ('edu', 4): ['chear:CollegeGraduate'], ('race', 1): ['chear:White'], ('race', 4): ['chear:American_Indian_or_Alaska_Native'], ('edu', 1): ['chear:HighSchoolOrLess'], ('race', 5): ['chear:UnknownRace'], ('edu', 3): ['chear:HigherEducation'], ('edu', 2): ['chear:SomeCollegeorTechnicalSchool'], ('race', 2): ['chear:AfricanAmerican']}
+'''.
+
+:resource_codebook a owl:Class, prov:SoftwareAgent, setl:PythonScript;
+    rdfs:subClassOf prov:Activity;
+    prov:value '''
+result = {}
+'''.
+
+
+<http://example.com/data/dataset> a void:Dataset;
+  prov:wasGeneratedBy [
+    a setl:Transform, setl:JSLDT;
+    prov:used :data;
+    prov:qualifiedUsage [ a prov:Use; prov:entity :codebook; prov:hadRole [ dcterms:identifier "codebook"]];
+    prov:qualifiedUsage [ a prov:Use; prov:entity :resource_codebook; prov:hadRole [ dcterms:identifier "resource_codebook"]];
+    setl:hasContext '''
+    {"@base": "http://example.com/data/", "Attribute": {"@id": "rdf:type", "@type": "@id"}, "Entity": {"@id": "rdf:type", "@type": "@id"}, "Role": {"@id": "sio:hasRole", "@type": "@id"}, "Time": {"@id": "sio:existsAt", "@type": "@id"}, "TimeInterval": {"@id": "sio:TimeInterval"}, "Unit": {"@id": "sio:hasUnit", "@type": "@id"}, "Value": {"@id": "sio:hasValue"}, "attributeOf": {"@id": "sio:isAttributeOf", "@type": "@id"}, "chear": "http://hadatac.org/ont/chear#", "chebi": "http://purl.obolibrary.org/obo/CHEBI_", "csvw": "http://www.w3.org/ns/csvw#", "dc": "http://purl.org/dc/terms/", "hasEnd": {"@id": "sio:hasEndTime"}, "hasStart": {"@id": "sio:hasStartTime"}, "hasco": "http://hadatac.org/ont/hasco#", "hasneto": "http://hadatac.org/ont/hasneto#", "inRelationTo": {"@id": "sio:inRelationTo", "@type": "@id"}, "obo": "http://purl.obolibrary.org/obo/", "owl": "http://www.w3.org/2002/07/owl#", "prov": "http://www.w3.org/ns/prov#", "pubchem": "http://rdf.ncbi.nlm.nih.gov/pubchem/compound/", "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#", "rdfs": "http://www.w3.org/2000/01/rdf-schema#", "sio": "http://semanticscience.org/resource/", "skos": "http://www.w3.org/2004/02/skos/core#", "stato": "http://purl.obolibrary.org/obo/STATO_", "uberon": "http://purl.obolibrary.org/obo/UBERON_", "void": "http://rdfs.org/ns/void#", "vstoi": "http://hadatac.org/ont/vstoi#", "wasDerivedFrom": {"@id": "prov:wasDerivedFrom", "@type": "@id"}, "wasGeneratedBy": {"@id": "prov:wasGeneratedBy", "@type": "@id"}, "xsd": "http://www.w3.org/2001/XMLSchema#"}
+    ''';
+    prov:value '''[{
+    "@id" : "nanopub/{{name}}",
+    "@graph" : {
+        "@id" : "nanopub/{{name}}",
+        "@type" : "np:Nanopublication",
+        "np:hasAssertion" : {
+            "@type" : "np:Assertion",
+            "@id" : "nanopub/{{name}}_assertion",
+            "@graph" : [
+                {
+                    "attributeOf" : {
+                      "@id" : "subject-{{row.get('id')}}"
+                    },
+                    "rdf:type" : [
+                        {
+                            "@for" : "class in codebook.get(('edu', row['edu']), [])",
+                            "@do" : { "@id" : "{{class}}"}
+                        }
+                    ],
+                    "Value" : {
+                        "@value" : "{{row['edu']}}"
+                    },
+                    "Attribute" : ["chear:EducationLevel"],"@id" : "edu-{{row.get('id')}}"
+                },{
+                    "attributeOf" : {
+                      "@id" : "subject-{{row.get('id')}}"
+                    },
+                    "rdf:type" : [
+                        {
+                            "@for" : "class in codebook.get(('smoke', row['smoke']), [])",
+                            "@do" : { "@id" : "{{class}}"}
+                        }
+                    ],
+                    "Value" : {
+                        "@value" : "{{row['smoke']}}"
+                    },
+                    "Attribute" : ["chear:SmokingStatus"],"@id" : "smoke-{{row.get('id')}}"
+                },{
+                    "attributeOf" : {
+                      "@id" : "subject-{{row.get('id')}}"
+                    },
+                    "Unit" : { "@id" : "obo:UO_0000009" },
+                    "Time" : { "@id" : "visit1-{{name}}" },
+                    "rdf:type" : [
+                        {
+                            "@for" : "class in codebook.get(('wt1', row['wt1']), [])",
+                            "@do" : { "@id" : "{{class}}"}
+                        }
+                    ],
+                    "Value" : {
+                        "@type" : "xsd:decimal",
+                        "@value" : "{{row['wt1']}}"
+                    },
+                    "Attribute" : ["chear:Weight"],"@id" : "wt1-{{row.get('id')}}"
+                },{
+                    "attributeOf" : {
+                      "@id" : "subject-{{row.get('id')}}"
+                    },
+                    "rdf:type" : [
+                        {
+                            "@for" : "class in codebook.get(('id', row['id']), [])",
+                            "@do" : { "@id" : "{{class}}"}
+                        }
+                    ],
+                    "Value" : {
+                        "@value" : "{{row['id']}}"
+                    },
+                    "Attribute" : ["sio:Identifier"],"@id" : "id-{{row.get('id')}}"
+                },{
+                    "attributeOf" : {
+                      "@id" : "subject-{{row.get('id')}}"
+                    },
+                    "rdf:type" : [
+                        {
+                            "@for" : "class in codebook.get(('race', row['race']), [])",
+                            "@do" : { "@id" : "{{class}}"}
+                        }
+                    ],
+                    "Value" : {
+                        "@value" : "{{row['race']}}"
+                    },
+                    "Attribute" : ["chear:Race"],"@id" : "race-{{row.get('id')}}"
+                },{
+                    "attributeOf" : {
+                      "@id" : "subject-{{row.get('id')}}"
+                    },
+                    "Unit" : { "@id" : "obo:UO_0000036" },
+                    "rdf:type" : [
+                        {
+                            "@for" : "class in codebook.get(('age', row['age']), [])",
+                            "@do" : { "@id" : "{{class}}"}
+                        }
+                    ],
+                    "Value" : {
+                        "@value" : "{{row['age']}}"
+                    },
+                    "Attribute" : ["sio:Age"],"@id" : "age-{{row.get('id')}}"
+                },{
+                    "attributeOf" : {
+                      "@id" : "subject-{{row.get('id')}}"
+                    },
+                    "Unit" : { "@id" : "obo:UO_0000009" },
+                    "Time" : { "@id" : "visit2-{{name}}" },
+                    "rdf:type" : [
+                        {
+                            "@for" : "class in codebook.get(('wt2', row['wt2']), [])",
+                            "@do" : { "@id" : "{{class}}"}
+                        }
+                    ],
+                    "Value" : {
+                        "@type" : "decimal",
+                        "@value" : "{{row['wt2']}}"
+                    },
+                    "Attribute" : ["chear:Weight"],"@id" : "wt2-{{row.get('id')}}"
+                },{
+                    "attributeOf" : {
+                      "@id" : "subject-{{row.get('id')}}"
+                    },
+                    "rdf:type" : [
+                        {
+                            "@for" : "class in codebook.get(('sex', row['sex']), [])",
+                            "@do" : { "@id" : "{{class}}"}
+                        }
+                    ],
+                    "Value" : {
+                        "@value" : "{{row['sex']}}"
+                    },
+                    "Attribute" : ["sio:BiologicalSex"],"@id" : "sex-{{row.get('id')}}"
+                },{
+                    "Entity" : ["hasco:Study"],"@id" : "study-{{row.get('id')}}"
+                },{
+                    "Role" : {
+                        "inRelationTo" : { "@id" : "study-{{row.get('id')}}" },
+                        "@type" : "sio:SubjectRole"
+                    },
+                    "Entity" : ["sio:Human"],"@id" : "subject-{{row.get('id')}}"
+                },{
+                    "Unit" : { "@id" : "sio:Week" },"hasStart" : {
+                        "@type" : "TimeInterval",
+                        "Value" : {
+                            "@type" : "xsd:decimal",
+                            "@value" : "1"
+                        }
+                    },
+                    "hasEnd" : {
+                        "@type" : "TimeInterval",
+                        "Value" : {
+                            "@type" : "xsd:decimal",
+                            "@value" : "2"
+                        }
+                    },
+                    "Entity" : ["chear:Visit"],"@id" : "visit1-{{name}}"
+                },{
+                    "Unit" : { "@id" : "sio:Week" },"hasStart" : {
+                        "@type" : "TimeInterval",
+                        "Value" : {
+                            "@type" : "xsd:decimal",
+                            "@value" : "3"
+                        }
+                    },
+                    "hasEnd" : {
+                        "@type" : "TimeInterval",
+                        "Value" : {
+                            "@type" : "xsd:decimal",
+                            "@value" : "4"
+                        }
+                    },
+                    "Entity" : ["chear:Visit"],"@id" : "visit2-{{name}}"
+                }
+            ]
+        },
+        "np:hasProvenance" : {
+            "@type" : "np:Provenance",
+            "@id" : "nanopub/{{name}}_provenance",
+            "@graph" : [
+            ]
+        },
+        "np:hasPublicationInfo" : {
+            "@type" : "np:PublicationInfo",
+            "@id" : "nanopub/{{name}}_pubinfo",
+            "@graph" : [
+                {
+                    "@id" : "nanopub/{{name}}",
+                    "void:inDataset" : {"@id" : "http://example.com/data/dataset"},
+                    "prov:wasDerivedFrom" : {
+                        "@type" : "csvw:Row",
+                        "@reverse" : {"csvw:row" : {"@id" : "https://github.com/tetherless-world/SemanticDataDictionary/raw/master/ExampleProject/input/Data/exampleData.csv"} },
+                        "csvw:rownum" : { "@value" : "{{name}}", "@type" : "xsd:integer"}
+                    }
+                }
+            ]
+        }
+    }
+}]'''].
+
+
+<example.trig> a pv:File;
+    dcterms:format "application/trig";
+    prov:wasGeneratedBy [
+      a setl:Load;
+      prov:used <http://example.com/data/dataset> ;
+    ].

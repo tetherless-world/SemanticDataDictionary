@@ -15,9 +15,11 @@
 @prefix pv:            <http://purl.org/net/provenance/ns#>.
 @prefix bibo:          <http://purl.org/ontology/bibo/>.
 
-@prefix :              <{{sdd_prefix}}> .
+@prefix :              <{{prefix}}> .
 
-:data a <{{data_type}}>, setl:Table;
+:data a {{data_type}}, setl:Table;
+  {% if delimiter %} csvw:delimiter "{{delimiter}}";{% endif %}
+  {% if sheetname %} csvw:sheetname "{{sheetname}}";{% endif %}
   prov:wasGeneratedBy [
     a setl:Extract;
     prov:used <{{data}}>;
@@ -29,103 +31,142 @@
 result = {{str(sdd.codebook)}}
 '''.
 
-{{dataset}} a void:Dataset;
+:resource_codebook a owl:Class, prov:SoftwareAgent, setl:PythonScript;
+    rdfs:subClassOf prov:Activity;
+    prov:value '''
+result = {{str(sdd.resource_codebook)}}
+'''.
+
+
+<{{dataset}}> a void:Dataset;
   prov:wasGeneratedBy [
     a setl:Transform, setl:JSLDT;
     prov:used :data;
     prov:qualifiedUsage [ a prov:Use; prov:entity :codebook; prov:hadRole [ dcterms:identifier "codebook"]];
+    prov:qualifiedUsage [ a prov:Use; prov:entity :resource_codebook; prov:hadRole [ dcterms:identifier "resource_codebook"]];
     setl:hasContext '''
     {{ sdd.context | tojson }}
     ''';
     prov:value '''[{
-    "@id" : "_:nanopub",
+    "@id" : "nanopub/{% raw %}{{name}}{% endraw %}",
     "@graph" : {
-        "@id" : "_:nanopub",
+        "@id" : "nanopub/{% raw %}{{name}}{% endraw %}",
         "@type" : "np:Nanopublication",
         "np:hasAssertion" : {
             "@type" : "np:Assertion",
-            "@id" : "_:assertion",
+            "@id" : "nanopub/{% raw %}{{name}}{% endraw %}_assertion",
             "@graph" : [
                 {%for column in sdd.columns.values() %}{
-                    {% if 'attributeOf' in column and not isempty(column['attributeOf']) -%}
+                    {%- if 'attributeOf' in column and not isempty(column['attributeOf']) %}
                     "attributeOf" : {
                       "@id" : "{{sdd.columns[column['attributeOf']]['uri_template']}}"
                     },
                     {%- endif %}
-                    {% if 'Unit' in column and not isempty(column['Unit']) -%}
+                    {%- if 'Unit' in column and not isempty(column['Unit']) %}
                     "Unit" : { "@id" : "{{column['Unit']}}" },
                     {%- endif %}
-                    {% if 'Time' in column and not isempty(column['Time']) -%}
+                    {%- if 'Time' in column and not isempty(column['Time']) %}
                     "Time" : { "@id" : "{{sdd.columns[column['Time']]['uri_template']}}" },
                     {%- endif %}
-                    {% if 'wasDerivedFrom' in column and not isempty(column['wasDerivedFrom']) -%}
+                    {%- if 'wasDerivedFrom' in column and not isempty(column['wasDerivedFrom']) %}
                     "wasDerivedFrom" : { "@id" : "{{sdd.columns[column['wasDerivedFrom']]['uri_template']}}" },
                     {%- endif %}
-                    {% if 'wasGeneratedBy' in column and not isempty(column['wasGeneratedBy']) -%}
+                    {%- if 'wasGeneratedBy' in column and not isempty(column['wasGeneratedBy']) %}
                     "wasGeneratedBy" : { "@id" : "{{sdd.columns[column['wasGeneratedBy']]['uri_template']}}" },
                     {%- endif %}
-                    {% if 'Role' in column and not isempty(column['Role']) -%}
+                    {%- if 'Role' in column and not isempty(column['Role']) %}
                     "Role" : {
                         {% if not isempty(column['inRelationTo']) -%}
                         "inRelationTo" : { "@id" : "{{sdd.columns[column['inRelationTo']]['uri_template']}}" },
                         {% endif -%}
                         "@type" : {{column['Role'] | tojson}}
                     },
-                    {% elif 'Relation' in column and not isempty(column['Relation']) and not isempty(column['inRelationTo']) %}
+                    {%- elif 'Relation' in column and not isempty(column['Relation']) and not isempty(column['inRelationTo']) -%}
                     "{{column['Relation']}}" : { "@id" : "{{sdd.columns[column['inRelationTo']]['uri_template']}}" },
-                    {% endif -%}
-                    {% if not column['Column'].startswith("??") %}
+                    {%- endif %}
+                    {%- if not column['Column'].startswith("??") %}
                     "rdf:type" : [
                         {
-                            "@for" : "class in codebook.get((column['Column'], row['{{column['Column']}}']), [])",
+                            "@for" : "class in codebook.get(('{{column['Column']}}', row['{{column['Column']}}']), [])",
                             {% raw %}"@do" : { "@id" : "{{class}}"}{% endraw %}
                         }
                     ],
                     "Value" : {
-                        {% if 'Format' in column and not isempty(column['Format']) %}"@type" : "{{column.get('Format')}}",{% endif %}
+                        {%- if 'Format' in column and not isempty(column['Format']) %}
+                        "@type" : "{{column.get('Format')}}",
+                        {%- endif %}
                         "@value" : "{% raw %}{{{% endraw %}row['{{column['Column']}}']{% raw %}}}{% endraw %}"
                     },
-                    {% endif %}
-                    {% if 'Attribute' in column and not isempty(column['Attribute']) %}
+                    {%- endif %}
+                    {%- if 'Start' in column and not isempty(column['Start']) and 'End' in column and not isempty(column['End']) %}
+                    {%- if column['End'] == column['Start'] %}
+                    "Value" : {
+                        "@type" : "xsd:decimal",
+                        "@value" : "{{column['Start']}}"
+                    },
+                    {%- else -%}
+                    "hasStart" : {
+                        "@type" : "TimeInterval",
+                        "Value" : {
+                            "@type" : "xsd:decimal",
+                            "@value" : "{{column['Start']}}"
+                        }
+                    },
+                    "hasEnd" : {
+                        "@type" : "TimeInterval",
+                        "Value" : {
+                            "@type" : "xsd:decimal",
+                            "@value" : "{{column['End']}}"
+                        }
+                    },
+                    {%- endif %}
+                    {%- endif %}
+                    {%- if 'Attribute' in column and not isempty(column['Attribute']) %}
                     "Attribute" : {{column['Attribute'] | tojson }},
-                    {% endif -%}
-                    {% if 'Entity' in column and not isempty(column['Entity']) %}
+                    {%- endif %}
+                    {%- if 'Entity' in column and not isempty(column['Entity']) %}
                     "Entity" : {{column['Entity'] | tojson }},
-                    {% endif -%}
-                    {% if 'Type' in column and not isempty(column['Type']) %}
+                    {%- endif %}
+                    {%- if 'Type' in column and not isempty(column['Type']) %}
                     "Entity" : {{column['Type'] | tojson }},
-                    {% endif -%}
+                    {%- endif %}
+                    {%- if column['Column'] in sdd.resource_codebook %}
+                    "@id" : "{% raw %}{{{%endraw%} resource_codebook['{{column['Column']}}'][row['{{column['Column']}}']] {%raw%}}}{% endraw %}"
+                    {%- else -%}
                     "@id" : "{{column['uri_template']}}"
-                }{% endfor %}
+                    {%- endif %}
+                }{% if not loop.last %},{% endif %}{% endfor %}
             ]
         },
         "np:hasProvenance" : {
             "@type" : "np:Provenance",
-            "@id" : "_:provenance",
+            "@id" : "nanopub/{% raw %}{{name}}{% endraw %}_provenance",
             "@graph" : [
-                {
-                    "@id" : "_:nanopub",
-                    "void:inDataset" : {"@id" : "{{dataset_uri}}"},
-                    "prov:wasDerivedFrom" : {
-                        "@type" : "csvw:Row",
-                        {% raw %}"csvw:rownum" : { "@value" "{{i}}", "@type" : "xsd:integer"}{% endraw %}
-                    }
-                }
             ]
         },
         "np:hasPublicationInfo" : {
             "@type" : "np:PublicationInfo",
-            "@id" : "_:pubinfo",
+            "@id" : "nanopub/{% raw %}{{name}}{% endraw %}_pubinfo",
             "@graph" : [
-
+                {
+                    "@id" : "nanopub/{% raw %}{{name}}{% endraw %}",
+                    "void:inDataset" : {"@id" : "{{dataset}}"},
+                    "prov:wasDerivedFrom" : {
+                        "@type" : "csvw:Row",
+                        "@reverse" : {"csvw:row" : {"@id" : "{{data}}"} },
+                        {% raw %}"csvw:rownum" : { "@value" : "{{name}}", "@type" : "xsd:integer"}{% endraw %}
+                    }
+                }
             ]
         }
     }
 }]'''].
 
-<metadata.ttl> a pv:File;
-    dcterms:format "text/turtle";
+{% if data_out %}
+<{{data_out}}> a pv:File;
+    dcterms:format "application/trig";
     prov:wasGeneratedBy [
       a setl:Load;
-      prov:used :metadata ;
+      prov:used <{{dataset}}> ;
     ].
+{% endif %}
