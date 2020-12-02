@@ -26,7 +26,7 @@ setup(
         'rdflib-jsonld',
         'setlr',
         'jinja2',
-        'slugify',
+        'python-slugify',
         'pandas>=0.23.0',
     ],
     entry_points = {
