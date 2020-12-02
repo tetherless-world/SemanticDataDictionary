@@ -20,6 +20,7 @@ setup(
     packages=['sdd2rdf'],
     long_description='''SETLr is a tool for generating RDF graphs, including named graphs, from almost any kind of tabular data.''',
     include_package_data = True,
+    package_data={'sdd2rdf': ['templates/*.jinja']},
     install_requires = [
         'future',
         'rdflib',
