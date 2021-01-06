@@ -7,6 +7,8 @@ import numpy as np
 import re
 from setlr import isempty
 from slugify import slugify
+import io
+import magic
 
 base_context = {
     "void" : "http://rdfs.org/ns/void#",
@@ -106,19 +108,42 @@ class SemanticDataDictionary:
             template  =col.get('Template',template)
             col['uri_template'] = template.format(i='{{name}}',**self.column_templates)
 
+    loaders = {
+        "text/csv" : pd.read_csv,
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': pd.read_excel
+    }
 
     def _get_table(self, entry=None):
-        if entry is None:
-            path = self.sdd_path
-        else:
+        if entry is not None:
             path = self.infosheet[entry]
-        if '#' in path:
-            infosheet_path, sheetname  = self.sdd_path.split('#')
-            if path != self.sdd_path:
-                sheetname = path.replace('#','',1)
-            return pd.read_excel(infosheet_path, sheet_name=sheetname)
+            if path.startswith('#'):
+                sheetname = path.split('#')[1]
+                location = self.sdd_path
+                local = True
+            else:
+                sheetname = None
+                location = path
+                local = False
         else:
-            return pd.read_csv(path)
+            path = None
+            location = self.sdd_path
+            local = True
+            sheetname = "InfoSheet"
+
+        if isinstance(location, io.IOBase):
+            if self.sdd_format is None:
+                self.sdd_format = magic.from_buffer(location.read(2048), mime=True)
+                location.seek(0)
+            kwargs = {}
+            if sheetname is not None:
+                kwargs['sheet_name'] = sheetname
+            result = loaders[self.sdd_format](location, **kwargs)
+            location.seek(0)
+        else:
+            if local:
+                return pd.read_excel(location, sheet_name=sheetname)
+            else:
+                return pd.read_csv(location)
 
     def _split(self, value):
         if isempty(value):
