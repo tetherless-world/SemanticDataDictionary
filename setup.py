@@ -10,8 +10,8 @@ def read(fname):
 
 setup(
     name = "sdd2rdf",
-    version = "0.1",
-    author = "Jim McCusker",
+    version = "0.1.1",
+    author = "Jamie McCusker",
     author_email = "mccusj@cs.rpi.edu",
     description = ("sdd2rdf generates RDF graphs from semantically annotated data."),
     license = "Apache License 2.0",

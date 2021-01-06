@@ -38,8 +38,11 @@ result = {{str(sdd.resource_codebook)}}
 '''.
 
 
+:setl a setl:SemanticETLScript;
+  rdfs:label "Semantic Data Dictionary-generated SETL Script".
+
 <{{dataset}}> a void:Dataset;
-  prov:wasGeneratedBy [
+  prov:wasGeneratedBy :setl, [
     a setl:Transform, setl:JSLDT;
     prov:used :data;
     prov:qualifiedUsage [ a prov:Use; prov:entity :codebook; prov:hadRole [ dcterms:identifier "codebook"]];
