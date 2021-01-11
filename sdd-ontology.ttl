@@ -33,6 +33,10 @@
         a                owl:Class ;
         rdfs:subClassOf  <http://www.w3.org/ns/prov#Entity> .
 
+<http://rdfs.org/ns/void#uriSpace> a owl:DatatypeProperty;
+        rdfs:label "URI space";
+        rdfs:domain <http://rdfs.org/ns/void#Dataset>.
+
 <http://rdfs.org/ns/void#Dataset>
         rdfs:subClassOf  <http://www.w3.org/ns/dcat#Dataset> .
 
