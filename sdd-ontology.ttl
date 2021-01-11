@@ -1,0 +1,58 @@
+@prefix :      <http://purl.org/twc/sdd#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xml:   <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://www.w3.org/ns/csvw#Table>
+        a                owl:Class ;
+        rdfs:subClassOf  <http://purl.org/net/provenance/ns#File> .
+
+<http://purl.org/twc/sdd>
+        a            owl:Ontology ;
+        owl:imports  <http://www.w3.org/ns/dcat> , <http://vocab.deri.ie/void> .
+
+<http://purl.org/dc/dcmitype/Service>
+        rdfs:subClassOf  <http://www.w3.org/ns/prov#Entity> .
+
+<http://www.w3.org/ns/dcat#Resource>
+        rdfs:subClassOf  <http://www.w3.org/ns/prov#Entity> .
+
+<https://www.iana.org/assignments/media-types/text/csv>
+        a                owl:Class ;
+        rdfs:label       "Comma Separated Value File" ;
+        rdfs:subClassOf  <http://www.w3.org/ns/csvw#Table> .
+
+<http://purl.org/dc/terms/conformsTo>
+        a           owl:ObjectProperty ;
+        rdfs:label  "conforms to" ;
+        rdfs:range  <http://purl.org/dc/terms/Standard> .
+
+<http://purl.org/dc/terms/Standard>
+        a                owl:Class ;
+        rdfs:subClassOf  <http://www.w3.org/ns/prov#Entity> .
+
+<http://rdfs.org/ns/void#Dataset>
+        rdfs:subClassOf  <http://www.w3.org/ns/dcat#Dataset> .
+
+<http://purl.org/twc/sdd/SemanticDataDictionary>
+        a                owl:Class ;
+        rdfs:label       "Semantic Data Dictionary" ;
+        rdfs:subClassOf  <http://purl.org/twc/sdd/DataDictionary> .
+
+<http://purl.org/twc/sdd/DataDictionary>
+        a                owl:Class ;
+        rdfs:label       "Data Dictionary" ;
+        rdfs:subClassOf  <http://purl.org/dc/terms/Standard> .
+
+<http://www.w3.org/ns/dcat#Distribution>
+        rdfs:subClassOf  <http://www.w3.org/ns/prov#Entity> .
+
+<http://purl.org/net/provenance/ns#File>
+        a                owl:Class ;
+        rdfs:subClassOf  <http://www.w3.org/ns/prov#Entity> .
+
+<http://www.w3.org/ns/csvw#delimiter>
+        a            owl:DatatypeProperty ;
+        rdfs:domain  <http://www.w3.org/ns/csvw#Table> .
