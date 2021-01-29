@@ -72,20 +72,45 @@ result = {{str(sdd.resource_codebook)}}
                     "Time" : { "@id" : "{{sdd.columns[column['Time']]['uri_template']}}" },
                     {%- endif %}
                     {%- if 'wasDerivedFrom' in column and not isempty(column['wasDerivedFrom']) %}
-                    "wasDerivedFrom" : { "@id" : "{{sdd.columns[column['wasDerivedFrom']]['uri_template']}}" },
+                    "wasDerivedFrom" : [
+                        {% for entity in column['wasDerivedFrom'] -%}
+                        { "@id" : "{{sdd.columns[entity]['uri_template']}}" }
+                        {%- if not loop.last %},{% endif %}
+                        {%- endfor %}
+                    ],
                     {%- endif %}
                     {%- if 'wasGeneratedBy' in column and not isempty(column['wasGeneratedBy']) %}
-                    "wasGeneratedBy" : { "@id" : "{{sdd.columns[column['wasGeneratedBy']]['uri_template']}}" },
+                    "wasGeneratedBy" : [
+                        {% for entity in column['wasGeneratedBy'] -%}
+                            { "@id" : "{{sdd.columns[entity]['uri_template']}}" }
+                            {%- if not loop.last %},{% endif %}
+                        {%- endfor %}
+                    ],
                     {%- endif %}
                     {%- if 'Role' in column and not isempty(column['Role']) %}
                     "Role" : {
                         {% if not isempty(column['inRelationTo']) -%}
-                        "inRelationTo" : { "@id" : "{{sdd.columns[column['inRelationTo']]['uri_template']}}" },
+                            {% for entity in column['inRelationTo'] -%}
+                                { "@id" : "{{sdd.columns[entity]['uri_template']}}" }
+                                {%- if not loop.last %},{% endif %}
+                            {%- endfor %}
                         {% endif -%}
                         "@type" : {{column['Role'] | tojson}}
                     },
                     {%- elif 'Relation' in column and not isempty(column['Relation']) and not isempty(column['inRelationTo']) -%}
-                    "{{column['Relation']}}" : { "@id" : "{{sdd.columns[column['inRelationTo']]['uri_template']}}" },
+                    "{{column['Relation']}}" : [
+                        {% for entity in column['inRelationTo'] -%}
+                            { "@id" : "{{sdd.columns[entity]['uri_template']}}" }
+                            {%- if not loop.last %},{% endif %}
+                        {%- endfor %}
+                    ],
+                    {%- else -%}
+                    "inRelationTo" : [
+                        {% for entity in column['inRelationTo'] -%}
+                            { "@id" : "{{sdd.columns[entity]['uri_template']}}" }
+                            {%- if not loop.last %},{% endif %}
+                        {%- endfor %}
+                    ],
                     {%- endif %}
                     {%- if not column['Column'].startswith("??") %}
                     "rdf:type" : [
@@ -96,9 +121,9 @@ result = {{str(sdd.resource_codebook)}}
                     ],
                     "Value" : {
                         {%- if 'Format' in column and not isempty(column['Format']) %}
-                        "@type" : "{{column.get('Format')}}",
+                        "@type" : "{{column.get('@type')}}",
                         {%- endif %}
-                        "@value" : "{% raw %}{{{% endraw %}row['{{column['Column']}}']{% raw %}}}{% endraw %}"
+                        "@value" : "{{column['@value']}}"
                     },
                     {%- endif %}
                     {%- if 'Start' in column and not isempty(column['Start']) and 'End' in column and not isempty(column['End']) %}

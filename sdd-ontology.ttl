@@ -6,17 +6,23 @@
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 
 <http://www.w3.org/ns/csvw#Table>
+        rdfs:label "Table";
         a                owl:Class ;
         rdfs:subClassOf  <http://purl.org/net/provenance/ns#File> .
 
 <http://purl.org/twc/sdd>
+        rdfs:label "Semantic Data Dictionary Ontology";
         a            owl:Ontology ;
         owl:imports  <http://www.w3.org/ns/dcat> , <http://vocab.deri.ie/void> .
 
 <http://purl.org/dc/dcmitype/Service>
+        a owl:Class;
+        rdfs:label "Service";
         rdfs:subClassOf  <http://www.w3.org/ns/prov#Entity> .
 
 <http://www.w3.org/ns/dcat#Resource>
+        a owl:Class;
+        rdfs:label "Data Resource";
         rdfs:subClassOf  <http://www.w3.org/ns/prov#Entity> .
 
 <https://www.iana.org/assignments/media-types/text/csv>
@@ -30,8 +36,12 @@
         rdfs:range  <http://purl.org/dc/terms/Standard> .
 
 <http://purl.org/dc/terms/Standard>
+        rdfs:label "Standard";
         a                owl:Class ;
         rdfs:subClassOf  <http://www.w3.org/ns/prov#Entity> .
+
+rdfs:label rdfs:label "Label";
+        a owl:DatatypeProperty.
 
 <http://rdfs.org/ns/void#uriSpace> a owl:DatatypeProperty;
         rdfs:label "URI space";
@@ -50,13 +60,16 @@
         rdfs:label       "Data Dictionary" ;
         rdfs:subClassOf  <http://purl.org/dc/terms/Standard> .
 
-<http://www.w3.org/ns/dcat#Distribution>
+<http://www.w3.org/ns/dcat#Distribution> a owl:Class;
+        rdfs:label "Data File";
         rdfs:subClassOf  <http://www.w3.org/ns/prov#Entity> .
 
 <http://purl.org/net/provenance/ns#File>
+        rdfs:label "File";
         a                owl:Class ;
         rdfs:subClassOf  <http://www.w3.org/ns/prov#Entity> .
 
 <http://www.w3.org/ns/csvw#delimiter>
+        rdfs:label "delimiter";
         a            owl:DatatypeProperty ;
         rdfs:domain  <http://www.w3.org/ns/csvw#Table> .

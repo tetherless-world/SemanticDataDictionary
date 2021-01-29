@@ -43,6 +43,9 @@ class SemanticDataDictionary:
     codemap = None
     timeline = None
     infosheet = None
+    sdd_format = None
+    sheets = None
+    data = None
 
     def __init__(self, sdd_path, prefix):
         self.sdd_path = sdd_path
@@ -96,17 +99,30 @@ class SemanticDataDictionary:
             for annotation in ['Unit','Format','Role','Relation']:
                 if annotation in col and not isempty(col[annotation]):
                     col[annotation] = self.codemap.get(col[annotation],col[annotation])
-            for annotation in ['wasDerivedFrom','wasGeneratedBy']:
-                if annotation in col and not isempty(col[annotation]):
+            for annotation in ['wasDerivedFrom','wasGeneratedBy', 'inRelationTo']:
+                if annotation in col:
                     col[annotation] = self._split(col[annotation])
             for annotation in ['Attribute','Entity','Type']:
                 if annotation in col and not isempty(col[annotation]):
                     col[annotation] = self._split_and_map(col[annotation])
-            self.column_templates[col['Column']] = "{{row.get('%s')}}"%col['Column']
+            self.column_templates[slugify(col['Column'])] = "{{row.get('%s')}}"%col['Column']
+            if 'Format' in col and not isempty(col['Format']):
+                value_type = col['Format'].split("^^")
+                if len(value_type) > 0:
+                    col['@value'] = value_type[0]
+                    if len(col['@value']) == 0:
+                        col['@value'] = '{%s}'%col['Column']
+                        col['@type'] = value_type[1]
+            if '@value' not in col and not col['Column'].startswith('??'):
+                col['@value'] = '{%s}'%col['Column']
         for col in self.columns.values():
             template = slugify(col['Column'])+'-{i}'
-            template  =col.get('Template',template)
+            template = col.get('Template',template)
+            template = re.sub(r'(:<=\{).*(:=\})',lambda x:slugify(x.group(0)),template)
             col['uri_template'] = template.format(i='{{name}}',**self.column_templates)
+            if '@value' in col:
+                col['@value'] = re.sub(r'\{.*\}',lambda x:slugify(x.group(0)),col['@value'])
+                col['@value'] = col['@value'].format(i='{{name}}',**self.column_templates)
 
     loaders = {
         "text/csv" : pd.read_csv,
@@ -131,14 +147,13 @@ class SemanticDataDictionary:
             sheetname = "InfoSheet"
 
         if isinstance(location, io.IOBase):
-            if self.sdd_format is None:
-                self.sdd_format = magic.from_buffer(location.read(2048), mime=True)
-                location.seek(0)
+            if self.data is None:
+                self.data = location.read()
+                self.sdd_format = magic.from_buffer(self.data[:2048], mime=True)
             kwargs = {}
             if sheetname is not None:
                 kwargs['sheet_name'] = sheetname
-            result = loaders[self.sdd_format](location, **kwargs)
-            location.seek(0)
+            return self.loaders[self.sdd_format](io.BytesIO(self.data), **kwargs)
         else:
             if local:
                 return pd.read_excel(location, sheet_name=sheetname)
@@ -146,9 +161,10 @@ class SemanticDataDictionary:
                 return pd.read_csv(location)
 
     def _split(self, value):
-        if isempty(value):
+        if value is None or isempty(value):
             return []
-        return re.split('\\\\s*[,;&]\\\\s*', value)
+        result = re.split(r'\s*[,;&]\s*', value)
+        return result
 
     def _split_and_map(self, value):
         if isempty(value):
