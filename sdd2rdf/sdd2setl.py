@@ -86,7 +86,9 @@ class SemanticDataDictionary:
                                        if not isempty(row.prefix) and not isempty(row.url)]))
 
         dm = self._get_table('Dictionary Mapping')
-        self.columns = dict([(col.Column, col.to_dict()) for i, col in dm.iterrows()])
+        self.columns = dict([(col.Column, col.to_dict())
+                             for i, col in dm.iterrows()
+                             if isinstance(col['Column'],str)])
         timeline = self._get_table('Timeline')
         for i, t in timeline.iterrows():
             if t.Name in self.columns:
@@ -99,7 +101,7 @@ class SemanticDataDictionary:
             for annotation in ['Unit','Format','Role','Relation']:
                 if annotation in col and not isempty(col[annotation]):
                     col[annotation] = self.codemap.get(col[annotation],col[annotation])
-            for annotation in ['wasDerivedFrom','wasGeneratedBy', 'inRelationTo']:
+            for annotation in ['attributeOf','wasDerivedFrom','wasGeneratedBy', 'inRelationTo']:
                 if annotation in col:
                     col[annotation] = self._split(col[annotation])
             for annotation in ['Attribute','Entity','Type']:
@@ -156,9 +158,9 @@ class SemanticDataDictionary:
             return self.loaders[self.sdd_format](io.BytesIO(self.data), **kwargs)
         else:
             if local:
-                return pd.read_excel(location, sheet_name=sheetname)
+                return pd.read_excel(location, sheet_name=sheetname,dtype=str)
             else:
-                return pd.read_csv(location)
+                return pd.read_csv(location,dtype=str)
 
     def _split(self, value):
         if value is None or isempty(value):

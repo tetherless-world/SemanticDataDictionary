@@ -116,9 +116,10 @@ result = properties
                     },
                     { "@if" : "not isempty(row.Start)",
                       "@type": "Restriction",
-                      "on" : "sio:hasStartTime",
+                      "on" : "sio:hasAttribute",
                       "only" : { "@type" : "Class",
                         "and" : [
+                          { "@id": "sio:MinimalValue"},
                           { "@id": "{{row.Unit}}"},
                           { "@type" : "Restriction",
                             "on" : "sio:hasValue",
@@ -129,9 +130,10 @@ result = properties
                     },
                     { "@if" : "not isempty(row.End)",
                       "@type": "Restriction",
-                      "on" : "sio:hasEndTime",
+                      "on" : "sio:hasAttribute",
                       "only" : { "@type" : "Class",
                         "and" : [
+                          { "@id": "sio:MaximalValue"},
                           { "@id": "{{row.Unit}}"},
                           { "@type" : "Restriction",
                             "on" : "sio:hasValue",
@@ -242,7 +244,7 @@ result = properties
                     },
                     { "@if" : "not isempty(row.Time)",
                       "@type": "Restriction",
-                      "on" : "sio:measuredAt",
+                      "on" : "sio:existsAt",
                       "some" : {"@id" : "{{row.Time | replace('??', '__')}}" }
                     },
                     { "@if" : "not isempty(row.Entity)",

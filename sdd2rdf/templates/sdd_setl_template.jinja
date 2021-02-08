@@ -60,11 +60,12 @@ result = {{str(sdd.resource_codebook)}}
             "@id" : "nanopub/{% raw %}{{name}}{% endraw %}_assertion",
             "@graph" : [
                 {%for column in sdd.columns.values() %}{
-                    {%- if 'attributeOf' in column and not isempty(column['attributeOf']) %}
-                    "attributeOf" : {
-                      "@id" : "{{sdd.columns[column['attributeOf']]['uri_template']}}"
-                    },
-                    {%- endif %}
+                    "attributeOf" : [
+                        {%- for attr in column['attributeOf'] %}
+                        { "@id" : "{{sdd.columns[attr]['uri_template']}}" }
+                        {%- if not loop.last %},{% endif %}
+                        {%- endfor %}
+                    ],
                     {%- if 'Unit' in column and not isempty(column['Unit']) %}
                     "Unit" : { "@id" : "{{column['Unit']}}" },
                     {%- endif %}
