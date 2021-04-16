@@ -108,15 +108,16 @@ class SemanticDataDictionary:
                 if annotation in col and not isempty(col[annotation]):
                     col[annotation] = self._split_and_map(col[annotation])
             self.column_templates[slugify(col['Column'])] = "{{row.get('%s')}}"%col['Column']
+            if not col['Column'].startswith('??'):
+                col['@value'] = '{%s}'%slugify(col['Column'])
             if 'Format' in col and not isempty(col['Format']):
                 value_type = col['Format'].split("^^")
-                if len(value_type) > 0:
-                    col['@value'] = value_type[0]
-                    if len(col['@value']) == 0:
-                        col['@value'] = '{%s}'%col['Column']
-                        col['@type'] = value_type[1]
-            if '@value' not in col and not col['Column'].startswith('??'):
-                col['@value'] = '{%s}'%col['Column']
+                if len(value_type) == 1:
+                    col['@type'] = value_type[0]
+                elif if len(value_type) == 2:
+                    col['@type'] = value_type[1]
+                    if (len(value_type[0]) > 0:
+                        col['@value'] = value_type[0]
         for col in self.columns.values():
             template = slugify(col['Column'])+'-{i}'
             template = col.get('Template',template)
