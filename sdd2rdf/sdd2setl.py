@@ -124,7 +124,6 @@ class SemanticDataDictionary:
             template = re.sub(r'(:<=\{).*(:=\})',lambda x:slugify(x.group(0)),template)
             col['uri_template'] = template.format(i='{{name}}',**self.column_templates)
             if '@value' in col:
-                col['@value'] = re.sub(r'\{.*\}',lambda x:slugify(x.group(0)),col['@value'])
                 col['@value'] = col['@value'].format(i='{{name}}',**self.column_templates)
 
     loaders = {
