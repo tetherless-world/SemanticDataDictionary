@@ -148,19 +148,20 @@ class SemanticDataDictionary:
             local = True
             sheetname = "InfoSheet"
 
+        kwargs = {'dtype':str }
+        if sheetname is not None:
+            kwargs['sheet_name'] = sheetname
+
         if isinstance(location, io.IOBase):
             if self.data is None:
                 self.data = location.read()
                 self.sdd_format = magic.from_buffer(self.data[:2048], mime=True)
-            kwargs = {}
-            if sheetname is not None:
-                kwargs['sheet_name'] = sheetname
             return self.loaders[self.sdd_format](io.BytesIO(self.data), **kwargs)
         else:
             if local:
-                return pd.read_excel(location, sheet_name=sheetname,dtype=str)
+                return pd.read_excel(location, **kwargs)
             else:
-                return pd.read_csv(location,dtype=str)
+                return pd.read_csv(location, **kwargs)
 
     def _split(self, value):
         if value is None or isempty(value):
