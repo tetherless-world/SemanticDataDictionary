@@ -91,10 +91,12 @@ result = {{str(sdd.resource_codebook)}}
                     {%- if 'Role' in column and not isempty(column['Role']) %}
                     "Role" : {
                         {% if not isempty(column['inRelationTo']) -%}
-                            {% for entity in column['inRelationTo'] -%}
-                                { "@id" : "{{sdd.columns[entity]['uri_template']}}" }
-                                {%- if not loop.last %},{% endif %}
-                            {%- endfor %}
+                            "inRelationTo" : [
+                                {% for entity in column['inRelationTo'] -%}
+                                    { "@id" : "{{sdd.columns[entity]['uri_template']}}" }
+                                    {%- if not loop.last %},{% endif %}
+                                {%- endfor %}
+                            ],
                         {% endif -%}
                         "@type" : {{column['Role'] | tojson}}
                     },
