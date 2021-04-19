@@ -114,9 +114,9 @@ class SemanticDataDictionary:
                 value_type = col['Format'].split("^^")
                 if len(value_type) == 1:
                     col['@type'] = value_type[0]
-                elif if len(value_type) == 2:
+                elif len(value_type) == 2:
                     col['@type'] = value_type[1]
-                    if (len(value_type[0]) > 0:
+                    if len(value_type[0]) > 0:
                         col['@value'] = value_type[0]
         for col in self.columns.values():
             template = slugify(col['Column'])+'-{i}'
