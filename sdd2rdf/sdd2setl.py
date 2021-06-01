@@ -21,7 +21,7 @@ base_context = {
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "Attribute" : { "@id" : "rdf:type", "@type" : "@id"},
     "Entity" : { "@id" : "rdf:type", "@type" : "@id"},
-    "attributeOf" : { "@id" : "sio:isAttributeOf", "@type" : "@id"},
+    "attributeOf" : { "@id" : "sio:isAttributeOf", "@type" : "@id", "@reverse" : "sio:hasAttribute" },
     "Entity" : { "@id" : "rdf:type", "@type" : "@id"},
     "inRelationTo" : { "@id" : "sio:inRelationTo", "@type" : "@id"},
     "Role" : { "@id" : "sio:hasRole", "@type" : "@id"},
@@ -88,9 +88,11 @@ class SemanticDataDictionary:
         dm = self._get_table('Dictionary Mapping')
         self.columns = dict([(col.Column, col.to_dict())
                              for i, col in dm.iterrows()
-                             if isinstance(col['Column'],str)])
+                             if not isempty(col['Column'])])
         timeline = self._get_table('Timeline')
         for i, t in timeline.iterrows():
+            if isempty(t.Name):
+                continue
             if t.Name in self.columns:
                 self.columns[t.Name].update(t.to_dict())
             else:
