@@ -19,6 +19,7 @@ base_context = {
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
     "prov": "http://www.w3.org/ns/prov#",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "np" : "http://www.nanopub.org/nschema#",
     "Attribute" : { "@id" : "rdf:type", "@type" : "@id"},
     "Entity" : { "@id" : "rdf:type", "@type" : "@id"},
     "attributeOf" : { "@id" : "sio:isAttributeOf", "@type" : "@id", "@reverse" : "sio:hasAttribute" },
@@ -99,6 +100,7 @@ class SemanticDataDictionary:
                 self.columns[t.Name] = t.to_dict()
                 self.columns[t.Name]['Column'] = t.Name
         self.column_templates = {}
+        self.value_templates = {}
         for key, col in self.columns.items():
             for annotation in ['Unit','Format','Role','Relation']:
                 if annotation in col and not isempty(col[annotation]):
@@ -109,9 +111,11 @@ class SemanticDataDictionary:
             for annotation in ['Attribute','Entity','Type']:
                 if annotation in col and not isempty(col[annotation]):
                     col[annotation] = self._split_and_map(col[annotation])
-            self.column_templates[slugify(col['Column'])] = "{{row.get('%s')}}"%col['Column']
+            self.value_templates[slugify(col['Column'],separator="_")] = "{{row.get('%s')}}"%col['Column']
+            #self.column_templates[slugify(col['Column'],separator="_")] = "{{row.get('%s').replace(' ','_').replace('>','').replace('\\','')}}"%col['Column']
+            self.column_templates[slugify(col['Column'],separator="_")] = "{{slugify(str(row.get('%s')),separator='_',lowercase=False)}}"%col['Column']
             if not col['Column'].startswith('??'):
-                col['@value'] = '{%s}'%slugify(col['Column'])
+                col['@value'] = '{%s}'%slugify(col['Column'],separator="_")
             if 'Format' in col and not isempty(col['Format']):
                 value_type = col['Format'].split("^^")
                 if len(value_type) == 1:
@@ -121,12 +125,16 @@ class SemanticDataDictionary:
                     if len(value_type[0]) > 0:
                         col['@value'] = value_type[0]
         for col in self.columns.values():
-            template = slugify(col['Column'])+'-{i}'
-            template = col.get('Template',template)
-            template = re.sub(r'(:<=\{).*(:=\})',lambda x:slugify(x.group(0)),template)
+            default = slugify(col['Column'],separator="_")+'_{i}'
+
+            template = col.get('Template', default)
+            if isempty(template):
+                template = slugify(col['Column'],separator="_")+'_{i}'
+
+            template = re.sub(r'(:<=\{).*(:=\})',lambda x:str(slugify(x.group(0),separator="_")),template)
             col['uri_template'] = template.format(i='{{name}}',**self.column_templates)
             if '@value' in col:
-                col['@value'] = col['@value'].format(i='{{name}}',**self.column_templates)
+                col['@value'] = col['@value'].format(i='{{name}}',**self.value_templates)
 
     loaders = {
         "text/csv" : pd.read_csv,
