@@ -3,6 +3,7 @@
 prefixes = ExampleProject/config/prefixes.csv
 # Specify the base uri to be associated with all triples minted by the script
 base_uri = example-kb
+nanopublication=enabled
 
 [Source Files]
 dictionary = ExampleProject/input/DM/exampleDM.csv
