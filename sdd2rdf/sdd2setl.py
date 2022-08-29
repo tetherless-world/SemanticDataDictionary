@@ -8,7 +8,7 @@ import re
 from setlr import isempty
 from slugify import slugify
 import io
-import magic
+import puremagic
 
 base_context = {
     "void" : "http://rdfs.org/ns/void#",
@@ -82,9 +82,10 @@ class SemanticDataDictionary:
         self.context['@base'] = self.prefix
         if 'Prefixes' in self.infosheet:
             prefixes = self._get_table('Prefixes')
-            self.context.update(dict([(str(row.prefix), row.url)
-                                       for i, row in prefixes.iterrows()
-                                       if not isempty(row.prefix) and not isempty(row.url)]))
+            prefix_dict = dict([(str(row.prefix), row.url)
+                                for i, row in prefixes.iterrows()
+                                if not isempty(row.prefix) and not isempty(row.url)])
+            self.context.update(prefix_dict)
 
         dm = self._get_table('Dictionary Mapping')
         self.columns = dict([(col.Column, col.to_dict())
@@ -138,7 +139,8 @@ class SemanticDataDictionary:
 
     loaders = {
         "text/csv" : pd.read_csv,
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': pd.read_excel
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': pd.read_excel,
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': pd.read_excel
     }
 
     def _get_table(self, entry=None):
@@ -165,7 +167,12 @@ class SemanticDataDictionary:
         if isinstance(location, io.IOBase):
             if self.data is None:
                 self.data = location.read()
-                self.sdd_format = magic.from_buffer(self.data[:2048], mime=True)
+                formats = puremagic.from_string(self.data[:2048], mime=True)
+                if len(formats) > 0:
+                    self.sdd_format = formats
+                else:
+                    self.sdd_format = 'text/csv'
+                print("SDD is ",self.sdd_format)
             return self.loaders[self.sdd_format](io.BytesIO(self.data), **kwargs)
         else:
             if local:

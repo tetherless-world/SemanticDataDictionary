@@ -10,7 +10,7 @@ def read(fname):
 
 setup(
     name = "sdd2rdf",
-    version = "1.0.0",
+    version = "1.0.3",
     author = "Jamie McCusker",
     author_email = "mccusj@cs.rpi.edu",
     description = ("sdd2rdf generates RDF graphs from semantically annotated data."),
@@ -29,7 +29,7 @@ setup(
 #        'bsddb3',
         'jinja2',
         'openpyxl',
-        'python-magic',
+        'puremagic',
         'python-slugify',
         'pandas>=0.23.0',
     ],

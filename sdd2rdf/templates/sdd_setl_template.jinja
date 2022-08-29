@@ -127,8 +127,7 @@ result = {{str(sdd.resource_codebook)}}
                         "@type" : "{{column.get('@type')}}",
                         {%- endif %}
                         "@if" : "not isempty(row.get('{{column['Column']}}'))",
-                        "@value" : "{{column['@value']}}",
-                        "@type" : "{{column['@type']}}",
+                        "@value" : "{{column['@value']}}"
                     }],
                     {%- endif %}
                     {%- if 'Start' in column and not isempty(column['Start']) and 'End' in column and not isempty(column['End']) %}
