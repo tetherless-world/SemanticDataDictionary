@@ -51,15 +51,28 @@ result = {{str(sdd.resource_codebook)}}
     {{ sdd.context | tojson }}
     ''';
     prov:value '''[{
-    "@id" : "nanopub/{% raw %}{{name}}{% endraw %}",
+{#    "@id" : "nanopub/{% raw %}{{name}}{% endraw %}",
     "@graph" : {
         "@id" : "nanopub/{% raw %}{{name}}{% endraw %}",
         "@type" : "np:Nanopublication",
         "np:hasAssertion" : {
             "@type" : "np:Assertion",
-            "@id" : "nanopub/{% raw %}{{name}}{% endraw %}_assertion",
+            "@id" : "nanopub/{% raw %}{{name}}{% endraw %}_assertion",#}
             "@graph" : [
-                {%for column in sdd.columns.values() %} {
+                {%for column in sdd.columns.values() %}
+                {%- if ('Attribute' in column and not isempty(column['Attribute'])) or
+                       ('Entity' in column and not isempty(column['Entity'])) %} {
+                    {%for predicate_column in sdd.columns.values() %}
+                    {%- if 'Subject' in predicate_column and predicate_column['Subject'] == column['Column'] %}
+                    "{{predicate_column['Predicate']}}" : [{
+                        {%- if 'Format' in predicate_column and not isempty(predicate_column['Format']) %}
+                        "@type" : "{{predicate_column.get('@type')}}",
+                        {%- endif %}
+                        "@if" : "not isempty(row.get('{{predicate_column['Column']}}'))",
+                        "@value" : "{{predicate_column['@value']}}"
+                    }],
+                    {% endif -%}
+                    {% endfor %}
                     "attributeOf" : [
                         {%- for attr in column['attributeOf'] %}
                         { "@id" : "{{sdd.columns[attr]['uri_template']}}" }
@@ -167,9 +180,9 @@ result = {{str(sdd.resource_codebook)}}
                     {%- else -%}
                     "@id" : "{{column['uri_template']}}"
                     {%- endif %}
-                }{% if not loop.last %},{% endif %}{% endfor %}
+                }{#}{% if not loop.last %} ,{% endif %} #},{% endif %}{% endfor %}{}
             ]
-        },
+{#        },
         "np:hasProvenance" : {
             "@type" : "np:Provenance",
             "@id" : "nanopub/{% raw %}{{name}}{% endraw %}_provenance",
@@ -191,7 +204,7 @@ result = {{str(sdd.resource_codebook)}}
                 }
             ]
         }
-    }
+    } #}
 }]'''].
 
 {% if data_out %}
