@@ -65,7 +65,8 @@ def convertImplicitToKGEntry(*args) :
                     return "<" + prefixes[kb] + args[0].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + "-" + args[1] + ">"
                 else :
                     return "<" + prefixes[kb] + args[0].replace(" ","_").replace(",","").replace("(","").replace(")","").replace("/","-").replace("\\","-") + ">"
-        return '"' + args[0] + "\"^^xsd:string"
+        #return '"' + args[0] + "\"^^xsd:string"
+        return args[0]
     else :
         return args[0]
 
@@ -1193,32 +1194,32 @@ def processData(data_fn, output_file, query_file, swrl_file, cb_tuple, timeline_
                                                     #print(tuple_row)
                                                     if ("Code" in tuple_row) and (str(tuple_row['Code']) == str(row[col_headers.index(a_tuple["Column"])+1]) ):
                                                         #print(tuple_row['Code'])
-                                                        if ("Class" in tuple_row) and (tuple_row['Class'] is not "") :
+                                                        if ("Class" in tuple_row) and (tuple_row['Class'] != "") :
                                                             if ',' in tuple_row['Class'] :
                                                                 classTerms = parseString(tuple_row['Class'],',')
                                                                 for classTerm in classTerms :
                                                                     assertionString += " ;\n        <" + rdf.type + ">    " + convertImplicitToKGEntry(codeMapper(classTerm))
                                                             else :
                                                                 assertionString += " ;\n        <" + rdf.type + ">    "+ convertImplicitToKGEntry(codeMapper(tuple_row['Class']))
-                                                        if ("Resource" in tuple_row) and (tuple_row['Resource'] is not "") :
+                                                        if ("Resource" in tuple_row) and (tuple_row['Resource'] != "") :
                                                             if ',' in tuple_row['Resource'] :
                                                                 classTerms = parseString(tuple_row['Resource'],',')
                                                                 for classTerm in classTerms :
                                                                     assertionString += " ;\n        <" + rdf.type + ">    " + convertImplicitToKGEntry(codeMapper(classTerm))
                                                             else :
                                                                 assertionString += " ;\n        <" + rdf.type + ">    " + convertImplicitToKGEntry(codeMapper(tuple_row['Resource']))
-                                                        if ("Label" in tuple_row) and (tuple_row['Label'] is not "") :
+                                                        if ("Label" in tuple_row) and (tuple_row['Label'] != "") :
                                                             assertionString += " ;\n        <" + properties_tuple["Label"] + ">    \"" + tuple_row['Label'] + "\"^^xsd:string"
-                                                        if ("Comment" in tuple_row) and (tuple_row['Comment'] is not "") :
+                                                        if ("Comment" in tuple_row) and (tuple_row['Comment'] != "") :
                                                             assertionString += " ;\n        <" + properties_tuple["Comment"] + ">    \"" + tuple_row['Comment'] + "\"^^xsd:string"
-                                                        if ("Definition" in tuple_row) and (tuple_row['Definition'] is not "") :
+                                                        if ("Definition" in tuple_row) and (tuple_row['Definition'] != "") :
                                                             assertionString += " ;\n        <" + properties_tuple["Definition"] + ">    \"" + tuple_row['Definition'] + "\"^^xsd:string"
                                         #print(str(row[col_headers.index(a_tuple["Column"])]))
                                         try :
                                             if str(row[col_headers.index(a_tuple["Column"])+1]) == "nan" :
                                                 pass
                                             # Check if Format was populated in the DM row of the current data point
-                                            if ("Format" in a_tuple) and (a_tuple['Format'] is not "") :
+                                            if ("Format" in a_tuple) and (a_tuple['Format'] != "") :
                                                 # Check if an xsd prefix is included in the populated Format cell
                                                 if("xsd:" in a_tuple['Format']):
                                                     assertionString += " ;\n        <" + properties_tuple["Value"] + ">    \"" + str(row[col_headers.index(a_tuple["Column"])+1]) + "\"^^" + a_tuple['Format']
