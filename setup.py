@@ -10,7 +10,7 @@ def read(fname):
 
 setup(
     name = "sdd2rdf",
-    version = "1.1.0",
+    version = "1.3.1",
     author = "Jamie McCusker",
     author_email = "mccusj@cs.rpi.edu",
     description = ("sdd2rdf generates RDF graphs from semantically annotated data."),
@@ -34,8 +34,7 @@ setup(
         'pandas>=0.23.0',
     ],
     entry_points = {
-        'console_scripts': ['sdd2rdf=sdd2rdf:main'],
-        'console_scripts': ['sdd2setl=sdd2rdf:sdd2setl_main'],
+        'console_scripts': ['sdd2rdf=sdd2rdf:main','sdd2setl=sdd2rdf:sdd2setl_main','sddmarkup=sdd2rdf:sddmarkup_main'],
     },
     classifiers=[
         "Development Status :: 5 - Production/Stable",

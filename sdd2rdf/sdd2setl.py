@@ -11,6 +11,7 @@ import io
 import puremagic
 import json
 import fnmatch
+import rdflib
 
 base_context = {
     "void" : "http://rdfs.org/ns/void#",
@@ -107,6 +108,8 @@ class SemanticDataDictionary:
             prefix_dict = dict([(str(row.prefix), row.url)
                                 for i, row in prefixes.iterrows()
                                 if not isempty(row.prefix) and not isempty(row.url)])
+            self.prefixes = dict([(prefix, rdflib.Namespace(url))
+                                  for (prefix, url) in prefix_dict.items()])
             self.context.update(prefix_dict)
 
         dm = self._get_table('Dictionary Mapping')
@@ -200,7 +203,7 @@ class SemanticDataDictionary:
         for col in self.columns.values():
             default = slugify(col['Column'],separator="_")+'_{i}'
             template = col.get('Template', default)
-            print(col['Column'], template)
+            #print(col['Column'], template)
             if isempty(template):
                 template = slugify(col['Column'],separator="_")+'_{i}'
 
@@ -257,7 +260,7 @@ class SemanticDataDictionary:
                     self.sdd_format = formats
                 else:
                     self.sdd_format = 'text/csv'
-                print("SDD is ",self.sdd_format)
+                #print("SDD is ",self.sdd_format)
             return self.loaders[self.sdd_format](io.BytesIO(self.data), **kwargs)
         else:
             if local:
