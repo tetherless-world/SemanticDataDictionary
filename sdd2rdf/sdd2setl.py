@@ -248,7 +248,7 @@ class SemanticDataDictionary:
             local = True
             sheetname = "InfoSheet"
 
-        kwargs = {'dtype':str }
+        kwargs = {'dtype':str , 'keep_default_na' : False, 'na_values': ['']}
         if sheetname is not None:
             kwargs['sheet_name'] = sheetname
 
