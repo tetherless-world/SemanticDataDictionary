@@ -105,7 +105,7 @@ class SemanticDataDictionary:
         self.context['@base'] = self.prefix
         if 'Prefixes' in self.infosheet:
             prefixes = self._get_table('Prefixes')
-            prefix_dict = dict([(str(row.prefix), row.url)
+            prefix_dict = dict([(str(row.prefix), row.url if row.url[0] != '{' else json.loads(row.url))
                                 for i, row in prefixes.iterrows()
                                 if not isempty(row.prefix) and not isempty(row.url)])
             self.prefixes = dict([(prefix, rdflib.Namespace(url))
