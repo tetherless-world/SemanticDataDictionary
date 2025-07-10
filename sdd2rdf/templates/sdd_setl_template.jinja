@@ -20,8 +20,6 @@
 :data a {{data_type}}, setl:Table;
   {% if delimiter %} csvw:delimiter "{{delimiter}}";{% endif %}
   {% if sheetname %} csvw:sheetname "{{sheetname}}";{% endif %}
-  {% if data_type == 'setl:XML' and sdd.infosheet.get('selector') -%}
-  setl:xpath '''{{ sdd.infosheet.get('selector') }}''';{% endif %}
   prov:wasGeneratedBy [
     a setl:Extract;
     prov:used <{{data}}>;
@@ -39,14 +37,6 @@ result = {{str(sdd.codebook)}}
 result = {{str(sdd.resource_codebook)}}
 '''.
 
-:nested_enumerate a owl:Class, prov:SoftwareAgent, setl:PythonScript;
-      rdfs:subClassOf prov:Activity;
-      prov:value '''
-def result(iter, name):
-    for i, x in enumerate(iter):
-        print(name, x, i, "%s_%s"% (name, i))
-        yield "%s_%s"% (name, i), x
-'''.
 
 :setl a setl:SemanticETLScript;
   rdfs:label "Semantic Data Dictionary-generated SETL Script".
@@ -55,155 +45,191 @@ def result(iter, name):
   prov:wasGeneratedBy :setl, [
     a setl:Transform, setl:JSLDT;
     prov:used :data;
-    prov:qualifiedUsage [ a prov:Use; prov:entity :nested_enumerate; prov:hadRole [ dcterms:identifier "nested_enumerate"]];
     prov:qualifiedUsage [ a prov:Use; prov:entity :codebook; prov:hadRole [ dcterms:identifier "codebook"]];
     prov:qualifiedUsage [ a prov:Use; prov:entity :resource_codebook; prov:hadRole [ dcterms:identifier "resource_codebook"]];
     setl:hasContext '''
     {{ sdd.context | tojson }}
     ''';
-    prov:value '''[
-              {% for branch_column in sdd.root_columns recursive   %}
+    prov:value '''[{
+{#    "@id" : "nanopub/{% raw %}{{name}}{% endraw %}",
+    "@graph" : {
+        "@id" : "nanopub/{% raw %}{{name}}{% endraw %}",
+        "@type" : "np:Nanopublication",
+        "np:hasAssertion" : {
+            "@type" : "np:Assertion",
+            "@id" : "nanopub/{% raw %}{{name}}{% endraw %}_assertion",#}
+            "@graph" : [
+                {%for column in sdd.columns.values() %}
+                {%- if ('Attribute' in column and not isempty(column['Attribute'])) or
+                       ('Entity' in column and not isempty(column['Entity'])) %} {
+                    {%for predicate_column in sdd.columns.values() %}
+                    {%- if 'Subject' in predicate_column and predicate_column['Subject'] == column['Column'] %}
+                    "{{predicate_column['Predicate']}}" : [{
+                        {%- if 'Format' in predicate_column and not isempty(predicate_column['Format']) %}
+                        "@type" : "{{predicate_column.get('@type')}}",
+                        {%- endif %}
+                        "@if" : "not isempty(row.get('{{predicate_column['Column']}}'))",
+                        "@value" : "{{predicate_column['@value']}}"
+                    }],
+                    {% endif -%}
+                    {% endfor %}
+                    "attributeOf" : [
+                        {%- for attr in column['attributeOf'] %}
+                        {
+                          "@if" : "'owl:Nothing' not in codebook.get(('{{sdd.columns[attr]['Column']}}', row['{{sdd.columns[attr]['Column']}}']), [])",
+                          "@id" : "{{sdd.columns[attr]['uri_template']}}"
+                        }
+                        {%- if not loop.last %},{% endif %}
+                        {%- endfor %}
+                    ],
+                    {%- if 'Unit' in column and not isempty(column['Unit']) %}
+                    "Unit" : { "@id" : "{{column['Unit']}}" },
+                    {%- endif %}
+                    {%- if 'Time' in column and not isempty(column['Time']) %}
+                    "Time" : [
+                      {
+                          "@if" : "'owl:Nothing' not in codebook.get(('{{sdd.columns[column['Time']]['Column']}}', row['{{sdd.columns[column['Time']]['Column']}}']), [])",
+                        "@id" : "{{sdd.columns[column['Time']]['uri_template']}}"
+                      }
+                    ],
+                    {%- endif %}
+                    {%- if 'wasDerivedFrom' in column and not isempty(column['wasDerivedFrom']) %}
+                    "wasDerivedFrom" : [
+                        {% for entity in column['wasDerivedFrom'] -%}
+                        {
+                          "@if" : "'owl:Nothing' not in codebook.get(('{{sdd.columns[entity]['Column']}}', row['{{sdd.columns[entity]['Column']}}']), [])",
+                          "@id" : "{{sdd.columns[entity]['uri_template']}}"
+                        }
+                        {%- if not loop.last %},{% endif %}
+                        {%- endfor %}
+                    ],
+                    {%- endif %}
+                    {%- if 'wasGeneratedBy' in column and not isempty(column['wasGeneratedBy']) %}
+                    "wasGeneratedBy" : [
+                        {% for entity in column['wasGeneratedBy'] -%}
+                            {
+                              "@if" : "'owl:Nothing' not in codebook.get(('{{sdd.columns[entity]['Column']}}', row['{{sdd.columns[entity]['Column']}}']), [])",
+                              "@id" : "{{sdd.columns[entity]['uri_template']}}"
+                            }
+                            {%- if not loop.last %},{% endif %}
+                        {%- endfor %}
+                    ],
+                    {%- endif %}
+                    {%- if 'Role' in column and not isempty(column['Role']) %}
+                    "Role" : {
+                        {% if not isempty(column['inRelationTo']) -%}
+                            "inRelationTo" : [
+                                {% for entity in column['inRelationTo'] -%}
+                                    {
+                                      "@if" : "'owl:Nothing' not in codebook.get(('{{sdd.columns[entity]['Column']}}', row['{{sdd.columns[entity]['Column']}}']), [])",
+                                      "@id" : "{{sdd.columns[entity]['uri_template']}}"
+                                    }
+                                    {%- if not loop.last %},{% endif %}
+                                {%- endfor %}
+                            ],
+                        {% endif -%}
+                        "@type" : {{column['Role'] | tojson}}
+                    },
+                    {%- elif 'Relation' in column and not isempty(column['Relation']) and not isempty(column['inRelationTo']) -%}
+                    "{{column['Relation']}}" : [
+                        {% for entity in column['inRelationTo'] -%}
+                            {
+                              "@if" : "'owl:Nothing' not in codebook.get(('{{sdd.columns[entity]['Column']}}', row['{{sdd.columns[entity]['Column']}}']), [])",
+                              "@id" : "{{sdd.columns[entity]['uri_template']}}"
+                            }
+                            {%- if not loop.last %},{% endif %}
+                        {%- endfor %}
+                    ],
+                    {%- else -%}
+                    "inRelationTo" : [
+                        {% for entity in column['inRelationTo'] -%}
+                            {
+                              "@if" : "'owl:Nothing' not in codebook.get(('{{sdd.columns[entity]['Column']}}', row['{{sdd.columns[entity]['Column']}}']), [])",
+                              "@id" : "{{sdd.columns[entity]['uri_template']}}"
+                            }
+                            {%- if not loop.last %},{% endif %}
+                        {%- endfor %}
+                    ],
+                    {%- endif %}
+                    {%- if not column['Column'].startswith("??") %}
+                    "rdf:type" : [
+                        {
+                            "@for" : "class in codebook.get(('{{column['Column']}}', row['{{column['Column']}}']), [])",
+                            {% raw %}"@do" : { "@id" : "{{class}}"}{% endraw %}
+                        }
+                    ],
+                    "Value" : [{
+                        {%- if 'Format' in column and not isempty(column['Format']) %}
+                        "@type" : "{{column.get('@type')}}",
+                        {%- endif %}
+                        "@if" : "not isempty(row.get('{{column['Column']}}'))",
+                        "@value" : "{{column['@value']}}"
+                    }],
+                    {%- endif %}
+                    {%- if 'Start' in column and not isempty(column['Start']) and 'End' in column and not isempty(column['End']) %}
+                    {%- if column['End'] == column['Start'] %}
+                    "Value" : {
+                        "@type" : "xsd:decimal",
+                        "@value" : "{{column['Start']}}"
+                    },
+                    {%- else -%}
+                    "hasStart" : {
+                        "@type" : "TimeInterval",
+                        "Value" : {
+                            "@type" : "xsd:decimal",
+                            "@value" : "{{column['Start']}}"
+                        }
+                    },
+                    "hasEnd" : {
+                        "@type" : "TimeInterval",
+                        "Value" : {
+                            "@type" : "xsd:decimal",
+                            "@value" : "{{column['End']}}"
+                        }
+                    },
+                    {%- endif %}
+                    {%- endif %}
+                    {%- if 'Attribute' in column and not isempty(column['Attribute']) %}
+                    "Attribute" : {{column['Attribute'] | tojson }},
+                    {%- endif %}
+                    {%- if 'Entity' in column and not isempty(column['Entity']) %}
+                    "Entity" : {{column['Entity'] | tojson }},
+                    {%- endif %}
+                    {%- if 'Type' in column and not isempty(column['Type']) %}
+                    "Entity" : {{column['Type'] | tojson }},
+                    {%- endif %}
+                    "@if" : "'owl:Nothing' not in codebook.get(('{{column['Column']}}', row['{{column['Column']}}']), [])",
+                    {%- if column['Column'] in sdd.resource_codebook %}
+                    "@id" : "{% raw %}{{{%endraw%} resource_codebook['{{column['Column']}}'][row['{{column['Column']}}']] {%raw%}}}{% endraw %}"
+                    {%- else -%}
+                    "@id" : "{{column['uri_template']}}"
+                    {%- endif %}
+                }{#}{% if not loop.last %} ,{% endif %} #},{% endif %}{% endfor %}{}
+            ]
+{#        },
+        "np:hasProvenance" : {
+            "@type" : "np:Provenance",
+            "@id" : "nanopub/{% raw %}{{name}}{% endraw %}_provenance",
+            "@graph" : [
+            ]
+        },
+        "np:hasPublicationInfo" : {
+            "@type" : "np:PublicationInfo",
+            "@id" : "nanopub/{% raw %}{{name}}{% endraw %}_pubinfo",
+            "@graph" : [
                 {
-                  "@for" : "{{branch_column['Column']}}_name, {{branch_column['Column']}} in enumerate({{branch_column['iterator']}})",
-                  "@do" : [
-                    {
-                      "@with": {{branch_column['with'] | tojson}},
-                      "@do" : [
-                        {% for column in branch_column['leaves']  %}
-                          {%- if ('Attribute' in column and not isempty(column['Attribute'])) or
-                                 ('Entity' in column and not isempty(column['Entity'])) %} {
-                              {%for predicate_column in sdd.columns.values() %}
-                              {%- if 'Subject' in predicate_column and predicate_column['Subject'] == column['Column'] %}
-                              "{{predicate_column['Predicate']}}" : [{
-                                  {%- if 'Format' in predicate_column and not isempty(predicate_column['Format']) %}
-                                  "@type" : "{{predicate_column.get('@type')}}",
-                                  {%- endif %}
-                                  "@if" : "not isempty(row.get('{{predicate_column['Column']}}'))",
-                                  "@value" : "{{predicate_column['@value']}}"
-                              }],
-                              {% endif -%}
-                              {% endfor %}
-                              "attributeOf" : [
-                                  {%- for attr in column['attributeOf'] %}
-                                  { "@id" : "{{sdd.columns[attr]['uri_template']}}" }
-                                  {%- if not loop.last %},{% endif %}
-                                  {%- endfor %}
-                              ],
-                              {% if 'Unit' in column and not isempty(column['Unit']) -%}
-                                {%- if column['Unit'] in sdd.columns -%}
-                                "Unit" : { "@id" : "{{sdd.columns[column['Unit']]['uri_template']}}" },
-                                {%- else -%}
-                                "Unit" : { "@id" : "{{column['Unit']}}" },
-                                {%- endif -%}
-                              {% endif %}
-                              {%- if 'Time' in column and not isempty(column['Time']) %}
-                              "Time" : { "@id" : "{{sdd.columns[column['Time']]['uri_template']}}" },
-                              {%- endif %}
-                              {%- if 'wasDerivedFrom' in column and not isempty(column['wasDerivedFrom']) %}
-                              "wasDerivedFrom" : [
-                                  {% for entity in column['wasDerivedFrom'] -%}
-                                  { "@id" : "{{sdd.columns[entity]['uri_template']}}" }
-                                  {%- if not loop.last %},{% endif %}
-                                  {%- endfor %}
-                              ],
-                              {%- endif %}
-                              {%- if 'wasGeneratedBy' in column and not isempty(column['wasGeneratedBy']) %}
-                              "wasGeneratedBy" : [
-                                  {% for entity in column['wasGeneratedBy'] -%}
-                                      { "@id" : "{{sdd.columns[entity]['uri_template']}}" }
-                                      {%- if not loop.last %},{% endif %}
-                                  {%- endfor %}
-                              ],
-                              {%- endif %}
-                              {%- if 'Role' in column and not isempty(column['Role']) %}
-                              "Role" : {
-                                  {% if not isempty(column['inRelationTo']) -%}
-                                      "inRelationTo" : [
-                                          {% for entity in column['inRelationTo'] -%}
-                                              { "@id" : "{{sdd.columns[entity]['uri_template']}}" }
-                                              {%- if not loop.last %},{% endif %}
-                                          {%- endfor %}
-                                      ],
-                                  {% endif -%}
-                                  "@type" : {{column['Role'] | tojson}}
-                              },
-                              {%- elif 'Relation' in column and not isempty(column['Relation']) and not isempty(column['inRelationTo']) -%}
-                              "{{column['Relation']}}" : [
-                                  {% for entity in column['inRelationTo'] -%}
-                                      { "@id" : "{{sdd.columns[entity]['uri_template']}}" }
-                                      {%- if not loop.last %},{% endif %}
-                                  {%- endfor %}
-                              ],
-                              {% else -%}
-                              "inRelationTo" : [
-                                  {% for entity in column['inRelationTo'] -%}
-                                      { "@id" : "{{sdd.columns[entity]['uri_template']}}" }
-                                      {%- if not loop.last %},{% endif %}
-                                  {%- endfor %}
-                              ],
-                              {%- endif %}
-                              {%- if not column['Column'].startswith("??") %}
-                              "a" : [
-                                  {
-                                      "@for" : "class in codebook.get(('{{column['Column']}}', {{column['value_access']}}), [])",
-                                      {% raw %}"@do" : { "@id" : "{{class}}"}{% endraw %}
-                                  }
-                              ],
-                              "Value" : [{
-                                  {%- if 'Format' in column and not isempty(column['Format']) %}
-                                  "@type" : "{{column.get('@type')}}",
-                                  {%- endif %}
-                                  "@if" : "not isempty({{column['value_access']}})",
-                                  "@value" : "{{column['@value']}}"
-                              }],
-                              {%- endif %}
-                              {%- if 'Start' in column and not isempty(column['Start']) and 'End' in column and not isempty(column['End']) %}
-                              {%- if column['End'] == column['Start'] %}
-                              "Value" : {
-                                  "@type" : "xsd:decimal",
-                                  "@value" : "{{column['Start']}}"
-                              },
-                              {%- else -%}
-                              "hasStart" : {
-                                  "@type" : "TimeInterval",
-                                  "Value" : {
-                                      "@type" : "xsd:decimal",
-                                      "@value" : "{{column['Start']}}"
-                                  }
-                              },
-                              "hasEnd" : {
-                                  "@type" : "TimeInterval",
-                                  "Value" : {
-                                      "@type" : "xsd:decimal",
-                                      "@value" : "{{column['End']}}"
-                                  }
-                              },
-                              {%- endif %}
-                              {%- endif %}
-                              {%- if 'Attribute' in column and not isempty(column['Attribute']) %}
-                              "Attribute" : {{column['Attribute'] | tojson }},
-                              {%- endif %}
-                              {%- if 'Entity' in column and not isempty(column['Entity']) %}
-                              "Entity" : {{column['Entity'] | tojson }},
-                              {%- endif %}
-                              {%- if 'Type' in column and not isempty(column['Type']) %}
-                              "Entity" : {{column['Type'] | tojson }},
-                              {%- endif %}
-                              "@id" : "{{column['uri_template']}}"
-                          },
-                          {% else %}{},
-                          {% endif %}
-                        {% endfor %}
-                        {% set parent = branch_column %}
-                        {{ loop (branch_column['branches']) }}
-                          {}
-                      ]
+                    "@id" : "nanopub/{% raw %}{{name}}{% endraw %}",
+                    "void:inDataset" : {"@id" : "{{dataset}}"},
+                    "prov:wasDerivedFrom" : {
+                        "@type" : "csvw:Row",
+                        "@reverse" : {"csvw:row" : {"@id" : "{{data}}"} },
+                        {% raw %}"csvw:rownum" : { "@value" : "{{name}}", "@type" : "xsd:integer"}{% endraw %}
                     }
-                  ]
-                },
-              {% endfor %}
-                {}
-]'''].
+                }
+            ]
+        }
+    } #}
+}]'''].
 
 {% if data_out %}
 <{{data_out}}> a pv:File;
