@@ -5,7 +5,7 @@ import pandas as pd
 import argparse
 import numpy as np
 import re
-from setlr import isempty
+from setlr import isempty as empty
 from slugify import slugify
 import io
 import puremagic
@@ -13,6 +13,12 @@ import json
 import fnmatch
 import rdflib
 
+def isempty(value):
+    if isinstance(value,str):
+        return len(value) == 0
+    else:
+        return empty(value)
+    
 base_context = {
     "void" : "http://rdfs.org/ns/void#",
     "csvw" : "http://www.w3.org/ns/csvw#",

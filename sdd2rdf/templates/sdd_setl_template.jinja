@@ -76,7 +76,6 @@ result = {{str(sdd.resource_codebook)}}
                     "attributeOf" : [
                         {%- for attr in column['attributeOf'] %}
                         {
-                          "@if" : "'owl:Nothing' not in codebook.get(('{{sdd.columns[attr]['Column']}}', row['{{sdd.columns[attr]['Column']}}']), [])",
                           "@id" : "{{sdd.columns[attr]['uri_template']}}"
                         }
                         {%- if not loop.last %},{% endif %}
@@ -88,7 +87,6 @@ result = {{str(sdd.resource_codebook)}}
                     {%- if 'Time' in column and not isempty(column['Time']) %}
                     "Time" : [
                       {
-                          "@if" : "'owl:Nothing' not in codebook.get(('{{sdd.columns[column['Time']]['Column']}}', row['{{sdd.columns[column['Time']]['Column']}}']), [])",
                         "@id" : "{{sdd.columns[column['Time']]['uri_template']}}"
                       }
                     ],
@@ -97,7 +95,6 @@ result = {{str(sdd.resource_codebook)}}
                     "wasDerivedFrom" : [
                         {% for entity in column['wasDerivedFrom'] -%}
                         {
-                          "@if" : "'owl:Nothing' not in codebook.get(('{{sdd.columns[entity]['Column']}}', row['{{sdd.columns[entity]['Column']}}']), [])",
                           "@id" : "{{sdd.columns[entity]['uri_template']}}"
                         }
                         {%- if not loop.last %},{% endif %}
@@ -108,7 +105,6 @@ result = {{str(sdd.resource_codebook)}}
                     "wasGeneratedBy" : [
                         {% for entity in column['wasGeneratedBy'] -%}
                             {
-                              "@if" : "'owl:Nothing' not in codebook.get(('{{sdd.columns[entity]['Column']}}', row['{{sdd.columns[entity]['Column']}}']), [])",
                               "@id" : "{{sdd.columns[entity]['uri_template']}}"
                             }
                             {%- if not loop.last %},{% endif %}
@@ -121,7 +117,6 @@ result = {{str(sdd.resource_codebook)}}
                             "inRelationTo" : [
                                 {% for entity in column['inRelationTo'] -%}
                                     {
-                                      "@if" : "'owl:Nothing' not in codebook.get(('{{sdd.columns[entity]['Column']}}', row['{{sdd.columns[entity]['Column']}}']), [])",
                                       "@id" : "{{sdd.columns[entity]['uri_template']}}"
                                     }
                                     {%- if not loop.last %},{% endif %}
@@ -134,7 +129,6 @@ result = {{str(sdd.resource_codebook)}}
                     "{{column['Relation']}}" : [
                         {% for entity in column['inRelationTo'] -%}
                             {
-                              "@if" : "'owl:Nothing' not in codebook.get(('{{sdd.columns[entity]['Column']}}', row['{{sdd.columns[entity]['Column']}}']), [])",
                               "@id" : "{{sdd.columns[entity]['uri_template']}}"
                             }
                             {%- if not loop.last %},{% endif %}
@@ -144,7 +138,6 @@ result = {{str(sdd.resource_codebook)}}
                     "inRelationTo" : [
                         {% for entity in column['inRelationTo'] -%}
                             {
-                              "@if" : "'owl:Nothing' not in codebook.get(('{{sdd.columns[entity]['Column']}}', row['{{sdd.columns[entity]['Column']}}']), [])",
                               "@id" : "{{sdd.columns[entity]['uri_template']}}"
                             }
                             {%- if not loop.last %},{% endif %}
@@ -198,7 +191,6 @@ result = {{str(sdd.resource_codebook)}}
                     {%- if 'Type' in column and not isempty(column['Type']) %}
                     "Entity" : {{column['Type'] | tojson }},
                     {%- endif %}
-                    "@if" : "'owl:Nothing' not in codebook.get(('{{column['Column']}}', row['{{column['Column']}}']), [])",
                     {%- if column['Column'] in sdd.resource_codebook %}
                     "@id" : "{% raw %}{{{%endraw%} resource_codebook['{{column['Column']}}'][row['{{column['Column']}}']] {%raw%}}}{% endraw %}"
                     {%- else -%}
