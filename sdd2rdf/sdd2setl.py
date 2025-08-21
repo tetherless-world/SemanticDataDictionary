@@ -12,6 +12,7 @@ import puremagic
 import json
 import fnmatch
 import rdflib
+import uuid
 
 def isempty(value):
     if isinstance(value,str):
@@ -214,11 +215,11 @@ class SemanticDataDictionary:
             default = slugify(col['Column'],separator="_")+'_{i}'
             template = col.get('Template', default)
             #print(col['Column'], template)
-            if isempty(template):
-                template = slugify(col['Column'],separator="_")+'_{i}'
+            #if isempty(template):
+            #    template = slugify(col['Column'],separator="_")+'_{i}'
 
-            template = re.sub(r'(:<=\{).*(:=\})',lambda x:str(slugify(x.group(0),separator="_")),template)
-            formatted_template = template.format(i='{{name}}',**self.column_templates)
+            #template = re.sub(r'(:<=\{).*(:=\})',lambda x:str(slugify(x.group(0),separator="_")),template)
+            #formatted_template = template.format(i='{{name}}',**self.column_templates)
             # if col['Column'] in self.resource_codebook:
             #     formatted_template = ''.join([
             #         "{% if '",
@@ -230,7 +231,7 @@ class SemanticDataDictionary:
             #         "]}}{% else %}",
             #         formatted_template,
             #         "{% endif %}"])
-            col['uri_template'] = formatted_template
+            col['uri_template'] = template #formatted_template
 
             if '@value' in col:
                 col['@value'] = col['@value'].format(i='{{name}}',**self.value_templates)
@@ -322,8 +323,18 @@ file_types = {
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': "setl:Excel",
 }
 
+def resolve(template, column_name, column_types, row, i, sdd):
+    if template is None or len(template.strip()) == 0:
+        return uuid.uuid4().hex()
+    safe_values = dict([(key, slugify(str(value),separator='_',lowercase=False) )
+                for key, value in row.to_dict().items()])
+    result = template.format(i=i, uuid=uuid, **safe_values)
+    return result
+
 def sdd2setl(semantic_data_dictionary, prefix, datafile,
-             format='csv', delimiter=',', sheetname=None, output=None, dataset_uri=None):
+             format='csv', delimiter=',', sheetname=None,
+             output=None, dataset_uri=None,
+             resolver="sdd2rdf.resolve"):
     if dataset_uri is None:
         dataset_uri = prefix+'dataset'
     if format != 'csv':
@@ -340,7 +351,8 @@ def sdd2setl(semantic_data_dictionary, prefix, datafile,
                              data_out = output,
                              str=str,
                              dataset=dataset_uri,
-                             isempty=isempty)
+                             isempty=isempty,
+                             resolver=resolver)
     return output
 
 def sdd2setl_main():
@@ -354,6 +366,7 @@ def sdd2setl_main():
     parser.add_argument('-d', "--delimiter", default=',')
     parser.add_argument('-s', '--sheetname')
     parser.add_argument("--dataset_uri")
+    parser.add_argument("--resolver")
 
     args = parser.parse_args()
     output = sdd2setl(args.semantic_data_dictionary,
@@ -362,6 +375,7 @@ def sdd2setl_main():
                       args.format,
                       args.delimiter,
                       args.sheetname,
-                      args.output)
+                      args.output,
+                      args.resolver)
     with open(args.setl_output, 'wb') as o:
         o.write(output.encode('utf8'))

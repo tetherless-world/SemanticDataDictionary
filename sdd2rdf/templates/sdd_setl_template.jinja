@@ -29,7 +29,7 @@
 {% if column['Column'] in sdd.resource_codebook -%}
   {%raw%}{{{%endraw%} resource_codebook['{{column['Column']}}'][row['{{column['Column']}}']] {%raw%}}}{% endraw -%}
 {% else -%}
-  {{column['uri_template']}}
+  {%raw%}{{{%endraw%}resolve('{{column['uri_template']}}', '{{column['Column']}}', {{column['Entity']}}, row, i, sdd){%raw%}}}{% endraw -%}
 {%- endif -%}
 {%- endmacro %}
 
@@ -46,6 +46,21 @@ result = {{str(sdd.resource_codebook)}}
 '''.
 
 
+:uuid a owl:Class, prov:SoftwareAgent, setl:PythonScript;
+    rdfs:subClassOf prov:Activity;
+    prov:value '''
+import uuid
+def result():
+    return uuid.uuid4().hex()
+'''.
+
+:resolve a owl:Class, prov:SoftwareAgent, setl:PythonScript;
+    rdfs:subClassOf prov:Activity;
+    prov:value '''
+from {{resolver.split('.')[:-1]|join('.')}} import {{resolver.split('.')[-1]}} as result
+'''.
+
+
 :setl a setl:SemanticETLScript;
   rdfs:label "Semantic Data Dictionary-generated SETL Script".
 
@@ -55,6 +70,8 @@ result = {{str(sdd.resource_codebook)}}
     prov:used :data;
     prov:qualifiedUsage [ a prov:Use; prov:entity :codebook; prov:hadRole [ dcterms:identifier "codebook"]];
     prov:qualifiedUsage [ a prov:Use; prov:entity :resource_codebook; prov:hadRole [ dcterms:identifier "resource_codebook"]];
+    prov:qualifiedUsage [ a prov:Use; prov:entity :uuid; prov:hadRole [ dcterms:identifier "uuid"]];
+    prov:qualifiedUsage [ a prov:Use; prov:entity :resolve; prov:hadRole [ dcterms:identifier "resolve"]];
     setl:hasContext '''
     {{ sdd.context | tojson }}
     ''';
