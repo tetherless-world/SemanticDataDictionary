@@ -236,6 +236,8 @@ class SemanticDataDictionary:
             if '@value' in col:
                 col['@value'] = col['@value'].format(i='{{name}}',**self.value_templates)
 
+        self.column_types = dict([(col['Column'], col['Entity']) for col in self.columns.values()])
+
     loaders = {
         "text/csv" : pd.read_csv,
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': pd.read_excel,
@@ -323,7 +325,7 @@ file_types = {
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': "setl:Excel",
 }
 
-def resolve(template, column_name, column_types, row, i, sdd):
+def resolve(template, column_name, column_types, row, i, context, columns):
     if template is None or len(template.strip()) == 0:
         return uuid.uuid4().hex
     safe_values = dict([(key, slugify(str(value),separator='_',lowercase=False) )

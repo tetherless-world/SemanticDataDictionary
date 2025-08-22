@@ -29,9 +29,21 @@
 {% if column['Column'] in sdd.resource_codebook -%}
   {%raw%}{{{%endraw%} resource_codebook['{{column['Column']}}'][row['{{column['Column']}}']] {%raw%}}}{% endraw -%}
 {% else -%}
-  {%raw%}{{{%endraw%}resolve('{{column['uri_template']}}', '{{column['Column']}}', {{column['Entity']}}, row, i, sdd){%raw%}}}{% endraw -%}
+  {%raw%}{{{%endraw%}resolve('{{column['uri_template']}}', '{{column['Column']}}', {{column['Entity']}}, row, i, context, column_types){%raw%}}}{% endraw -%}
 {%- endif -%}
 {%- endmacro %}
+
+:context a owl:Class, prov:SoftwareAgent, setl:PythonScript;
+    rdfs:subClassOf prov:Activity;
+    prov:value '''
+result = {{str(sdd.context)}}
+'''.
+
+:column_types a owl:Class, prov:SoftwareAgent, setl:PythonScript;
+    rdfs:subClassOf prov:Activity;
+    prov:value '''
+result = {{str(sdd.column_types)}}
+'''.
 
 :codebook a owl:Class, prov:SoftwareAgent, setl:PythonScript;
     rdfs:subClassOf prov:Activity;
@@ -72,6 +84,8 @@ from {{resolver.split('.')[:-1]|join('.')}} import {{resolver.split('.')[-1]}} a
     prov:qualifiedUsage [ a prov:Use; prov:entity :resource_codebook; prov:hadRole [ dcterms:identifier "resource_codebook"]];
     prov:qualifiedUsage [ a prov:Use; prov:entity :uuid; prov:hadRole [ dcterms:identifier "uuid"]];
     prov:qualifiedUsage [ a prov:Use; prov:entity :resolve; prov:hadRole [ dcterms:identifier "resolve"]];
+    prov:qualifiedUsage [ a prov:Use; prov:entity :context; prov:hadRole [ dcterms:identifier "context"]];
+    prov:qualifiedUsage [ a prov:Use; prov:entity :column_types; prov:hadRole [ dcterms:identifier "column_types"]];
     setl:hasContext '''
     {{ sdd.context | tojson }}
     ''';
