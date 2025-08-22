@@ -213,7 +213,7 @@ class SemanticDataDictionary:
 
         for col in self.columns.values():
             default = slugify(col['Column'],separator="_")+'_{i}'
-            template = col.get('Template', default)
+            template = col.get('Template', '')
             #print(col['Column'], template)
             #if isempty(template):
             #    template = slugify(col['Column'],separator="_")+'_{i}'
@@ -325,7 +325,7 @@ file_types = {
 
 def resolve(template, column_name, column_types, row, i, sdd):
     if template is None or len(template.strip()) == 0:
-        return uuid.uuid4().hex()
+        return uuid.uuid4().hex
     safe_values = dict([(key, slugify(str(value),separator='_',lowercase=False) )
                 for key, value in row.to_dict().items()])
     result = template.format(i=i, uuid=uuid, **safe_values)
