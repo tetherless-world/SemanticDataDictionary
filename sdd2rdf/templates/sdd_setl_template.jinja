@@ -27,7 +27,7 @@
 
 {% macro build_id_template(column) -%}
 {% if column['Column'] in sdd.resource_codebook -%}
-  {%raw%}{{{%endraw%} resource_codebook['{{column['Column']}}'][row['{{column['Column']}}']] {%raw%}}}{% endraw -%}
+  {%raw%}{{{%endraw%} resource_codebook['{{column['Column']}}'].get(row['{{column['Column']}}'],resolve('{{column['uri_template']}}', '{{column['Column']}}', {{column['Entity']}}, row, i, context, column_types)) {%raw%}}}{% endraw -%}
 {% else -%}
   {%raw%}{{{%endraw%}resolve('{{column['uri_template']}}', '{{column['Column']}}', {{column['Entity']}}, row, i, context, column_types){%raw%}}}{% endraw -%}
 {%- endif -%}
@@ -45,6 +45,20 @@ result = {{str(sdd.context)}}
 result = {{str(sdd.column_types)}}
 '''.
 
+:strip_owl_nothing a owl:Class, prov:SoftwareAgent, setl:PythonScript;
+    rdfs:subClassOf prov:Activity;
+    prov:value '''
+import rdflib
+
+def result(graph):
+    out = rdflib.Dataset()
+    for q in graph.quads((None, None, None,None)):
+        if rdflib.OWL.Nothing not in q:
+            out.add(q)
+    return out
+'''.
+
+
 :codebook a owl:Class, prov:SoftwareAgent, setl:PythonScript;
     rdfs:subClassOf prov:Activity;
     prov:value '''
@@ -54,7 +68,13 @@ result = {{str(sdd.codebook)}}
 :resource_codebook a owl:Class, prov:SoftwareAgent, setl:PythonScript;
     rdfs:subClassOf prov:Activity;
     prov:value '''
+import pandas as pd
+import numpy as np
 result = {{str(sdd.resource_codebook)}}
+for mapping in result.values():
+    if '' in mapping:
+        mapping[pd.NA] = mapping['']
+        mapping[np.nan] = mapping['']
 '''.
 
 
