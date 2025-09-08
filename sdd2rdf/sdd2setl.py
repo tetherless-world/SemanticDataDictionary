@@ -236,7 +236,10 @@ class SemanticDataDictionary:
             if '@value' in col:
                 col['@value'] = col['@value'].format(i='{{name}}',**self.value_templates)
 
-        self.column_types = dict([(col['Column'], col['Entity']) for col in self.columns.values()])
+        self.column_types = dict([
+            (col['Column'], col.get('Entity',None))
+            for col in self.columns.values()
+        ])
 
     loaders = {
         "text/csv" : pd.read_csv,

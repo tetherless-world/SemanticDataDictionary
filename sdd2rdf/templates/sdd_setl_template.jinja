@@ -121,7 +121,11 @@ from {{resolver.split('.')[:-1]|join('.')}} import {{resolver.split('.')[-1]}} a
                         {%- endfor %}
                     ],
                     {%- if 'Unit' in column and not isempty(column['Unit']) %}
+                    {%- if column['Unit'] in sdd.columns %}
+                    "Unit" : { "@id" : "{{build_id_template(sdd.columns[column['Unit']])}}" },
+                    {%- else %}
                     "Unit" : { "@id" : "{{column['Unit']}}" },
+                    {%- endif %}
                     {%- endif %}
                     {%- if 'Time' in column and not isempty(column['Time']) %}
                     "Time" : [
