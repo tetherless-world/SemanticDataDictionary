@@ -1,5 +1,5 @@
 
-from jinja2 import Environment, PackageLoader, select_autoescape
+from jinja2 import Environment, PackageLoader, select_autoescape, Template
 
 import pandas as pd
 import argparse
@@ -339,20 +339,25 @@ def resolve(template, column_name, column_types, row, i, context, columns):
 def sdd2setl(semantic_data_dictionary, prefix, datafile,
              format='csv', delimiter=',', sheetname=None,
              output=None, dataset_uri=None,
-             resolver="sdd2rdf.resolve"):
+             resolver="sdd2rdf.resolve",
+             template_path=None):
     if dataset_uri is None:
         dataset_uri = prefix+'dataset'
     if format != 'csv':
         delimiter = None
     sdd = SemanticDataDictionary(semantic_data_dictionary,prefix, data_type=file_types[format])
-    env = Environment(loader=PackageLoader('sdd2rdf', 'templates'))
-    template = env.get_template('sdd_setl_template.jinja')
+    if template_path is not None:
+        t = open(template_path).read()
+        template = Template(t)
+    else:
+        env = Environment(loader=PackageLoader('sdd2rdf', 'templates'))
+        template = env.get_template('sdd_setl_template.jinja') 
     output = template.render(sdd=sdd,
                              prefix=prefix,
                              data=datafile,
                              data_type=file_types[format],
                              delimiter=delimiter,
-                             sheetname=sheetname,
+                             sheetname=sheetname, 
                              data_out = output,
                              str=str,
                              dataset=dataset_uri,
@@ -372,8 +377,10 @@ def sdd2setl_main():
     parser.add_argument('-s', '--sheetname')
     parser.add_argument("--dataset_uri")
     parser.add_argument("--resolver")
+    parser.add_argument("--template")
 
     args = parser.parse_args()
+    print(args.template)
     output = sdd2setl(args.semantic_data_dictionary,
                       args.prefix,
                       args.data_file,
@@ -381,6 +388,7 @@ def sdd2setl_main():
                       args.delimiter,
                       args.sheetname,
                       args.output,
-                      args.resolver)
+                      args.resolver,
+                      template_path=args.template)
     with open(args.setl_output, 'wb') as o:
         o.write(output.encode('utf8'))
