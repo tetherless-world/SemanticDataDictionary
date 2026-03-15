@@ -1303,6 +1303,138 @@ def processCodebook(cb_fn):
     return cb_tuple
 
 
+def writeCodebookEntryTuples(cb_tuple, cb_fn, explicit_entry_tuples, output_file):
+    """
+    Generate ontology-level named individuals for every codebook entry.
+
+    For each (Column, Code) pair this function produces:
+      - A named individual typed as the OWL class that the DM declared for
+        that column, plus any extra Class values listed in the codebook row.
+      - If the codebook row supplies a Resource URI, that URI is used as the
+        individual and owl:sameAs links it back to the generated URI so the
+        generated URI remains a stable, resolvable node.
+      - rdfs:label, rdfs:comment, and skos:definition annotations where present.
+      - A sio:hasValue triple carrying the raw code as an xsd:string, making
+        the code itself recoverable from the individual without the data file.
+      - Provenance (prov:generatedAtTime) for each individual, consistent with
+        explicit and implicit entry nanopubs.
+
+    The entire block is wrapped in its own nanopub keyed by a hash of the
+    codebook filename (same pattern as explicit_entry and implicit_entry nanopubs).
+    When nanopublication is disabled the triples are written flat.
+    """
+    if not cb_tuple or cb_fn is None:
+        return
+
+    # Build a fast lookup: column name -> class URI string declared in the DM.
+    # We prefer "Entity" over "Attribute" to match writeClassAttributeOrEntity.
+    column_class_map = {}
+    for a_tuple in explicit_entry_tuples:
+        col = a_tuple.get("Column")
+        if col is None:
+            continue
+        if "Entity" in a_tuple:
+            column_class_map[col] = str(a_tuple["Entity"])
+        elif "Attribute" in a_tuple:
+            column_class_map[col] = str(a_tuple["Attribute"])
+
+    datasetIdentifier = hashlib.md5(cb_fn.encode("utf-8")).hexdigest()
+    assertionString   = ""
+    provenanceString  = ""
+
+    if nanopublication_option == "enabled":
+        output_file.write("<" + prefixes[kb] + "head-codebook-" + datasetIdentifier + "> { ")
+        output_file.write("\n    <" + prefixes[kb] + "nanoPub-codebook-" + datasetIdentifier + ">    <" + str(rdf.type) + ">    <" + str(np.Nanopublication) + ">")
+        output_file.write(" ;\n        <" + str(np.hasAssertion) + ">    <" + prefixes[kb] + "assertion-codebook-" + datasetIdentifier + ">")
+        output_file.write(" ;\n        <" + str(np.hasProvenance) + ">    <" + prefixes[kb] + "provenance-codebook-" + datasetIdentifier + ">")
+        output_file.write(" ;\n        <" + str(np.hasPublicationInfo) + ">    <" + prefixes[kb] + "pubInfo-codebook-" + datasetIdentifier + ">")
+        output_file.write(" .\n}\n\n")
+
+    for column, entries in cb_tuple.items():
+        col_class = column_class_map.get(column)
+        col_term  = sanitize_term(column)
+
+        for entry in entries:
+            code = entry.get("Code")
+            if code is None:
+                continue
+
+            # Stable URI for this individual: <base><ColumnTerm>-<sanitized code>
+            code_term   = sanitize_term(str(code))
+            generated_uri = "<" + prefixes[kb] + col_term + "-" + code_term + ">"
+
+            # If an external Resource URI is given, use it as the primary node
+            # and owl:sameAs the generated URI so it remains resolvable.
+            resource = entry.get("Resource", "")
+            if resource and str(resource).strip():
+                resource_uri = str(resource).strip()
+                if not isURI(resource_uri):
+                    resource_uri = codeMapper(resource_uri)
+                primary_uri = "<" + resource_uri + ">" if not resource_uri.startswith("<") else resource_uri
+            else:
+                primary_uri = generated_uri
+                resource_uri = None
+
+            # --- assertion ---
+            assertionString += "\n    " + primary_uri + "\n        <" + str(rdf.type) + ">    owl:NamedIndividual"
+
+            # Type as the DM-declared column class
+            if col_class:
+                assertionString += " ;\n        <" + str(rdf.type) + ">    " + col_class
+
+            # Additional Class values from the codebook row
+            cb_class = entry.get("Class", "")
+            if cb_class and str(cb_class).strip():
+                class_vals = parse_delimited_string(str(cb_class), ",") if "," in str(cb_class) else [str(cb_class)]
+                for cv in class_vals:
+                    cv = cv.strip()
+                    if cv:
+                        assertionString += " ;\n        <" + str(rdf.type) + ">    " + codeMapper(cv)
+
+            # owl:sameAs back to generated URI when Resource was supplied
+            if resource_uri is not None and primary_uri != generated_uri:
+                assertionString += " ;\n        <" + str(owl.sameAs) + ">    " + generated_uri
+
+            # Store the raw code value on the individual
+            assertionString += (" ;\n        <" + str(sio.hasValue) + ">    \""
+                                + str(code) + "\"^^xsd:string")
+
+            # Annotation properties
+            label = entry.get("Label", "")
+            if label and str(label).strip():
+                assertionString += (" ;\n        <" + str(rdfs.label) + ">    \""
+                                    + str(label).strip() + "\"^^xsd:string")
+
+            comment = entry.get("Comment", "")
+            if comment and str(comment).strip():
+                assertionString += (" ;\n        <" + str(rdfs.comment) + ">    \""
+                                    + str(comment).strip() + "\"^^xsd:string")
+
+            definition = entry.get("Definition", "")
+            if definition and str(definition).strip():
+                assertionString += (" ;\n        <" + str(skos.definition) + ">    \""
+                                    + str(definition).strip() + "\"^^xsd:string")
+
+            assertionString += " .\n"
+
+            # --- provenance ---
+            provenanceString += ("\n    " + primary_uri + "    <" + str(prov.generatedAtTime)
+                                 + ">    \"" + utc_now_string() + "\"^^xsd:dateTime .\n")
+
+    if nanopublication_option == "enabled":
+        output_file.write("<" + prefixes[kb] + "assertion-codebook-" + datasetIdentifier + "> {" + assertionString + "\n}\n\n")
+        output_file.write("<" + prefixes[kb] + "provenance-codebook-" + datasetIdentifier + "> {")
+        prov_header = ("\n    <" + prefixes[kb] + "assertion-codebook-" + datasetIdentifier + ">    <"
+                       + str(prov.generatedAtTime) + ">    \"" + utc_now_string() + "\"^^xsd:dateTime .\n")
+        output_file.write(prov_header + provenanceString + "\n}\n\n")
+        output_file.write("<" + prefixes[kb] + "pubInfo-codebook-" + datasetIdentifier + "> {\n    <"
+                          + prefixes[kb] + "nanoPub-codebook-" + datasetIdentifier + ">    <"
+                          + str(prov.generatedAtTime) + ">    \"" + utc_now_string() + "\"^^xsd:dateTime .\n}\n\n")
+    else:
+        output_file.write(assertionString + "\n")
+        output_file.write(provenanceString + "\n")
+
+
 # ---------------------------------------------------------------------------
 # Data file processor
 # ---------------------------------------------------------------------------
@@ -1683,6 +1815,8 @@ def main():
         implicit_entry_tuples = writeImplicitEntryTuples(
             implicit_entry_list, timeline_tuple, output_file, query_file, swrl_file, dm_fn
         )
+
+        writeCodebookEntryTuples(cb_tuple, cb_fn, explicit_entry_tuples, output_file)
 
         processData(
             data_fn, output_file, query_file, swrl_file,
