@@ -1,5 +1,5 @@
 """
-sdd2rdf.py - Converts Semanticscience Description Document (SDD) files to RDF.
+sdd2rdf.py - Converts Semantic Data Dictionary (SDD) files to RDF.
 
 Usage:
     python sdd2rdf.py <configuration_file>
