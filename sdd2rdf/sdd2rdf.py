@@ -209,6 +209,14 @@ def parse_delimited_string(input_string, delim):
     """Split a string on delim and strip whitespace from each token."""
     return [item.strip() for item in input_string.split(delim)]
 
+def escape_turtle_literal(value):
+    """Escape special characters in a string for safe embedding in a Turtle quoted literal."""
+    return (str(value)
+            .replace("\\", "\\\\")  # must be first
+            .replace('"',  '\\"')
+            .replace('\n', '\\n')
+            .replace('\r', '\\r')
+            .replace('\t', '\\t'))
 
 def isfloat(term):
     try:
@@ -1823,25 +1831,25 @@ def _build_row_blocks(chunk, col_headers, cb_tuple, timeline_tuple,
                                         if "Definition" in tuple_row and tuple_row["Definition"] != "":
                                             assertionString += (" ;\n        <" + str(skos.definition) + ">    \""
                                                                 + tuple_row["Definition"] + "\"^^xsd:string")
-                                        assertionString += (" ;\n        <" + str(sio.hasValue) + ">    \"" + str(cell_value) + "\"^^xsd:string")
+                                        assertionString += (" ;\n        <" + str(sio.hasValue) + ">    \"" + escape_turtle_literal(cell_value) + "\"^^xsd:string")
                             else:
                                 if "Format" in a_tuple:
                                     fmt = a_tuple["Format"]
                                     if fmt in xsd_datatype_list:
                                         assertionString += (" ;\n        <" + str(sio.hasValue) + ">    \""
-                                                            + str(cell_value) + "\"^^xsd:" + fmt)
+                                                            + escape_turtle_literal(cell_value) + "\"^^xsd:" + fmt)
                                     elif isURI(fmt):
                                         assertionString += (" ;\n        <" + str(sio.hasValue) + ">    \""
-                                                            + str(cell_value) + "\"^^<" + fmt + ">")
+                                                            + escape_turtle_literal(cell_value) + "\"^^<" + fmt + ">")
                                     else:
                                         assertionString += (" ;\n        <" + str(sio.hasValue) + ">    \""
-                                                            + str(cell_value) + "\"^^xsd:string")
+                                                            + escape_turtle_literal(cell_value) + "\"^^xsd:string")
                                 elif isfloat(str(cell_value)):
                                     assertionString += (" ;\n        <" + str(sio.hasValue) + ">    \""
                                                         + str(cell_value) + "\"^^xsd:float")
                                 else:
                                     assertionString += (" ;\n        <" + str(sio.hasValue) + ">    \""
-                                                        + str(cell_value) + "\"^^xsd:string")
+                                                        + escape_turtle_literal(cell_value) + "\"^^xsd:string")
                         assertionString += " .\n"
                     except Exception as e:
                         print("Error writing value: " + str(e))
