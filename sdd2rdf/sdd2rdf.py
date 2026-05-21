@@ -1768,9 +1768,9 @@ def _build_row_blocks(chunk, col_headers, cb_tuple, timeline_tuple,
                             for label in labels:
                                 assertionString += (" ;\n        <" + str(properties_tuple["Label"]) + ">    \""
                                                     + label + "\"^^xsd:string")
-                        if "Comment" in a_tuple:
-                            assertionString += (" ;\n        <" + str(properties_tuple["Comment"]) + ">    \""
-                                                + a_tuple["Comment"] + "\"^^xsd:string")
+#                        if "Comment" in a_tuple:
+#                            assertionString += (" ;\n        <" + str(properties_tuple["Comment"]) + ">    \""
+#                                                + a_tuple["Comment"] + "\"^^xsd:string")
                         if "inRelationTo" in a_tuple:
                             if checkImplicit(a_tuple["inRelationTo"]):
                                 v_id = assignVID(implicit_entry_tuples, timeline_tuple, a_tuple, "inRelationTo", npubIdentifier)
