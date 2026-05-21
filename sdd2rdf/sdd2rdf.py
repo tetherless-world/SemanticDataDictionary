@@ -144,7 +144,7 @@ def add_trig_batch(blocks):
             if not body or not body.strip():
                 continue
             if graph_name:
-                parts.append("GRAPH <" + graph_name + "> {\n" + body + "\n}\n")
+                parts.append("<" + graph_name + "> {\n" + body + "\n}\n")
             else:
                 parts.append(body + "\n")
         trig_doc = "".join(parts)
@@ -1813,7 +1813,7 @@ def _build_row_blocks(chunk, col_headers, cb_tuple, timeline_tuple,
                                             for classTerm in classTerms:
                                                 assertionString += " ;\n        <" + str(rdf.type) + ">    " + classTerm
                                         if "Resource" in tuple_row and tuple_row["Resource"] != "":
-                                            assertionString += " ;\n        <" + str(sio.hasValue) + ">    <" + tuple_row["Resource"] + ">"
+                                            assertionString += " ;\n        <" + str(rdf.type) + ">    <" + tuple_row["Resource"] + ">"
                                         if "Label" in tuple_row and tuple_row["Label"] != "":
                                             assertionString += (" ;\n        <" + str(rdfs.label) + ">    \""
                                                                 + tuple_row["Label"] + "\"^^xsd:string")
@@ -1823,6 +1823,7 @@ def _build_row_blocks(chunk, col_headers, cb_tuple, timeline_tuple,
                                         if "Definition" in tuple_row and tuple_row["Definition"] != "":
                                             assertionString += (" ;\n        <" + str(skos.definition) + ">    \""
                                                                 + tuple_row["Definition"] + "\"^^xsd:string")
+                                        assertionString += (" ;\n        <" + str(sio.hasValue) + ">    \"" + str(cell_value) + "\"^^xsd:string")
                             else:
                                 if "Format" in a_tuple:
                                     fmt = a_tuple["Format"]
@@ -1958,7 +1959,7 @@ def _trig_block(graph_name, body):
     if not body or not body.strip():
         return ""
     if graph_name:
-        return "GRAPH <" + graph_name + "> {\n" + body + "\n}\n"
+        return "<" + graph_name + "> {\n" + body + "\n}\n"
     return body + "\n"
 
 
