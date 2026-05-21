@@ -1682,8 +1682,8 @@ def _build_row_blocks(chunk, col_headers, cb_tuple, timeline_tuple,
                     if f in a_tuple
                 )
                 identifierString = hashlib.md5(
-                    (str(row[col_headers.index(a_tuple["Column"]) + 1]) + typeString
-                     ).encode("utf-8")
+                    (str(row[col_headers.index(a_tuple["Column"]) + 1]) + typeString + npubIdentifier
+                    ).encode("utf-8")
                 ).hexdigest()
 
                 try:
