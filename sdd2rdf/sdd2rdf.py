@@ -1594,6 +1594,10 @@ def _resolve_col_ref(term, col_headers, row, explicit_entry_tuples):
     """
     term_stripped = str(term).strip()
 
+    # Implicit references (??name) and prefixed/full URIs are not column lookups.
+    if term_stripped.startswith("??") or isURI(term_stripped) or ":" in term_stripped:
+        return None
+
     # Prefixed names (owl:Class, sio:Attribute, fibo-...:something) and full
     # URIs are valid Turtle on their own - leave them alone.
     if isURI(term_stripped) or ":" in term_stripped:
